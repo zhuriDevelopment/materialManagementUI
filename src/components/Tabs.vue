@@ -1,0 +1,130 @@
+<template>
+  <div class="Tabs">
+    <el-tabs v-model="value" type="card" editable @tab-click="clickTab" @edit="handleTabsEdit">
+      <el-tab-pane :key="item.name" v-for="(item, index) in list"
+        :label="item.title" :name="item.name">
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'Tabs',
+  data() {
+    return {
+      value: this.tabValue,
+      list: this.tabList,
+      idx: this.tabIndex,
+      tabMap: {
+        '/': '物料基本信息查询',
+        'MtrInfo': '物料基本信息',
+      },
+    };
+  },
+  computed: {
+    id() {
+      if(this.$route.params.hasOwnProperty('id')){
+        return this.$route.params.id
+      } else {
+        return ''
+      }
+    }
+  },
+  props: ['tabValue', 'tabList', 'tabIndex'],
+  mounted() {
+    console.log(this.$route)
+    const pathName = (this.$route.name !== 'Home') ? this.$route.name : '/';
+    console.log(pathName)
+    if(this.list.filter(tab => tab.name === pathName).length === 0) {
+      this.addTab(pathName, this.id);
+    } else {
+      this.value = pathName;
+    }
+    
+  },
+  methods: {
+    handleTabsEdit(targetName, action) {
+      if (action === 'remove') {
+        let tabs = this.list;
+        let activeName = this.value;
+        let idx = 0;
+        let flag = false;
+        if (activeName === targetName) {
+          flag = true;
+          tabs.forEach((tab, index) => {
+            if (tab.name === targetName) {
+              let nextTab = tabs[index + 1] || tabs[index - 1];
+              if (nextTab) {
+                activeName = nextTab.name;
+                idx = (tabs[index + 1]) ? index : (index - 1);
+              }
+            }
+          });
+        }
+        this.value = activeName;
+        this.list = tabs.filter(tab => tab.name !== targetName);
+        this.idx = idx;
+        if(this.list.length === 0){
+          console.log('list length === 0')
+          activeName = '/';
+          idx = 0;
+          this.addTab(activeName, '');
+        }
+        this.updateTabs();
+        if(flag){
+          this.clickTab({name: activeName, index: this.idx, id: this.list[this.idx].id});
+        }
+      }
+    },
+    clickTab(tab) {
+      this.savePageState(tab);
+      console.log('click tab')
+      console.log(tab.name)
+      console.log(tab)
+      console.log(this.list)
+      console.log(tab.index)
+      console.log(this.list[tab.index])
+      if(tab.name === 'Home'){
+        tab.name = '/';
+      }
+      // console.log(this.$route.params);
+      if(this.list[tab.index].hasOwnProperty('id') && this.list[tab.index].id !== '' ) {
+        this.$router.push(`/${tab.name}/${this.list[tab.index].id}`);
+      } else {
+        this.$router.push(tab.name);
+      }
+      
+    },
+    addTab(name, id) {
+      this.list.push({
+        title: this.tabMap[name],
+        name,
+        id,
+      });
+      this.value = name;
+      console.log('addTab: ',this.list);
+      this.updateTabs();
+    },
+    updateTabs() {
+      const tabs = {'list': this.list, 'value': this.value, 'index': this.idx};
+      console.log('updateTabs', tabs);
+      this.$emit('updateTabs', tabs);
+      this.savePageState(tabs);
+    },
+    savePageState(tab) {
+      const tabs = {'list': this.list, 'value': tab.name, 'index': tab.index};
+      console.log('save tab ', tabs);
+      localStorage.materialInfoTabs = JSON.stringify(tabs);
+    },
+  }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+.Tabs {
+  width: 100%;
+}
+</style>
