@@ -13,13 +13,27 @@
             <el-tab-pane label="物料基本信息">
               <Mtr-basic-info :data="mtrBasicInfo"></Mtr-basic-info>
             </el-tab-pane>
-            <el-tab-pane label="物料定义">配置管理</el-tab-pane>
-            <el-tab-pane label="SKU定义">角色管理</el-tab-pane>
-            <el-tab-pane label="采购和库存属性">定时任务补偿</el-tab-pane>
-            <el-tab-pane label="计划类属性">定时任务补偿</el-tab-pane>
-            <el-tab-pane label="销售类属性">定时任务补偿</el-tab-pane>
-            <el-tab-pane label="质量类属性">定时任务补偿</el-tab-pane>
-            <el-tab-pane label="财务类属性">定时任务补偿</el-tab-pane>
+            <el-tab-pane label="物料定义">
+              <Mtr-defs :data="mtrDefs"></Mtr-defs>
+            </el-tab-pane>
+            <el-tab-pane label="SKU定义">
+              <Mtr-sku-defs :data="mtrSkuDefs"></Mtr-sku-defs>
+            </el-tab-pane>
+            <el-tab-pane label="采购和库存属性">
+              <Mtr-purchase-and-store :data="mtrPurchaseAndStore"></Mtr-purchase-and-store>
+            </el-tab-pane>
+            <el-tab-pane label="计划类属性">
+              <Mtr-plan :data="mtrPlan"></Mtr-plan>
+            </el-tab-pane>
+            <el-tab-pane label="销售类属性">
+              <Mtr-sales :data="mtrSales"></Mtr-sales>
+            </el-tab-pane>
+            <el-tab-pane label="质量类属性">
+              <Mtr-quality :data="mtrQuality"></Mtr-quality>
+            </el-tab-pane>
+            <el-tab-pane label="财务类属性">
+              <Mtr-finance :data="mtrFinance"></Mtr-finance>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </div>
@@ -32,6 +46,13 @@ import NavHeader from '@/components/Nav'
 import Tabs from '@/components/Tabs'
 import Breadcrumb from '@/components/Breadcrumb'
 import MtrBasicInfo from '@/components/MtrInfoPanels/MtrBasicInfo'
+import MtrDefs from '@/components/MtrInfoPanels/MtrDefs'
+import MtrSkuDefs from '@/components/MtrInfoPanels/MtrSkuDefs'
+import MtrPurchaseAndStore from '@/components/MtrInfoPanels/MtrPurchaseAndStore'
+import MtrPlan from '@/components/MtrInfoPanels/MtrPlan'
+import MtrSales from '@/components/MtrInfoPanels/MtrSales'
+import MtrQuality from '@/components/MtrInfoPanels/MtrQuality'
+import MtrFinance from '@/components/MtrInfoPanels/MtrFinance'
 
 export default {
   name: 'home',
@@ -40,6 +61,13 @@ export default {
     Tabs,
     Breadcrumb,
     MtrBasicInfo,
+    MtrDefs,
+    MtrSkuDefs,
+    MtrPurchaseAndStore,
+    MtrPlan,
+    MtrSales,
+    MtrQuality,
+    MtrFinance
   },
   created() {
     this.initTabs();
@@ -47,6 +75,13 @@ export default {
   data() {
     return {
       mtrBasicInfo: {},
+      mtrDefs: {},
+      mtrSkuDefs: {},
+      mtrPurchaseAndStore: {},
+      mtrPlan: {},
+      mtrSales: {},
+      mtrQuality: {},
+      mtrFinance: {},
       editableTabsValue: '',
       editableTabs: [],
       tabIndex: '',
@@ -158,7 +193,7 @@ export default {
             font-size: 15px;
             margin: 0 10px 0 25px;
             text-align: left;
-            
+
           }
         }
         .adv-search{

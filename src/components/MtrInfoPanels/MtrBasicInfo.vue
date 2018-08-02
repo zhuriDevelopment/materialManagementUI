@@ -9,7 +9,7 @@
               <el-option
                 v-for="item in col.options"
                 :key="item.value"
-                :label="item.value"
+                :label="item.label"
                 :value="item.value">
               </el-option>
             </el-select>
@@ -39,7 +39,6 @@
               v-model="rows[4][0].value">
             </el-input>
           </div>
-         
         </div>
       </div>
     </div>
@@ -117,12 +116,12 @@ export default {
     return {
       info: this.data,
       rows: [
-        [{label: 'SPU编码', value: ''}, {label: 'SPU名称', value: ''}, {label: '物料类型', value: '', options: ['选项1','选项2','选项3']}], 
-        [{label: '物料分类', value: '', options: ['选项1','选项2','选项3']}, {label: '来源', value: '', options: ['选项1','选项2','选项3']}, {label: '用途', value: ''}], 
+        [{label: 'SPU编码', value: ''}, {label: 'SPU名称', value: ''}, {label: '物料类型', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}],
+        [{label: '物料分类', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '来源', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '用途', value: ''}],
         [{label: '设计图号', value: ''}, {label: '设计版次', value: ''}, {label: '助记码', value: ''}],
         [{label: '规格描述', value: ''}, {label: '多规格物料', value: false}],
         [{label: '备注', value: ''}],
-        [{label: '默认计量单位', value: '', options: ['选项1','选项2','选项3']}],
+        [{label: '默认计量单位', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}],
         [{label: '辅助计量单位', value: [{unit: '米', factor: ''}]}],
       ],
     };
