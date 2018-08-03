@@ -51,7 +51,6 @@ export default {
   .lower{
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
   }
   .row{
       display: flex;

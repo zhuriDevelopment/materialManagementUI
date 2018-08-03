@@ -2,7 +2,7 @@
   <div class="Mtr-quality">
     <div class="lower">
       <div class="row" v-for="row in rows.slice(0, 1)">
-        <div class="col col2" v-for="col in row">
+        <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="radiobar">
             <el-radio-group v-if="col.hasOwnProperty('options')" v-model="col.modelgroup">
@@ -16,7 +16,7 @@
           </div>
         </div>
       </div>
-      <div class="row" v-for="row in rows.slice(1)">
+      <div class="row" v-for="row in rows.slice(1, 3)">
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="inputbar">
@@ -29,6 +29,14 @@
               </el-option>
             </el-select>
             <el-input v-else v-model="col.value" placeholder="请输入"></el-input>
+          </div>
+        </div>
+      </div>
+      <div class="row" v-for="row in rows.slice(3)">
+        <div class="col-2" v-for="col in row">
+          <div class="label">{{col.label}}</div>
+          <div class="inputbar">
+            <el-input v-model="col.value" placeholder="请输入"></el-input>
           </div>
         </div>
       </div>
@@ -63,7 +71,6 @@ export default {
   .lower{
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
   }
   .row{
       display: flex;
@@ -73,7 +80,7 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
-        width: 400px;
+        width: 500px;
         margin: 15px 0;
         .label{
           font-size: 14px;
@@ -88,17 +95,28 @@ export default {
           }
         }
         .radiobar{
-          width: 400px
+          width: 300px;
+          margin-right: 15px;
         }
       }
       .col-2{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         width: 100%;
-        .inputbar{
-          margin-right: 20%;
-          flex: 1;
+        margin: 15px 0;
+        .label{
+          font-size: 14px;
+          width: 120px;
+          white-space: nowrap;
         }
-        .el-table{
-          max-width: 600px;
+        .inputbar{
+          margin-right: 15px;
+          width: 100%;
+          flex: 1;
+          .el-input{
+            width: 100%;
+          }
         }
       }
     }
