@@ -19,6 +19,9 @@
             <el-tab-pane label="SKU定义">
               <Mtr-sku-defs :data="mtrSkuDefs"></Mtr-sku-defs>
             </el-tab-pane>
+            <el-tab-pane label="附件管理">
+              <Mtr-files :data="mtrFiles"></Mtr-files>
+            </el-tab-pane>
             <el-tab-pane label="采购和库存属性">
               <Mtr-purchase-and-store :data="mtrPurchaseAndStore"></Mtr-purchase-and-store>
             </el-tab-pane>
@@ -48,6 +51,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import MtrBasicInfo from '@/components/MtrInfoPanels/MtrBasicInfo'
 import MtrDefs from '@/components/MtrInfoPanels/MtrDefs'
 import MtrSkuDefs from '@/components/MtrInfoPanels/MtrSkuDefs'
+import MtrFiles from '@/components/MtrInfoPanels/MtrFiles'
 import MtrPurchaseAndStore from '@/components/MtrInfoPanels/MtrPurchaseAndStore'
 import MtrPlan from '@/components/MtrInfoPanels/MtrPlan'
 import MtrSales from '@/components/MtrInfoPanels/MtrSales'
@@ -63,6 +67,7 @@ export default {
     MtrBasicInfo,
     MtrDefs,
     MtrSkuDefs,
+    MtrFiles,
     MtrPurchaseAndStore,
     MtrPlan,
     MtrSales,
@@ -77,6 +82,7 @@ export default {
       mtrBasicInfo: {},
       mtrDefs: {},
       mtrSkuDefs: {},
+      mtrFiles: {},
       mtrPurchaseAndStore: {},
       mtrPlan: {},
       mtrSales: {},
