@@ -2,7 +2,7 @@
   <div class="breadcrumb">
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item class="bold" :to="{ path: '/' }">物料信息管理</el-breadcrumb-item>
-      <el-breadcrumb-item>{{list[index].title}}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
@@ -19,14 +19,15 @@ export default {
   },
   computed: {
     item() {
-      if(this.list.hasOwnProperty(this.index)) {
-        return this.list[this.index].title
-      } else {
-        return ''
-      }
+      // if(this.list.hasOwnProperty(this.index)) {
+      //   return this.list[this.index].title
+      // } else {
+      //   return ''
+      // }
+      return this.tabList[this.tabIndex].title
     }
   },
-  props: ["tabList", "tabIndex"],
+  props: ["tabList", "tabIndex","tabValue"],
   methods: {
     emit(){
       console.log('click')

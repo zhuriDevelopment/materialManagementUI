@@ -170,6 +170,16 @@ export default {
       .card{
         display: flex;
         flex-direction: column;
+        flex: 1;
+        .el-tabs{
+          // height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        .el-tab-pane{
+          overflow: scroll;
+          max-height: 500px;
+        }
       }
       .search{
         height: 50px;

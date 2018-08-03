@@ -7,6 +7,7 @@
           <div class="radiobar">
             <el-radio-group v-if="col.hasOwnProperty('options')" v-model="col.modelgroup">
               <el-radio
+                :key="item.value"
                 v-for="item in col.options"
                 :label="item.value">
                 {{item.label}}

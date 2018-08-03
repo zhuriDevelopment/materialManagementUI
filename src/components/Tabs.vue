@@ -40,7 +40,9 @@ export default {
     if(this.list.filter(tab => tab.name === pathName).length === 0) {
       this.addTab(pathName, this.id);
     } else {
+      // this.idx = this.list.filter(tab => tab.value === pathName)[0].tabIndex;
       this.value = pathName;
+      // this.updateTabs();
     }
     
   },
