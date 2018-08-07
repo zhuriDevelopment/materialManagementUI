@@ -20,6 +20,7 @@ export default {
       tabMap: {
         '/': '物料基本信息查询',
         'MtrInfo': '物料基本信息',
+        'MtrTypeModify': '物料分类管理',
       },
     };
   },
@@ -44,7 +45,7 @@ export default {
       this.value = pathName;
       // this.updateTabs();
     }
-    
+
   },
   methods: {
     handleTabsEdit(targetName, action) {
@@ -97,7 +98,7 @@ export default {
       } else {
         this.$router.push(tab.name);
       }
-      
+
     },
     addTab(name, id) {
       this.list.push({

@@ -42,12 +42,12 @@ export default {
 .breadcrumb{
   height: 50px;
   padding-left: 15px;
-  margin-bottom: 55px;
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
   vertical-align: middle;
   border-top: 1px solid black;
-  border-bottom: 1px solid black; 
+  border-bottom: 1px solid black;
   .bold{
     font-weight: bold;
     cursor: pointer;

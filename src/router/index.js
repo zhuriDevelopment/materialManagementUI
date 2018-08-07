@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Hello from '@/views/Hello';
 import Home from '@/views/Home';
 import MtrInfo from '@/views/MtrInfo';
+import MtrTypeModify from '@/views/MtrTypeModify'
 
 Vue.use(Router);
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/MtrInfo/:id',
       name: 'MtrInfo',
       component: MtrInfo,
+    },
+    {
+      path: '/MtrTypeModify/:id',
+      name: 'MtrTypeModify',
+      component: MtrTypeModify,
     },
   ],
 });
