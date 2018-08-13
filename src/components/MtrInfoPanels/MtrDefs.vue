@@ -89,6 +89,11 @@ export default {
     };
   },
   props: ["data"],
+  watch: {
+    data(val) {
+      this.tableData = this.data;
+    }
+  }
 };
 
 </script>

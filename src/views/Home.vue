@@ -104,14 +104,14 @@
             </el-table>
           </div>
           <div class="pagination">
-            <div>共搜索出100条数据</div>
-            <el-pagination
+            <div>{{this.pageNumberString}}</div>
+            <!-- <el-pagination
               layout="prev, pager, next"
               :total="100">
-            </el-pagination>
+            </el-pagination> -->
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -128,9 +128,10 @@ export default {
     NavHeader,
     Tabs,
     Breadcrumb,
-},
+  },
   created() {
     this.initTabs();
+    this.getTableData();
   },
   data() {
     return {
@@ -153,7 +154,7 @@ export default {
       tableData:[
         {code: '1', name: '1', class:'', desc:'',figCode:'',figVersion:'',source:'',unit:'',note:''}
       ],
-
+      pageNumberString: '共搜索出100条数据',
     };
   },
   methods: {
@@ -185,7 +186,34 @@ export default {
       console.log('emit: ', tabs);
     },
     clickRow(row, event, column) {
-      this.$router.push({path: `/MtrInfo/${row.code}`});
+      this.$router.push({path: `/MtrInfo/${row.code}/${row.name}`});
+    },
+    getTableData() {
+      this.$axios.post('http://localhost:8080/MaterialManagement/getAllBaseInfo')
+        .then((response) => {
+          console.log(response);
+          let basedatas = response.data[0];
+          let catdatas = response.data[1];
+          let unitdatas = response.data[2];
+          this.tableData = [];
+          for (let i = 0; i < basedatas.length; ++i) {
+            let tmpvalue = {};
+            tmpvalue["code"] = basedatas[i]["spuCode"];
+            tmpvalue["name"] = basedatas[i]["spuName"];
+            tmpvalue["class"] = catdatas[i]["name"];
+            tmpvalue["desc"] = basedatas[i]["description"];
+            tmpvalue["figCode"] = basedatas[i]["designCode"];
+            tmpvalue["figVersion"] = basedatas[i]["designVersion"];
+            tmpvalue["source"] = basedatas[i]["source"];
+            tmpvalue["unit"] = unitdatas[i]["name"];
+            tmpvalue["note"] = basedatas[i]["note"];
+            this.tableData.push(tmpvalue);
+            this.pageNumberString = "共搜索出" + basedatas.length + "条数据"
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   },
 };
@@ -249,7 +277,7 @@ export default {
             font-size: 15px;
             margin: 0 10px 0 25px;
             text-align: left;
-            
+
           }
         }
         .adv-search{

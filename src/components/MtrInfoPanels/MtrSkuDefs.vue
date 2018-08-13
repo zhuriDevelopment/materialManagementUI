@@ -17,10 +17,10 @@
             property="skuCode"
             label="SKU编码">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             property="skuName"
             label="SKU名称">
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             property="materialCode"
             label="物料编码">
@@ -65,28 +65,16 @@ export default {
   name: "MtrSkuDefs",
   data() {
     return {
-      tableData: [{
-        skuCode: 'SKU1001',
-        skuName: 'S_丝绸',
-        materialCode: 'B12343',
-        unit: '米',
-        barCode: '123321',
-        purchasePrice: '100',
-        sellingPrice: '120',
-        description: '备注1'
-      }, {
-        skuCode: 'SKU1002',
-        skuName: 'S_棉布',
-        materialCode: 'B12345',
-        unit: '米',
-        barCode: '10086',
-        purchasePrice: '110',
-        sellingPrice: '130',
-        description: '备注2'
-      }]
+      tableData: [],
     };
   },
   props: ["data"],
+  watch: {
+    data(val) {
+      console.log("MtrSkuDefs");
+      this.tableData = this.data;
+    }
+  }
 };
 </script>
 

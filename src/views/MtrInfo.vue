@@ -76,6 +76,7 @@ export default {
   },
   created() {
     this.initTabs();
+    this.setData();
   },
   data() {
     return {
@@ -142,6 +143,53 @@ export default {
       this.editableTabsValue = tabs.value;
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index
+    },
+    setData() {
+      console.log(this.$route.console);
+      this.$axios.post('http://localhost:8080/MaterialManagement/getMaterialInfo', {
+          "spuCode": this.$route.params.id,
+          "spuName": this.$route.params.name,
+          // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
+          "typeArr": [1, 2, 3],
+        })
+        .then((response) => {
+          console.log(response);
+          // 物料基础信息
+          const _mtrBasicInfo = response.data[0][0];
+          this.mtrBasicInfo = {
+            "spuCode": _mtrBasicInfo["spuCode"],
+            "spuName": _mtrBasicInfo["spuName"],
+            "type": _mtrBasicInfo["type"],
+            "category": _mtrBasicInfo["materialCatId"],
+            "source": _mtrBasicInfo["source"],
+            "usage": _mtrBasicInfo["usage"],
+            "designCode": _mtrBasicInfo["designCode"],
+            "designVersion": _mtrBasicInfo["designVersion"],
+            "mnemonic": _mtrBasicInfo["mnemonic"],
+            "note": _mtrBasicInfo["note"],
+          };
+          // 物料定义
+          const _mtrDefs = response.data[1];
+          this.mtrDefs = _mtrDefs;
+          // 物料sku信息
+          const _mtrSkuDefs = response.data[2];
+          let _skuLen = response.data[2][0].length;
+          this.mtrSkuDefs = [];
+          for (let i = 0; i < _skuLen; ++i) {
+            let tmpSku = {};
+            tmpSku["skuCode"] = _mtrSkuDefs[0][i]["spuCode"];
+            tmpSku["materialCode"] = _mtrSkuDefs[1][i]["materialCode"];
+            tmpSku["unit"] = _mtrSkuDefs[2][i]["name"];
+            tmpSku["barCode"] = _mtrSkuDefs[1][i]["barCode"];
+            tmpSku["purchasePrice"] = _mtrSkuDefs[0][i]["purchasePrice"];
+            tmpSku["sellingPrice"] = _mtrSkuDefs[0][i]["sellingPrice"];
+            tmpSku["description"] = _mtrSkuDefs[0][i]["description"];
+            this.mtrSkuDefs.push(tmpSku);
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   },
 };

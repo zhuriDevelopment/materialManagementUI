@@ -1,6 +1,6 @@
 <template>
   <div class="Mtr-basic-info">
-    <div class="upper">
+    <div class="upper" v-if="rows.length > 3">
       <div class="row" v-for="row in rows.slice(0,3)">
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="lower">
+    <div class="lower" v-if="rows.length > 3">
       <div class="row">
         <div class="col">
           <div class="label">{{rows[5][0].label}}</div>
@@ -114,20 +114,31 @@ export default {
   name: 'MtrBasicInfo',
   data() {
     return {
-      info: this.data,
-      rows: [
-        [{label: 'SPU编码', value: ''}, {label: 'SPU名称', value: ''}, {label: '物料类型', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}],
-        [{label: '物料分类', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '来源', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '用途', value: ''}],
-        [{label: '设计图号', value: ''}, {label: '设计版次', value: ''}, {label: '助记码', value: ''}],
-        [{label: '规格描述', value: ''}, {label: '多规格物料', value: false}],
-        [{label: '备注', value: ''}],
-        [{label: '默认计量单位', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}],
-        [{label: '辅助计量单位', value: [{unit: '米', factor: ''}]}],
-      ],
+      rows: [],
     };
   },
   props: ["data"],
-
+  watch: {
+    data(val) {
+      this.rows = [
+        [{label: 'SPU编码', value: this.data.spuCode},
+          {label: 'SPU名称', value: this.data.spuName},
+          {label: '物料类型', value: this.data.type}],
+        [{label: '物料分类', value: this.data.category,},
+        {label: '来源', value: this.data.source,},
+        {label: '用途', value: this.data.usage,}],
+        [{label: '设计图号', value: this.data.designCode,},
+          {label: '设计版次', value: this.data.designVersion,},
+          {label: '助记码', value: this.data.mnemonic,}],
+        [{label: '规格描述', value: ''},
+          {label: '多规格物料', value: false}],
+        [{label: '备注', value: this.data.note}],
+        [{label: '默认计量单位', value: '',}],
+        [{label: '辅助计量单位',
+          value: [{unit: '米', factor: ''}]}],
+      ];
+    }
+  }
 };
 </script>
 

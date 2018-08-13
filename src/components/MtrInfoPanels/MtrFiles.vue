@@ -27,7 +27,6 @@ export default {
   name: 'MtrFiles',
   data() {
     return {
-      info: this.data,
       filesData: [{
         'fileId': 1,
         'fileName': '1.txt',
