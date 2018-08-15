@@ -16,7 +16,7 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/MtrInfo/:id/:name',
+      path: '/MtrInfo/:id',
       name: 'MtrInfo',
       component: MtrInfo,
     },
