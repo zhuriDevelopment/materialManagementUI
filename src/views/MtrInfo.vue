@@ -9,7 +9,7 @@
         </div>
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
-          <el-tabs type="border-card">
+          <el-tabs type="border-card" value="1">
             <el-tab-pane label="物料基本信息">
               <Mtr-basic-info :basicInfo="mtrBasicInfo"></Mtr-basic-info>
             </el-tab-pane>
