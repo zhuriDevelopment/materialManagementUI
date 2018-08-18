@@ -1,5 +1,6 @@
 <template>
   <div class="Mtr-basic-info">
+    
     <div class="upper" v-if="rows.length > 3">
       <div class="row" v-for="row in rows.slice(0,3)">
         <div class="col" v-for="col in row">
@@ -112,33 +113,33 @@
 
 export default {
   name: 'MtrBasicInfo',
+  props: ["basicInfo"],
   data() {
     return {
       rows: [],
     };
   },
-  props: ["data"],
   watch: {
-    data(val) {
+    basicInfo(newVal, oldVal) {
       this.rows = [
-        [{label: 'SPU编码', value: this.data.spuCode},
-          {label: 'SPU名称', value: this.data.spuName},
-          {label: '物料类型', value: this.data.type}],
-        [{label: '物料分类', value: this.data.category,},
-        {label: '来源', value: this.data.source,},
-        {label: '用途', value: this.data.usage,}],
-        [{label: '设计图号', value: this.data.designCode,},
-          {label: '设计版次', value: this.data.designVersion,},
-          {label: '助记码', value: this.data.mnemonic,}],
+        [{label: 'SPU编码', value: this.basicInfo.spuCode},
+          {label: 'SPU名称', value: this.basicInfo.spuName},
+          {label: '物料类型', value: this.basicInfo.type}],
+        [{label: '物料分类', value: this.basicInfo.category,},
+        {label: '来源', value: this.basicInfo.source,},
+        {label: '用途', value: this.basicInfo.usage,}],
+        [{label: '设计图号', value: this.basicInfo.designCode,},
+          {label: '设计版次', value: this.basicInfo.designVersion,},
+          {label: '助记码', value: this.basicInfo.mnemonic,}],
         [{label: '规格描述', value: ''},
           {label: '多规格物料', value: false}],
-        [{label: '备注', value: this.data.note}],
+        [{label: '备注', value: this.basicInfo.note}],
         [{label: '默认计量单位', value: '',}],
         [{label: '辅助计量单位',
           value: [{unit: '米', factor: ''}]}],
       ];
     }
-  }
+  },
 };
 </script>
 

@@ -9,9 +9,9 @@
         </div>
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
-          <el-tabs type="border-card">
+          <el-tabs type="border-card" value="1">
             <el-tab-pane label="物料基本信息">
-              <Mtr-basic-info :data="mtrBasicInfo"></Mtr-basic-info>
+              <Mtr-basic-info :basicInfo="mtrBasicInfo"></Mtr-basic-info>
             </el-tab-pane>
             <el-tab-pane label="物料定义">
               <Mtr-defs :data="mtrDefs"></Mtr-defs>
@@ -76,6 +76,8 @@ export default {
   },
   created() {
     this.initTabs();
+  },
+  mounted(){
     this.setData();
   },
   data() {
@@ -145,10 +147,9 @@ export default {
       this.tabIndex = tabs.index
     },
     setData() {
-      console.log(this.$route.console);
-      this.$axios.post('http://localhost:8080/MaterialManagement/getMaterialInfo', {
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
           "spuCode": this.$route.params.id,
-          "spuName": this.$route.params.name,
+          "spuName": this.$route.query.name,
           // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
           "typeArr": [1, 2, 3],
         })

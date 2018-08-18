@@ -186,10 +186,17 @@ export default {
       console.log('emit: ', tabs);
     },
     clickRow(row, event, column) {
-      this.$router.push({path: `/MtrInfo/${row.code}/${row.name}`});
+      console.log(column)
+      if(column.label !== '操作'){
+        this.$router.push({path: `/MtrInfo/${row.code}?${row.name}`});
+      }
+    },
+    handleClick(row){
+      console.log(row);
+      this.$router.push({path: `/MtrInfo/${row.code}?${row.name}`});
     },
     getTableData() {
-      this.$axios.post('http://localhost:8080/MaterialManagement/getAllBaseInfo')
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getAllBaseInfo`)
         .then((response) => {
           console.log(response);
           let basedatas = response.data[0];

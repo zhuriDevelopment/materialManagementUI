@@ -11,10 +11,17 @@ require('normalize.css');
 require('@/styles/global/index.less');
 
 Vue.use(ElementUI);
-
 Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;
+
+window.$config = {};
+if (window.location.hostname === 'localhost') {
+  window.$config.HOST = 'http://localhost:8080'
+} else {
+  // backend url
+  window.$config.HOST = 'http://localhost:3000'
+}
 
 /* eslint-disable no-new */
 new Vue({
