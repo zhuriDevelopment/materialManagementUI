@@ -5,7 +5,7 @@
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="radiobar">
-            <el-radio-group v-if="col.hasOwnProperty('options')" v-model="col.modelgroup">
+            <el-radio-group v-if="col.hasOwnProperty('options')" v-model="col.value">
               <el-radio
                 :key="item.value"
                 v-for="item in col.options"
@@ -58,7 +58,32 @@ export default {
       ]
     }
   },
-  props: ["data"]
+  props: ["data"],
+  watch: {
+    data(newVal, oldVal) {
+      const col_num = 2;
+      this.rows=[];
+      this.rows.push([{
+        label: this.data[0].propertyName,
+        value: this.data[0].propertyValue,
+        options: [{label: '不检验', value: '不检验'}, {label: '抽样检验', value: '抽样检验'}, {label: '全样检验', value: '全样检验'}]
+      }])
+      const lineIndexs = [3, 3, 1];
+      let j = 1;
+      lineIndexs.forEach((el, index) => {
+        this.rows.push([])
+        for(let i = 0; i < el ;i += 1 ){
+          const d = this.data[j+i];
+          this.rows[index+1].push({
+            label: d.propertyName,
+            value: d.propertyValue,
+            options: [{label: d.propertyValue, value: d.propertyValue}]
+          })
+        }
+        j += el;
+      })
+    }
+  }
 };
 </script>
 
