@@ -26,7 +26,7 @@ export default {
   name: 'MtrPurchaseAndStore',
   data() {
     return {
-      info: this.data,
+      info: this.mtrData,
       rows: [
         [{label: '物料制购类型', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},
           {label: 'ABC分类', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},
@@ -43,7 +43,28 @@ export default {
       ]
     }
   },
-  props: ["data"]
+  props: ["mtrData"],
+  watch: {
+    mtrData(newVal, oldVal) {
+      const col_num = 3;
+      this.rows=[];
+      this.mtrData.forEach((el, index) => {
+        if((index % col_num) === 0){
+          this.rows.push([]);
+        }
+        if(el.propertyValue === 'true') {
+          el.propertyValue = '是';
+        } else if(el.propertyValue === 'false') {
+          el.propertyValue = '否';
+        }
+        this.rows[Math.floor(index / col_num)].push({
+          label: el.propertyName,
+          value: el.propertyValue,
+          options: [{label: el.propertyValue, value: el.propertyValue}],
+        })
+      })
+    }
+  },
 };
 </script>
 

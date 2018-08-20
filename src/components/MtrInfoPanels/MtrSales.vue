@@ -36,7 +36,28 @@ export default {
       ]
     }
   },
-  props: ["data"]
+  props: ["data"],
+  watch: {
+    data(newVal, oldVal) {
+      const col_num = 2;
+      this.rows=[];
+      this.data.forEach((el, index) => {
+        if((index % col_num) === 0){
+          this.rows.push([]);
+        }
+        if(el.propertyValue === 'true') {
+          el.propertyValue = '是';
+        } else if(el.propertyValue === 'false') {
+          el.propertyValue = '否';
+        }
+        this.rows[Math.floor(index / col_num)].push({
+          label: el.propertyName,
+          value: el.propertyValue,
+          options: [{label: el.propertyValue, value: el.propertyValue}],
+        })
+      })
+    }
+  }
 };
 </script>
 
