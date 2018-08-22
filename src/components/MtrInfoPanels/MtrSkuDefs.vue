@@ -16,42 +16,59 @@
           <el-table-column
             property="skuCode"
             label="SKU编码">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['skuCode']"></el-input>
+            </template>
           </el-table-column>
-          <!-- <el-table-column
-            property="skuName"
-            label="SKU名称">
-          </el-table-column> -->
           <el-table-column
             property="materialCode"
             label="物料编码">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['materialCode']"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             property="unit"
             label="计量单位">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['unit']"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             property="barCode"
             label="条形码">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['barCode']"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             property="purchasePrice"
             label="采购价格（元）">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['purchasePrice']"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             property="sellingPrice"
             label="销售价格（元）">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['sellingPrice']"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             property="description"
             label="备注">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['description']"></el-input>
+            </template>
           </el-table-column>
           <el-table-column
             label="操作"
             fixed="right"
             width="150">
             <template slot-scope="scope">
-              <el-button type="text" size="mini">添加</el-button>
-              <el-button type="text" size="mini">删除</el-button>
+              <el-button type="text" size="mini" @click="handleSkuDefAdd(scope.$index, scope.row)">添加</el-button>
+              <el-button type="text" size="mini" @click="handleSkuDefDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -73,6 +90,28 @@ export default {
     data(val) {
       console.log("MtrSkuDefs");
       this.tableData = this.data;
+    }
+  },
+  methods: {
+    pushRow() {
+      this.tableData.push({
+        skuCode: '',
+        materialCode: '',
+        unit: '',
+        barCode: '',
+        purchasePrice: '',
+        sellingPrice: '',
+        description: '',
+      });
+    },
+    handleSkuDefAdd(index, row) {
+      this.pushRow();
+    },
+    handleSkuDefDelete(index, row) {
+      this.tableData.splice(index, 1);
+      if (this.tableData.length === 0) {
+        this.pushRow();
+      }
     }
   }
 };

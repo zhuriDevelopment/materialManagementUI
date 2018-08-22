@@ -3,17 +3,28 @@
     <div class="row">
       <div class="col" v-for="col in inputBoxData">
         <div class="label">{{col.label}}</div>
-        <el-input
+        <!-- <el-input
           :placeholder="col.holder"
           v-model="col.model"
           clearable>
-        </el-input>
+        </el-input> -->
+        <el-select
+          :placeholder="col.holder"
+          @change="selectchange"
+          v-model="col.model">
+          <el-option
+            v-for="item in col.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </div>
     </div>
     <div class="row">
       <div class="col" v-for="col in selectData">
         <div class="label">{{col.label}}</div>
-        <el-select v-model="col.value" placeholder="请选择">
+        <el-select v-model="col.model" placeholder="请选择" @change="typeselectchange">
           <el-option
             v-for="item in col.options"
             :key="item.value"
@@ -39,19 +50,121 @@ export default {
         label: '分类编码',
         model: '',
         holder: '请输入分类编码',
+        options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]
       }, {
         label: '分类名称',
         model: '',
         holder: '请输入分类名称',
-      }],
-      selectData: [{
-        value: '',
-        label: '物料类别',
         options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]
       }],
+      selectData: [{
+        model: '',
+        label: '物料类别',
+        options: [],
+      }],
+      spuCodeArr: [],
+      spuNameArr: [],
+      typeArr: [
+        {label: '无类别', value: '0'},
+        {label: '原材料', value: '1'},
+        {label: '半成品', value: '2'},
+        {label: '成品', value: '3'},
+        {label: '设备', value: '4'},
+      ],
+      spuCodeModel: ``,
+      spuNameModel: ``,
+      typeModel: ``,
     }
   },
   props: ["data"],
+  watch: {
+    data(newVal, oldVal) {
+      console.log("pass data in mtr type info!");
+      console.log(this.data);
+      if (this.data.baseData.length > 0) {
+        this.spuCodeArr = [];
+        this.spuNameArr = [];
+        for (let baseInfo in this.data.baseData) {
+          this.spuCodeArr.push(this.data.baseData[baseInfo].spuCode);
+          this.spuNameArr.push(this.data.baseData[baseInfo].spuName);
+        }
+        let spuCodeOptions = [];
+        let spuNameOptions = [];
+        for (let spuCode in this.spuCodeArr) {
+          spuCodeOptions.push({
+            label: this.spuCodeArr[spuCode],
+            value: this.spuCodeArr[spuCode],
+          });
+        };
+        for (let spuName in this.spuNameArr) {
+          spuNameOptions.push({
+            label: this.spuNameArr[spuName],
+            value: this.spuNameArr[spuName],
+          })
+        };
+        this.spuCodeModel = this.spuCodeArr[0];
+        this.spuNameModel = this.spuNameArr[0];
+        this.inputBoxData = [
+          {
+            label: `分类编码`,
+            model: this.spuCodeModel,
+            holder: `请选择分类编码`,
+            options: spuCodeOptions,
+          },
+          {
+            label: `分类名称`,
+            model: this.spuNameModel,
+            holder: `请选择分类名称`,
+            options: spuNameOptions,
+          }
+        ];
+        this.typeModel = 0;
+        this.selectData = [{
+          model: this.typeModel,
+          label: '物料类别',
+          options: this.typeArr,
+        }];
+      } else {
+        console.log("baseData empty!");
+      }
+    }
+  },
+  methods: {
+    selectchange(value) {
+      console.log("change!");
+      console.log(value);
+      // 检查是name还是code，0是code，1是name
+      let flag = 0;
+      let index = -1;
+      for (let _index in this.spuCodeArr) {
+        if (value == this.spuCodeArr[_index]) {
+          flag = 0;
+          index = _index;
+          break;
+        }
+      }
+      if (index == -1) {
+        for (let _index in this.spuNameArr) {
+          if (value == this.spuNameArr[_index]) {
+            flag = 1;
+            index = _index;
+          }
+        }
+      }
+      if (flag == 0) {
+        // name
+        this.spuNameModel = this.spuNameArr[index];
+      } else {
+        // code
+        this.spuCodeModel = this.spuCodeArr[index];
+      }
+      console.log(this.data);
+    },
+    typeselectchange(value) {
+      console.log(`typechange!`);
+      console.log(value);
+    }
+  }
 }
 </script>
 

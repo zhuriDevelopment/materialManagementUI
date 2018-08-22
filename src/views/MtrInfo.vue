@@ -151,7 +151,7 @@ export default {
         "spuCode": this.$route.params.id,
         "spuName": this.$route.query.name,
         // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
-        "typeArr": [1, 2, 3, 5],
+        "typeArr": [1, 2, 3, 5, 6, 7, 8, 9],
       })
       .then((response) => {
         console.log(response);
@@ -178,7 +178,7 @@ export default {
         this.mtrSkuDefs = [];
         for (let i = 0; i < _skuLen; ++i) {
           let tmpSku = {};
-          tmpSku["skuCode"] = _mtrSkuDefs[0][i]["spuCode"];
+          tmpSku["skuCode"] = _mtrSkuDefs[0][i]["skuCode"];
           tmpSku["materialCode"] = _mtrSkuDefs[1][i]["materialCode"];
           tmpSku["unit"] = _mtrSkuDefs[2][i]["name"];
           tmpSku["barCode"] = _mtrSkuDefs[1][i]["barCode"];
@@ -394,9 +394,9 @@ export default {
           },
         ]
       });
-      
+
     },
-    
+
   },
 };
 </script>

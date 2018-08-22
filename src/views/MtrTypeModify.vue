@@ -16,9 +16,9 @@
             </div>
             <el-tree
               :data="treeData"
-              show-checkbox
               node-key="id"
-              :props="defaultProps">
+              :props="defaultTreeData"
+              @node-click="handleNodeClick">
             </el-tree>
           </div>
           <div class="rightInfos">
@@ -82,6 +82,7 @@ export default {
   },
   created() {
     this.initTabs();
+    this.initTree();
   },
   data() {
     return {
@@ -92,59 +93,41 @@ export default {
       mtrSales: {},
       mtrQuality: {},
       mtrFinance: {},
-      treeData: [
-        {
-          id: 1,
-          label: "一级 1",
-          children: [
-            {
-              id: 4,
-              label: "二级 1-1",
-              children: [
-                {
-                  id: 9,
-                  label: "三级 1-1-1"
-                },
-                {
-                  id: 10,
-                  label: "三级 1-1-2"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 2,
-          label: "一级 2",
-          children: [
-            {
-              id: 5,
-              label: "二级 2-1"
-            },
-            {
-              id: 6,
-              label: "二级 2-2"
-            }
-          ]
-        },
-        {
-          id: 3,
-          label: "一级 3",
-          children: [
-            {
-              id: 7,
-              label: "二级 3-1"
-            },
-            {
-              id: 8,
-              label: "二级 3-2"
-            }
-          ]
-        }
-      ]
+      treeData: [],
+      defaultTreeData: {
+        children: 'children',
+        label: 'label'
+      }
     };
   },
   methods: {
+    initTree() {
+      console.log("initing Tree!");
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategory`, {})
+          .then((response) => {
+            console.log(response);
+            this.treeData = [];
+            this.treeData.push(response.data);
+          });
+      console.log("init Tree Finished!");
+    },
+    handleNodeClick(data) {
+      console.log(data);
+      console.log(data.id);
+      const catId = data.id;
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getAllMaterialBaseByCategoryInfos`, {
+        "id": catId,
+      })
+      .then((response) => {
+        console.log(response);
+        const baseData = response.data[0];
+        const catData = response.data[1];
+        this.mtrTypeModifyInfo = {
+          "baseData": baseData,
+          "catData": catData,
+        };
+      });
+    },
     initTabs() {
       if (localStorage.materialInfoTabs !== undefined) {
         const tabs = JSON.parse(localStorage.materialInfoTabs);

@@ -1,6 +1,5 @@
 <template>
   <div class="Mtr-basic-info">
-    
     <div class="upper" v-if="rows.length > 3">
       <div class="row" v-for="row in rows.slice(0,3)">
         <div class="col" v-for="col in row">
@@ -77,11 +76,17 @@
                 property="unit"
                 label="计量单位"
                 width="120">
+                <template slot-scope="scope">
+                  <el-input v-model="rows[6][0].value[scope.$index]['unit']"></el-input>
+                </template>
               </el-table-column>
               <el-table-column
                 property="factor"
                 label="换算系数"
                 width="120">
+                <template slot-scope="scope">
+                  <el-input v-model="rows[6][0].value[scope.$index]['factor']"></el-input>
+                </template>
               </el-table-column>
               <el-table-column
                 label="排序"
@@ -96,9 +101,8 @@
                 label="操作"
                 width="150">
                 <template slot-scope="scope">
-                  <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                  <el-button type="text" size="small">编辑</el-button>
-                  <el-button type="text" size="small">删除</el-button>
+                  <el-button @click="handleUnitAdd(scope.$index, scope.row)" type="text" size="small">添加</el-button>
+                  <el-button @click="handleUnitDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -136,8 +140,25 @@ export default {
         [{label: '备注', value: this.basicInfo.note}],
         [{label: '默认计量单位', value: '',}],
         [{label: '辅助计量单位',
-          value: [{unit: '米', factor: ''}]}],
+          value: [{unit: '米', factor: '1'}]}],
       ];
+    }
+  },
+  methods: {
+    pushRow() {
+      this.rows[6][0].value.push({
+        unit: '',
+        factor: '',
+      });
+    },
+    handleUnitAdd(index, row) {
+      this.pushRow();
+    },
+    handleUnitDelete(index, row) {
+      this.rows[6][0].value.splice(index, 1);
+      if(this.rows[6][0].value.length === 0){
+        this.pushRow();
+      }
     }
   },
 };
