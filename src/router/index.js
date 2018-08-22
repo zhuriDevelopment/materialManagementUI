@@ -21,7 +21,7 @@ export default new Router({
       component: MtrInfo,
     },
     {
-      path: '/MtrTypeModify/:id',
+      path: '/MtrTypeModify',
       name: 'MtrTypeModify',
       component: MtrTypeModify,
     },
