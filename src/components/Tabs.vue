@@ -94,9 +94,11 @@ export default {
       }
       // console.log(this.$route.params);
       if(this.list[tab.index].hasOwnProperty('id') && this.list[tab.index].id !== '' ) {
-        this.$router.push(`/${tab.name}/${this.list[tab.index].id}`);
+        console.log("error")
+        this.$router.push({ name: tab.name, params: { id: this.list[tab.index].id } });
       } else {
-        this.$router.push(tab.name);
+        console.log("success")
+        this.$router.push({ name: tab.name });
       }
 
     },

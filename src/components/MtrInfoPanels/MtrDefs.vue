@@ -27,7 +27,7 @@
             fixed="right"
             width="150">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="handleAdd(scope.$index, scope.row)">添加</el-button>
+              <el-button type="text" size="mini" @click="handleAdd(scope.$index, scope.row)" :disabled="disabled[scope.$index]===scope.row.barCode">添加</el-button>
               <el-button type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
