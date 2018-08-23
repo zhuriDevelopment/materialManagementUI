@@ -23,7 +23,7 @@
               <Mtr-files :data="mtrFiles"></Mtr-files>
             </el-tab-pane>
             <el-tab-pane label="采购和库存属性">
-              <Mtr-purchase-and-store :mtrData="mtrPurchaseAndStore"></Mtr-purchase-and-store>
+              <Mtr-purchase-and-store @changeModel="updateData($event, 'mtrPurchaseAndStore')" :mtrData="mtrPurchaseAndStore"></Mtr-purchase-and-store>
             </el-tab-pane>
             <el-tab-pane label="计划类属性">
               <Mtr-plan :data="mtrPlan"></Mtr-plan>
@@ -145,6 +145,10 @@ export default {
       this.editableTabsValue = tabs.value;
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index
+    },
+    updateData(newVal, type) {
+      this[type] = newVal;
+      console.log(newVal, this[type]);
     },
     setData() {
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
