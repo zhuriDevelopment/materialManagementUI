@@ -89,8 +89,8 @@ export default {
       console.log(this.list)
       console.log(tab.index)
       console.log(this.list[tab.index])
-      if(tab.name === 'Home'){
-        tab.name = '/';
+      if(tab.name === '/'){
+        tab.name = 'Home';
       }
       // console.log(this.$route.params);
       if(this.list[tab.index].hasOwnProperty('id') && this.list[tab.index].id !== '' ) {

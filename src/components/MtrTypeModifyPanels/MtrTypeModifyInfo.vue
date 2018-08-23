@@ -1,7 +1,7 @@
 <template>
   <div class="Mtr-type-modify-info">
     <div class="row">
-      <div class="col" v-for="col in inputBoxData">
+      <div class="col" v-for="(col, index) in inputBoxData">
         <div class="label">{{col.label}}</div>
         <!-- <el-input
           :placeholder="col.holder"
@@ -10,7 +10,7 @@
         </el-input> -->
         <el-select
           :placeholder="col.holder"
-          @change="selectchange"
+          @change="selectchange(index)"
           v-model="col.model">
           <el-option
             v-for="item in col.options"
@@ -71,9 +71,11 @@ export default {
         {label: '成品', value: '3'},
         {label: '设备', value: '4'},
       ],
-      spuCodeModel: ``,
-      spuNameModel: ``,
-      typeModel: ``,
+      spuCodeModel: '',
+      spuNameModel: '',
+      typeModel: '',
+      code2Name: {},
+      name2Code: {},
     }
   },
   props: ["data"],
@@ -87,7 +89,14 @@ export default {
         for (let baseInfo in this.data.baseData) {
           this.spuCodeArr.push(this.data.baseData[baseInfo].spuCode);
           this.spuNameArr.push(this.data.baseData[baseInfo].spuName);
+          this.code2Name[this.data.baseData[baseInfo].spuCode] = this.data.baseData[baseInfo].spuName;
         }
+        const invertObj = obj =>
+          Object.keys(obj).reduce((acc, key)=>{
+            acc[obj[key]] = key;
+            return acc;
+          }, {});
+        this.name2Code = invertObj(this.code2Name);
         let spuCodeOptions = [];
         let spuNameOptions = [];
         for (let spuCode in this.spuCodeArr) {
@@ -106,19 +115,19 @@ export default {
         this.spuNameModel = this.spuNameArr[0];
         this.inputBoxData = [
           {
-            label: `分类编码`,
+            label: '分类编码',
             model: this.spuCodeModel,
-            holder: `请选择分类编码`,
+            holder: '请选择分类编码',
             options: spuCodeOptions,
           },
           {
-            label: `分类名称`,
+            label: '分类名称',
             model: this.spuNameModel,
-            holder: `请选择分类名称`,
+            holder: '请选择分类名称',
             options: spuNameOptions,
           }
         ];
-        this.typeModel = 0;
+        this.typeModel = toString(0); // 这里传typemodel
         this.selectData = [{
           model: this.typeModel,
           label: '物料类别',
@@ -127,38 +136,15 @@ export default {
       } else {
         console.log("baseData empty!");
       }
-    }
+    },
   },
   methods: {
-    selectchange(value) {
+    selectchange(idx) {
       console.log("change!");
-      console.log(value);
+      console.log(idx);
       // 检查是name还是code，0是code，1是name
-      let flag = 0;
-      let index = -1;
-      for (let _index in this.spuCodeArr) {
-        if (value == this.spuCodeArr[_index]) {
-          flag = 0;
-          index = _index;
-          break;
-        }
-      }
-      if (index == -1) {
-        for (let _index in this.spuNameArr) {
-          if (value == this.spuNameArr[_index]) {
-            flag = 1;
-            index = _index;
-          }
-        }
-      }
-      if (flag == 0) {
-        // name
-        this.spuNameModel = this.spuNameArr[index];
-      } else {
-        // code
-        this.spuCodeModel = this.spuCodeArr[index];
-      }
-      console.log(this.data);
+      const model = this.inputBoxData[idx].model;
+      this.inputBoxData[1-idx].model = (idx === 0) ? this.code2Name[model] : this.name2Code[model];
     },
     typeselectchange(value) {
       console.log(`typechange!`);
