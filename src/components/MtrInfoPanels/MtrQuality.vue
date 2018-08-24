@@ -5,7 +5,8 @@
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="radiobar">
-            <el-radio-group v-if="col.hasOwnProperty('options')" v-model="col.value">
+            <el-radio-group v-if="col.hasOwnProperty('options')" v-model="col.value"
+              @change="changeModel">
               <el-radio
                 :key="item.value"
                 v-for="item in col.options"
@@ -20,7 +21,9 @@
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="inputbar">
-            <el-select v-if="col.hasOwnProperty('options')" v-model="col.value" placeholder="请选择" filterable allow-create default-first-option>
+            <el-select v-if="col.hasOwnProperty('options')" v-model="col.value"
+            placeholder="请选择" @change="changeModel"
+            filterable allow-create default-first-option>
               <el-option
                 v-for="item in col.options"
                 :key="item.value"
@@ -36,7 +39,7 @@
         <div class="col-2" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="inputbar">
-            <el-input v-model="col.value" placeholder="请输入"></el-input>
+            <el-input v-model="col.value" placeholder="请输入" @change="changeModel"></el-input>
           </div>
         </div>
       </div>
@@ -83,7 +86,21 @@ export default {
         j += el;
       })
     }
-  }
+  },
+  methods: {
+    changeModel() {
+      const updateData = rows => {
+        let newData = [];
+        for(let i of rows) {
+          for(let j of i) {
+            newData.push({"propertyName": j.label, "propertyValue": j.value});
+          }
+        }
+        return newData;
+      }
+      this.$emit('changeModel', updateData(this.rows))
+    },
+  },
 };
 </script>
 

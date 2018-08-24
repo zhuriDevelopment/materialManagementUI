@@ -26,13 +26,13 @@
               <Mtr-purchase-and-store @changeModel="updateData($event, 'mtrPurchaseAndStore')" :mtrData="mtrPurchaseAndStore"></Mtr-purchase-and-store>
             </el-tab-pane>
             <el-tab-pane label="计划类属性">
-              <Mtr-plan :data="mtrPlan"></Mtr-plan>
+              <Mtr-plan @changeModel="updateData($event, 'mtrPlan')" :data="mtrPlan"></Mtr-plan>
             </el-tab-pane>
             <el-tab-pane label="销售类属性">
-              <Mtr-sales :data="mtrSales"></Mtr-sales>
+              <Mtr-sales @changeModel="updateData($event, 'mtrSales')" :data="mtrSales"></Mtr-sales>
             </el-tab-pane>
             <el-tab-pane label="质量类属性">
-              <Mtr-quality :data="mtrQuality"></Mtr-quality>
+              <Mtr-quality @changeModel="updateData($event, 'mtrQuality')" :data="mtrQuality"></Mtr-quality>
             </el-tab-pane>
             <el-tab-pane label="财务类属性">
               <Mtr-finance @changeModel="updateData($event, 'mtrFinance')" :data="mtrFinance"></Mtr-finance>
@@ -89,8 +89,11 @@ export default {
       mtrPurchaseAndStore: {},
       mtrPurchaseAndStoreUpdateValue: [],
       mtrPlan: {},
+      mtrPlanUpdateValue: [],
       mtrSales: {},
+      mtrSalesUpdateValue: [],
       mtrQuality: {},
+      mtrQualityUpdateValue: [],
       mtrFinance: {},
       mtrFinanceUpdateValue: [],
       editableTabsValue: '',
@@ -148,28 +151,85 @@ export default {
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index
     },
+    checkContainsNV(list, name) {
+      for (let element in list) {
+        if (list[element].name === name) {
+          return element;
+        }
+      }
+      return -1;
+    },
     updateData(newVal, type) {
-      this.mtrPurchaseAndStoreUpdateValue = [];
-      this.mtrFinanceUpdateValue = [];
       for (let element in newVal) {
-        if (newVal[element].propertyValue !== this[type][element].propertyValue) {
+        let oldValue = this[type][element].propertyValue;
+        let newValue = newVal[element].propertyValue;
+        let proName = newVal[element].propertyName;
+        let findIndex = 0;
+        if (newValue !== oldValue) {
           switch(type) {
             case `mtrPurchaseAndStore`:
-              this.mtrPurchaseAndStoreUpdateValue.push({
-                name: newVal[element].propertyName,
-                value: newVal[element].propertyValue,
-              });
+              findIndex = this.checkContainsNV(this.mtrPurchaseAndStoreUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrPurchaseAndStoreUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrPurchaseAndStoreUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
               break;
             case `mtrFinance`:
-              this.mtrFinanceUpdateValue.push({
-                name: newVal[element].propertyName,
-                value: newVal[element].propertyValue,
-              });
+              findIndex = this.checkContainsNV(this.mtrFinanceUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrFinanceUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrFinanceUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrSales`:
+              findIndex = this.checkContainsNV(this.mtrSalesUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrSalesUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrSalesUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrQuality`:
+              findIndex = this.checkContainsNV(this.mtrQualityUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrQualityUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrQualityUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrPlan`:
+              findIndex = this.checkContainsNV(this.mtrPlanUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrPlanUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrPlanUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
               break;
           }
         }
       }
+      console.log(this.mtrPurchaseAndStoreUpdateValue);
       console.log(this.mtrFinanceUpdateValue);
+      console.log(this.mtrSalesUpdateValue);
+      console.log(this.mtrQualityUpdateValue);
+      console.log(this.mtrPlanUpdateValue);
       this[type] = newVal;
       console.log(newVal, this[type]);
     },
@@ -333,7 +393,7 @@ export default {
           },
           {
               "propertyName": "销价下限率（%）",
-              "propertyValue": ""
+              "propertyValue": "10"
           },
           {
               "propertyName": "销售成本科目",

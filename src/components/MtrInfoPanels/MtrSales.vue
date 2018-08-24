@@ -5,7 +5,9 @@
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="inputbar">
-            <el-select v-if="col.hasOwnProperty('options')" v-model="col.value" placeholder="请选择" filterable allow-create default-first-option>
+            <el-select v-if="col.hasOwnProperty('options')" v-model="col.value"
+            placeholder="请选择" @change="changeModel"
+            filterable allow-create default-first-option>
               <el-option
                 v-for="item in col.options"
                 :key="item.value"
@@ -30,7 +32,7 @@ export default {
       rows: [
         [{label: '销售计划价格', value: '',}, {label: '计价货币', value: '',}],
         [{label: '是否售价控制', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '销售价格策略', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '销价下限率（%）', value: ''}, {label: '销售成本科目', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
+        [{label: '销价下降率（%）', value: ''}, {label: '销售成本科目', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
         [{label: '默认客户', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '销售地', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
         [{label: '默认业务员', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '默认销售单位', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
       ]
@@ -57,7 +59,21 @@ export default {
         })
       })
     }
-  }
+  },
+  methods: {
+    changeModel() {
+      const updateData = rows => {
+        let newData = [];
+        for(let i of rows) {
+          for(let j of i) {
+            newData.push({"propertyName": j.label, "propertyValue": j.value});
+          }
+        }
+        return newData;
+      }
+      this.$emit('changeModel', updateData(this.rows))
+    },
+  },
 };
 </script>
 
