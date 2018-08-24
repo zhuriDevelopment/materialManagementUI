@@ -35,7 +35,7 @@
               <Mtr-quality :data="mtrQuality"></Mtr-quality>
             </el-tab-pane>
             <el-tab-pane label="财务类属性">
-              <Mtr-finance :data="mtrFinance"></Mtr-finance>
+              <Mtr-finance @changeModel="updateData($event, 'mtrFinance')" :data="mtrFinance"></Mtr-finance>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -92,6 +92,7 @@ export default {
       mtrSales: {},
       mtrQuality: {},
       mtrFinance: {},
+      mtrFinanceUpdateValue: [],
       editableTabsValue: '',
       editableTabs: [],
       tabIndex: '',
@@ -149,6 +150,7 @@ export default {
     },
     updateData(newVal, type) {
       this.mtrPurchaseAndStoreUpdateValue = [];
+      this.mtrFinanceUpdateValue = [];
       for (let element in newVal) {
         if (newVal[element].propertyValue !== this[type][element].propertyValue) {
           switch(type) {
@@ -158,10 +160,16 @@ export default {
                 value: newVal[element].propertyValue,
               });
               break;
+            case `mtrFinance`:
+              this.mtrFinanceUpdateValue.push({
+                name: newVal[element].propertyName,
+                value: newVal[element].propertyValue,
+              });
+              break;
           }
         }
       }
-      console.log(this.mtrPurchaseAndStoreUpdateValue);
+      console.log(this.mtrFinanceUpdateValue);
       this[type] = newVal;
       console.log(newVal, this[type]);
     },
