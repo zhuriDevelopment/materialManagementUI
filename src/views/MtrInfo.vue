@@ -9,7 +9,12 @@
         </div>
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
-          <el-tabs type="border-card" value="0">
+          <div class="button-row">
+            <el-row type="flex" justify="end">
+              <el-button type="primary" icon="el-icon-check" @click="submitChangeValue">提交</el-button>
+            </el-row>
+          </div>
+          <el-tabs type="border-card" value="4">
             <el-tab-pane label="物料基本信息">
               <Mtr-basic-info :basicInfo="mtrBasicInfo"></Mtr-basic-info>
             </el-tab-pane>
@@ -23,19 +28,19 @@
               <Mtr-files :data="mtrFiles"></Mtr-files>
             </el-tab-pane>
             <el-tab-pane label="采购和库存属性">
-              <Mtr-purchase-and-store @changeModel="updateData($event, 'mtrPurchaseAndStore')" :mtrData="mtrPurchaseAndStore"></Mtr-purchase-and-store>
+              <Mtr-purchase-and-store @changeModel="updateControlData($event, 'mtrPurchaseAndStore')" :mtrData="mtrPurchaseAndStore"></Mtr-purchase-and-store>
             </el-tab-pane>
             <el-tab-pane label="计划类属性">
-              <Mtr-plan @changeModel="updateData($event, 'mtrPlan')" :data="mtrPlan"></Mtr-plan>
+              <Mtr-plan @changeModel="updateControlData($event, 'mtrPlan')" :data="mtrPlan"></Mtr-plan>
             </el-tab-pane>
             <el-tab-pane label="销售类属性">
-              <Mtr-sales @changeModel="updateData($event, 'mtrSales')" :data="mtrSales"></Mtr-sales>
+              <Mtr-sales @changeModel="updateControlData($event, 'mtrSales')" :data="mtrSales"></Mtr-sales>
             </el-tab-pane>
             <el-tab-pane label="质量类属性">
-              <Mtr-quality @changeModel="updateData($event, 'mtrQuality')" :data="mtrQuality"></Mtr-quality>
+              <Mtr-quality @changeModel="updateControlData($event, 'mtrQuality')" :data="mtrQuality"></Mtr-quality>
             </el-tab-pane>
             <el-tab-pane label="财务类属性">
-              <Mtr-finance @changeModel="updateData($event, 'mtrFinance')" :data="mtrFinance"></Mtr-finance>
+              <Mtr-finance @changeModel="updateControlData($event, 'mtrFinance')" :data="mtrFinance"></Mtr-finance>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -159,7 +164,7 @@ export default {
       }
       return -1;
     },
-    updateData(newVal, type) {
+    updateControlData(newVal, type) {
       for (let element in newVal) {
         let oldValue = this[type][element].propertyValue;
         let newValue = newVal[element].propertyValue;
@@ -495,7 +500,9 @@ export default {
       });
 
     },
-
+    submitChangeValue() {
+      console.log("change!");
+    },
   },
 };
 </script>
@@ -522,9 +529,12 @@ export default {
       flex-direction: column;
       width: calc(~"100% - 250px");
       margin: 10px;
+      .button-row{
+        margin-bottom: 15px;
+      }
       .cards{
         height: 50px;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
       }
       .card{
         display: flex;
