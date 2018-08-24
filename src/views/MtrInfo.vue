@@ -87,6 +87,7 @@ export default {
       mtrSkuDefs: {},
       mtrFiles: {},
       mtrPurchaseAndStore: {},
+      mtrPurchaseAndStoreUpdateValue: [],
       mtrPlan: {},
       mtrSales: {},
       mtrQuality: {},
@@ -147,6 +148,20 @@ export default {
       this.tabIndex = tabs.index
     },
     updateData(newVal, type) {
+      this.mtrPurchaseAndStoreUpdateValue = [];
+      for (let element in newVal) {
+        if (newVal[element].propertyValue !== this[type][element].propertyValue) {
+          switch(type) {
+            case `mtrPurchaseAndStore`:
+              this.mtrPurchaseAndStoreUpdateValue.push({
+                name: newVal[element].propertyName,
+                value: newVal[element].propertyValue,
+              });
+              break;
+          }
+        }
+      }
+      console.log(this.mtrPurchaseAndStoreUpdateValue);
       this[type] = newVal;
       console.log(newVal, this[type]);
     },

@@ -127,7 +127,7 @@ export default {
             options: spuNameOptions,
           }
         ];
-        this.typeModel = toString(0); // 这里传typemodel
+        this.typeModel = this.data.catData[0].type.toString(); // 这里传typemodel
         this.selectData = [{
           model: this.typeModel,
           label: '物料类别',

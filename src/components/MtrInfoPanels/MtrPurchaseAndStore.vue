@@ -5,8 +5,8 @@
         <div class="col" v-for="col in row">
           <div class="label">{{col.label}}</div>
           <div class="inputbar">
-            <el-select v-if="col.hasOwnProperty('options')" v-model="col.value" 
-            @change="changeModel" placeholder="请选择" 
+            <el-select v-if="col.hasOwnProperty('options')" v-model="col.value"
+            @change="changeModel" placeholder="请选择"
             filterable allow-create default-first-option>
               <el-option
                 v-for="item in col.options"
