@@ -17,13 +17,14 @@
             <el-tree
               :data="treeData"
               node-key="id"
+              default-expand-all
               :props="defaultTreeData"
               @node-click="handleNodeClick">
             </el-tree>
           </div>
           <div class="rightInfos">
             <div class="baseInfos">
-              <Mtr-type-modify-info :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
+              <Mtr-type-modify-info @changeValue="setNewSpuInfo" :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
             </div>
             <div class="table">
               <el-tabs type="border-card">
@@ -31,19 +32,19 @@
                   <Mtr-type-modify-table :data="mtrTypeModifyTable"></Mtr-type-modify-table>
                 </el-tab-pane>
                 <el-tab-pane label="采购和库存属性">
-                  <Mtr-purchase-and-store :data="mtrPurchaseAndStore"></Mtr-purchase-and-store>
+                  <Mtr-purchase-and-store @changeModel="updateControlData($event, 'mtrPurchaseAndStore')" :data="mtrPurchaseAndStore"></Mtr-purchase-and-store>
                 </el-tab-pane>
                 <el-tab-pane label="计划类属性">
-                  <Mtr-plan :data="mtrPlan"></Mtr-plan>
+                  <Mtr-plan @changeModel="updateControlData($event, 'mtrPlan')" :data="mtrPlan"></Mtr-plan>
                 </el-tab-pane>
                 <el-tab-pane label="销售类属性">
-                  <Mtr-sales :data="mtrSales"></Mtr-sales>
+                  <Mtr-sales @changeModel="updateControlData($event, 'mtrSales')" :data="mtrSales"></Mtr-sales>
                 </el-tab-pane>
                 <el-tab-pane label="质量类属性">
-                  <Mtr-quality :data="mtrQuality"></Mtr-quality>
+                  <Mtr-quality @changeModel="updateControlData($event, 'mtrQuality')" :data="mtrQuality"></Mtr-quality>
                 </el-tab-pane>
                 <el-tab-pane label="财务类属性">
-                  <Mtr-finance :data="mtrFinance"></Mtr-finance>
+                  <Mtr-finance @changeModel="updateControlData($event, 'mtrFinance')" :data="mtrFinance"></Mtr-finance>
                 </el-tab-pane>
               </el-tabs>
             </div>
@@ -89,10 +90,15 @@ export default {
       mtrTypeModifyInfo: {},
       mtrTypeModifyTable: {},
       mtrPurchaseAndStore: {},
+      mtrPurchaseAndStoreUpdateValue: [],
       mtrPlan: {},
+      mtrPlanUpdateValue: [],
       mtrSales: {},
+      mtrSalesUpdateValue: [],
       mtrQuality: {},
+      mtrQualityUpdateValue: [],
       mtrFinance: {},
+      mtrFinanceUpdateValue: [],
       treeData: [],
       defaultTreeData: {
         children: 'children',
@@ -158,7 +164,106 @@ export default {
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index;
       console.log("emit: ", tabs);
-    }
+    },
+    setNewSpuInfo(spuCode, spuName) {
+      console.log(spuCode, spuName);
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
+        "spuCode": spuCode,
+        "spuName": spuName,
+        // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
+        "typeArr": [5, 6, 7, 8, 9],
+      })
+      .then((response) => {
+        console.log(response);
+        this.mtrPurchaseAndStore = response.data[0];
+        this.mtrPlan = response.data[1];
+        this.mtrSales = response.data[2];
+        this.mtrQuality = response.data[3];
+        this.mtrFinance = response.data[4];
+      });
+    },
+    checkContainsNV(list, name) {
+      for (let element in list) {
+        if (list[element].name === name) {
+          return element;
+        }
+      }
+      return -1;
+    },
+    updateControlData(newVal, type) {
+      for (let element in newVal) {
+        let oldValue = this[type][element].propertyValue;
+        let newValue = newVal[element].propertyValue;
+        let proName = newVal[element].propertyName;
+        let findIndex = 0;
+        if (newValue !== oldValue) {
+          switch(type) {
+            case `mtrPurchaseAndStore`:
+              findIndex = this.checkContainsNV(this.mtrPurchaseAndStoreUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrPurchaseAndStoreUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrPurchaseAndStoreUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrFinance`:
+              findIndex = this.checkContainsNV(this.mtrFinanceUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrFinanceUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrFinanceUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrSales`:
+              findIndex = this.checkContainsNV(this.mtrSalesUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrSalesUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrSalesUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrQuality`:
+              findIndex = this.checkContainsNV(this.mtrQualityUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrQualityUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrQualityUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+            case `mtrPlan`:
+              findIndex = this.checkContainsNV(this.mtrPlanUpdateValue, proName);
+              if (findIndex != -1) {
+                this.mtrPlanUpdateValue[findIndex].value = newValue;
+              } else {
+                this.mtrPlanUpdateValue.push({
+                  name: proName,
+                  value: newValue,
+                });
+              }
+              break;
+          }
+        }
+      }
+      console.log(this.mtrPurchaseAndStoreUpdateValue);
+      console.log(this.mtrFinanceUpdateValue);
+      console.log(this.mtrSalesUpdateValue);
+      console.log(this.mtrQualityUpdateValue);
+      console.log(this.mtrPlanUpdateValue);
+      this[type] = newVal;
+      // console.log(newVal, this[type]);
+    },
   }
 };
 </script>
@@ -198,6 +303,14 @@ export default {
           .el-button {
             padding-left: 10px;
           }
+        }
+        .custom-tree-node {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 14px;
+          padding-right: 8px;
         }
       }
       .rightInfos {

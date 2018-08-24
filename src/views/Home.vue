@@ -188,12 +188,12 @@ export default {
     clickRow(row, event, column) {
       console.log(column)
       if(column.label !== '操作'){
-        this.$router.push({path: `/MtrInfo/${row.code}?${row.name}`});
+        this.$router.push({path: `/MtrInfo/${row.code}?name=${row.name}`});
       }
     },
     handleClick(row){
       console.log(row);
-      this.$router.push({path: `/MtrInfo/${row.code}?${row.name}`});
+      this.$router.push({path: `/MtrInfo/${row.code}?name=${row.name}`});
     },
     getTableData() {
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getAllBaseInfo`)

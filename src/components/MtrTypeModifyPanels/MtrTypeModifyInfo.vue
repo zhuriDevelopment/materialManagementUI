@@ -24,7 +24,7 @@
     <div class="row">
       <div class="col" v-for="col in selectData">
         <div class="label">{{col.label}}</div>
-        <el-select v-model="col.model" placeholder="请选择" @change="typeselectchange">
+        <el-select v-model="col.model" placeholder="请选择">
           <el-option
             v-for="item in col.options"
             :key="item.value"
@@ -127,6 +127,7 @@ export default {
             options: spuNameOptions,
           }
         ];
+        this.$emit('changeValue', this.inputBoxData[0].model, this.inputBoxData[1].model);
         this.typeModel = this.data.catData[0].type.toString(); // 这里传typemodel
         this.selectData = [{
           model: this.typeModel,
@@ -142,14 +143,10 @@ export default {
     selectchange(idx) {
       console.log("change!");
       console.log(idx);
-      // 检查是name还是code，0是code，1是name
       const model = this.inputBoxData[idx].model;
       this.inputBoxData[1-idx].model = (idx === 0) ? this.code2Name[model] : this.name2Code[model];
+      this.$emit('changeValue', this.inputBoxData[0].model, this.inputBoxData[1].model);
     },
-    typeselectchange(value) {
-      console.log(`typechange!`);
-      console.log(value);
-    }
   }
 }
 </script>

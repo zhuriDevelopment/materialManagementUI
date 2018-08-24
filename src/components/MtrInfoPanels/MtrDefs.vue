@@ -6,7 +6,8 @@
           :data="tableData"
           border
           highlight-current-row
-          style="width: 100%">
+          style="width: 100%"
+          v-on:current-change="updateValue">
           <el-table-column
             type="index"
             label="序号"
@@ -19,7 +20,8 @@
             :key="index"
             :label="labels[index]">
             <template slot-scope="scope">
-              <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.barCode"></el-input>
+              <!-- <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.barCode"></el-input>               -->
+              <el-input v-model="tableData[scope.$index][p]"></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -43,7 +45,7 @@ export default {
   data() {
     return {
       labels: ['物料编码','物料名称','旧物料编码','条形码','规格1','规格2','规格3'],
-      disabled:[],
+      disabled: [],
       tableData: [{
         materialCode: 'B12343',
         materialName: '布料',
@@ -86,6 +88,11 @@ export default {
         this.disabled = [];
         this.pushRow();
       }
+    },
+    updateValue(currentRow, oldCurrentRow) {
+      console.log("updateRowValue!");
+      console.log(currentRow);
+      console.log(oldCurrentRow);
     }
   }
 };

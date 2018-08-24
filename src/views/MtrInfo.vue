@@ -230,13 +230,13 @@ export default {
           }
         }
       }
-      console.log(this.mtrPurchaseAndStoreUpdateValue);
-      console.log(this.mtrFinanceUpdateValue);
-      console.log(this.mtrSalesUpdateValue);
-      console.log(this.mtrQualityUpdateValue);
-      console.log(this.mtrPlanUpdateValue);
+      // console.log(this.mtrPurchaseAndStoreUpdateValue);
+      // console.log(this.mtrFinanceUpdateValue);
+      // console.log(this.mtrSalesUpdateValue);
+      // console.log(this.mtrQualityUpdateValue);
+      // console.log(this.mtrPlanUpdateValue);
       this[type] = newVal;
-      console.log(newVal, this[type]);
+      // console.log(newVal, this[type]);
     },
     setData() {
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
@@ -263,7 +263,19 @@ export default {
         };
         // 物料定义
         const _mtrDefs = response.data[1];
-        this.mtrDefs = _mtrDefs;
+        let _defLen = response.data[1].length;
+        this.mtrDefs = [];
+        for (let i = 0; i < _defLen; ++i) {
+          let tmpDef = {};
+          tmpDef["materialCode"] = _mtrDefs[i]["materialCode"];
+          tmpDef["materialName"] = _mtrDefs[i]["materialName"];
+          tmpDef["oldMaterialCode"] = _mtrDefs[i]["oldMaterialCode"];
+          tmpDef["barCode"] = _mtrDefs[i]["barCode"];
+          tmpDef["format1"] = `规格1`;
+          tmpDef["format2"] = `规格2`;
+          tmpDef["format3"] = `规格3`;
+          this.mtrDefs.push(tmpDef);
+        }
         // 物料sku信息
         const _mtrSkuDefs = response.data[2];
         let _skuLen = response.data[2][0].length;
@@ -502,6 +514,65 @@ export default {
     },
     submitChangeValue() {
       console.log("change!");
+      console.log(this.$route);
+      let spuCode = this.$route.params.id;
+      let spuName = this.$route.query.name;
+      let sendData = {
+        'spuCode': spuCode,
+        'spuName': spuName,
+        'data': [],
+      };
+      console.log(spuName);
+      if (this.mtrPurchaseAndStoreUpdateValue.length != 0) {
+        let tmpData = {
+          'propertyType': 5,
+          'updateValue': this.mtrPurchaseAndStoreUpdateValue,
+          'organizationCode': 1,
+        };
+        sendData['data'].push(tmpData);
+        console.log(`add PurchaseAndStore values!`);
+      }
+      if (this.mtrPlanUpdateValue.length != 0) {
+        let tmpData = {
+          'propertyType': 6,
+          'updateValue': this.mtrPlanUpdateValue,
+          'organizationCode': 1,
+        };
+        sendData['data'].push(tmpData);
+        console.log(`add Plan values!`);
+      }
+      if (this.mtrSalesUpdateValue.length != 0) {
+        let tmpData = {
+          'propertyType': 7,
+          'updateValue': this.mtrSalesUpdateValue,
+          'organizationCode': 1,
+        };
+        sendData['data'].push(tmpData);
+        console.log(`add Sales values!`);
+      }
+      if (this.mtrQualityUpdateValue.length != 0) {
+        let tmpData = {
+          'propertyType': 8,
+          'updateValue': this.mtrQualityUpdateValue,
+          'organizationCode': 1,
+        };
+        sendData['data'].push(tmpData);
+        console.log(`add Quality values!`);
+      }
+      if (this.mtrFinanceUpdateValue.length != 0) {
+        let tmpData = {
+          'propertyType': 9,
+          'updateValue': this.mtrFinanceUpdateValue,
+          'organizationCode': 1,
+        };
+        sendData['data'].push(tmpData);
+        console.log(`add Finance values!`);
+      }
+      console.log(sendData);
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
+        .then((response) => {
+          console.log(response);
+        });
     },
   },
 };
