@@ -140,7 +140,9 @@ export default {
         [{label: '备注', value: this.basicInfo.note}],
         [{label: '默认计量单位', value: '',}],
         [{label: '辅助计量单位',
-          value: [{unit: '米', factor: '1'}]}],
+          value: [{unit: '米', factor: '1', sort: 1,},
+                  {unit: '厘米', factor: '0.3', sort: 2,},
+                  {unit: '尺', factor: '2.3', sort: 3,}]}],
       ];
     }
   },
