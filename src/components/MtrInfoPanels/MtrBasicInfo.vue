@@ -77,7 +77,7 @@
                 label="计量单位"
                 width="120">
                 <template slot-scope="scope">
-                  <el-input v-model="rows[6][0].value[scope.$index]['unit']"></el-input>
+                  <el-input v-model="rows[6][0].value[scope.$index]['unit']" :disabled="disabled[scope.$index]===scope.row.unit"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
@@ -85,15 +85,15 @@
                 label="换算系数"
                 width="120">
                 <template slot-scope="scope">
-                  <el-input v-model="rows[6][0].value[scope.$index]['factor']"></el-input>
+                  <el-input v-model="rows[6][0].value[scope.$index]['factor']" :disabled="disabled[scope.$index]===scope.row.unit"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
                 label="排序"
                 width="120">
                 <template slot-scope="scope">
-                  <i class="el-icon-sort-up"></i>
-                  <i class="el-icon-sort-down"></i>
+                  <i class="el-icon-sort-up" @click="handleUnitUp(scope.$index, scope.row)" :class="{'disabled': scope.$index === 0}"></i>
+                  <i class="el-icon-sort-down"  @click="handleUnitDown(scope.$index, scope.row)" :class="{'disabled': scope.$index === rows[6][0].value.length-1}"></i>
                 </template>
               </el-table-column>
               <el-table-column
@@ -101,7 +101,7 @@
                 label="操作"
                 width="150">
                 <template slot-scope="scope">
-                  <el-button @click="handleUnitAdd(scope.$index, scope.row)" type="text" size="small">添加</el-button>
+                  <el-button @click="handleUnitAdd(scope.$index, scope.row)" type="text" size="small" :disabled="disabled[scope.$index]===scope.row.unit">添加</el-button>
                   <el-button @click="handleUnitDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
               </el-table-column>
@@ -121,6 +121,7 @@ export default {
   data() {
     return {
       rows: [],
+      disabled: [],
     };
   },
   watch: {
@@ -144,17 +145,55 @@ export default {
                   {unit: '厘米', factor: '0.3', sort: 2,},
                   {unit: '尺', factor: '2.3', sort: 3,}]}],
       ];
-    }
+    },
+    rows(newVal, oldVal) {
+      return this.rows;
+    },
   },
   methods: {
-    pushRow() {
+    pushRow() {  
       this.rows[6][0].value.push({
         unit: '',
         factor: '',
+        sort: this.rows[6][0].value.length + 1,
       });
+      console.log(this.rows[6][0].value)
+    },
+    reverseValue(x, y){
+      // console.log(x, y)
+      [x.sort, y.sort] = [y.sort, x.sort];
+      return [x, y]
+    },
+    handleUnitUp(index, row){
+      let units = this.rows[6][0].value;
+      if(index !== 0) {
+        [units[index - 1], units[index]] = [units[index], units[index - 1]];
+        [units[index - 1].sort, units[index].sort] = [units[index].sort, units[index - 1].sort]
+        this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
+        this.exchangeDisable(index, index - 1);
+      }
+    },
+    handleUnitDown(index, row){
+      let units = this.rows[6][0].value;
+      if(index < this.rows[6][0].value.length - 1) {
+        [units[index + 1], units[index]] = [units[index], units[index + 1]];
+        [units[index + 1].sort, units[index].sort] = [units[index].sort, units[index + 1].sort]
+        this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units)
+        this.exchangeDisable(index, index + 1);
+      }
+    },
+    exchangeDisable(idx1, idx2) {
+      const tmp = this.disabled[idx1];
+      this.disabled[idx1] = this.disabled[idx2];
+      this.disabled[idx2] = tmp;
     },
     handleUnitAdd(index, row) {
-      this.pushRow();
+      if(this.rows[6][0].value.slice(-1)[0].unit !== ''){
+        this.pushRow();
+      }
+      if(this.rows[6][0].value[index].unit !== ''){
+        this.disabled[index] = row.unit;
+      }
     },
     handleUnitDelete(index, row) {
       this.rows[6][0].value.splice(index, 1);
@@ -220,6 +259,10 @@ export default {
     font-size: 20px;
     margin-right: 10px;
     cursor: pointer;
+    &.disabled{
+      cursor: default;
+      color: #c0c4cc;
+    }
   }
 }
 </style>

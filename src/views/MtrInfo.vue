@@ -9,7 +9,7 @@
         </div>
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
-          <el-tabs type="border-card" value="4">
+          <el-tabs type="border-card" value="0">
             <el-tab-pane label="物料基本信息">
               <Mtr-basic-info :basicInfo="mtrBasicInfo"></Mtr-basic-info>
             </el-tab-pane>
@@ -282,6 +282,18 @@ export default {
       })
       .catch((error) => {
         console.log(error);
+        this.mtrBasicInfo =  {
+          "spuCode": '1',
+          "spuName": '111',
+          "type": '123',
+          "category": '321',
+          "source": '123',
+          "usage": '321',
+          "designCode": 'qqq',
+          "designVersion": '1.0',
+          "mnemonic": '123',
+          "note": '123',
+        };
         this.mtrPurchaseAndStore = [
           {
               "propertyName": "物料制购类型",
