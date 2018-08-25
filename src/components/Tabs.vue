@@ -31,6 +31,13 @@ export default {
       } else {
         return ''
       }
+    },
+    query() {
+      if(this.$route.query !== {}){
+        return this.$route.query
+      } else {
+        return {}
+      }
     }
   },
   props: ['tabValue', 'tabList', 'tabIndex'],
@@ -39,7 +46,7 @@ export default {
     const pathName = (this.$route.name !== 'Home') ? this.$route.name : '/';
     console.log(pathName)
     if(this.list.filter(tab => tab.name === pathName).length === 0) {
-      this.addTab(pathName, this.id);
+      this.addTab(pathName, this.id, this.query);
     } else {
       // this.idx = this.list.filter(tab => tab.value === pathName)[0].tabIndex;
       this.value = pathName;
@@ -89,37 +96,40 @@ export default {
       console.log(this.list)
       console.log(tab.index)
       console.log(this.list[tab.index])
-      if(tab.name === '/'){
-        tab.name = 'Home';
+      let name = tab.name;
+      if(name === '/'){
+        name = 'Home';
       }
-      // console.log(this.$route.params);
+      
+      console.log(this.$route.params);
       if(this.list[tab.index].hasOwnProperty('id') && this.list[tab.index].id !== '' ) {
         console.log("error")
-        this.$router.push({ name: tab.name, params: { id: this.list[tab.index].id } });
+        this.$router.push({ name, params: { id: this.list[tab.index].id }, query: this.list[tab.index].query });
       } else {
         console.log("success")
-        this.$router.push({ name: tab.name });
+        this.$router.push({ name });
       }
 
     },
-    addTab(name, id) {
+    addTab(name, id, query) {
       this.list.push({
         title: this.tabMap[name],
         name,
         id,
+        query
       });
       this.value = name;
       console.log('addTab: ',this.list);
       this.updateTabs();
     },
     updateTabs() {
-      const tabs = {'list': this.list, 'value': this.value, 'index': this.idx};
+      const tabs = {'list': this.list, 'value': this.value, 'index': this.idx, 'query': this.query};
       console.log('updateTabs', tabs);
       this.$emit('updateTabs', tabs);
       this.savePageState(tabs);
     },
     savePageState(tab) {
-      const tabs = {'list': this.list, 'value': tab.name, 'index': tab.index};
+      const tabs = {'list': this.list, 'value': tab.name, 'index': tab.index, 'query': tab.query};
       console.log('save tab ', tabs);
       localStorage.materialInfoTabs = JSON.stringify(tabs);
     },
