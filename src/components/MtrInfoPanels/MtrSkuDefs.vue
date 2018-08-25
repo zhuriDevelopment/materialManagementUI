@@ -90,6 +90,23 @@ export default {
     data(val) {
       console.log("MtrSkuDefs");
       this.tableData = this.data;
+    },
+    tableData: {
+      // handler should not be arrow function.
+      handler: function (newVal, oldVal) {
+        let d = Object.assign([], d, newVal);
+        let idxs = [];
+        for(let i in d) {
+          if(d[i].skuCode === '' || d[i].materialCode === '') {
+            idxs.push(i)
+          }
+        }
+        for(let i of idxs.reverse()) {
+          d.splice(i, 1);
+        }
+        this.$emit('changeModel', d);
+      },
+      deep: true,
     }
   },
   methods: {

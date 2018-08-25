@@ -6,8 +6,7 @@
           :data="tableData"
           border
           highlight-current-row
-          style="width: 100%"
-          v-on:current-change="updateValue">
+          style="width: 100%">
           <el-table-column
             type="index"
             label="序号"
@@ -61,6 +60,23 @@ export default {
   watch: {
     data(val) {
       this.tableData = this.data;
+    },
+    tableData: {
+      // handler should not be arrow function.
+      handler: function (newVal, oldVal) {
+        let d = Object.assign([], d, newVal);
+        let idxs = [];
+        for(let i in d) {
+          if(d[i].materialCode === '' || d[i].materialName === '') {
+            idxs.push(i)
+          }
+        }
+        for(let i of idxs.reverse()) {
+          d.splice(i, 1);
+        }
+        this.$emit('changeModel', d);
+      },
+      deep: true,
     }
   },
   methods: {

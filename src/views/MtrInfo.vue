@@ -14,15 +14,15 @@
               <el-button type="primary" icon="el-icon-check" @click="submitChangeValue">提交</el-button>
             </el-row>
           </div>
-          <el-tabs type="border-card" value="4">
+          <el-tabs type="border-card" value="1">
             <el-tab-pane label="物料基本信息">
-              <Mtr-basic-info :basicInfo="mtrBasicInfo"></Mtr-basic-info>
+              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" :basicInfo="mtrBasicInfo"></Mtr-basic-info>
             </el-tab-pane>
             <el-tab-pane label="物料定义">
-              <Mtr-defs :data="mtrDefs"></Mtr-defs>
+              <Mtr-defs @changeModel="updateMtrData($event, 'mtrDefs')" :data="mtrDefs"></Mtr-defs>
             </el-tab-pane>
             <el-tab-pane label="SKU定义">
-              <Mtr-sku-defs :data="mtrSkuDefs"></Mtr-sku-defs>
+              <Mtr-sku-defs @changeModel="updateMtrData($event, 'mtrSkuDefs')" :data="mtrSkuDefs"></Mtr-sku-defs>
             </el-tab-pane>
             <el-tab-pane label="附件管理">
               <Mtr-files :data="mtrFiles"></Mtr-files>
@@ -163,6 +163,55 @@ export default {
         }
       }
       return -1;
+    },
+    updateMtrData(newVal, type){
+      let flag = false;
+      let unitTable = [];
+      console.log("emit: ", newVal);
+      if(type === 'mtrBasicInfo'){
+        unitTable = newVal.asUnit;
+        delete(newVal.asUnit);
+        for(let i in newVal) {
+          if(this[type].hasOwnProperty(i)){
+            if(newVal[i] !== this[type][i]) {
+              console.log(type, i, newVal[i], this[type][i])
+              flag = true;
+              break;
+            }
+          } else {
+            flag = true;
+            break;
+          }
+        }
+      } else {
+        if(newVal.length !== this[type].length) {
+          flag = true;
+        } else {
+          for(let i = 0; i< newVal.length; i+=1) {
+            for(let key in newVal[i]) {
+              if(newVal[i][key] !== this[type][i][key]) {
+                flag = true;
+                break;
+              }
+            }
+            if(flag) {
+              break;
+            }
+          }
+        }
+      }
+      if(flag) {
+        switch(type){
+          case 'mtrBasicInfo':
+            console.log("mtrBasicInfo: ", newVal);
+            console.log("计量单位表: ",unitTable);
+          case 'mtrDefs':
+            console.log("mtrDefs: ", newVal);
+          case 'mtrSkuDefs':
+            console.log("mtrSkuDefs: ", newVal);
+          break;
+        }
+      }
     },
     updateControlData(newVal, type) {
       for (let element in newVal) {

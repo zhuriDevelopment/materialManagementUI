@@ -11,8 +11,8 @@
         <div class="card">
           <div class="leftTree">
             <div class="treebuttons">
-              <el-button type="text">添加</el-button>
-              <el-button type="text">删除</el-button>
+              <el-button type="text" @click="addNode">添加</el-button>
+              <el-button type="text" @click="deleteNode">删除</el-button>
             </div>
             <el-tree
               :data="treeData"

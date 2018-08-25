@@ -73,19 +73,19 @@
                 width="50">
               </el-table-column>
               <el-table-column
-                property="unit"
+                property="name"
                 label="计量单位"
                 width="120">
                 <template slot-scope="scope">
-                  <el-input v-model="rows[6][0].value[scope.$index]['unit']" :disabled="disabled[scope.$index]===scope.row.unit"></el-input>
+                  <el-input v-model="rows[6][0].value[scope.$index]['name']" :disabled="disabled[scope.$index]===scope.row.name"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
-                property="factor"
+                property="conversionFactor"
                 label="换算系数"
                 width="120">
                 <template slot-scope="scope">
-                  <el-input v-model="rows[6][0].value[scope.$index]['factor']" :disabled="disabled[scope.$index]===scope.row.unit"></el-input>
+                  <el-input v-model="rows[6][0].value[scope.$index]['conversionFactor']" :disabled="disabled[scope.$index]===scope.row.name"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
@@ -101,7 +101,7 @@
                 label="操作"
                 width="150">
                 <template slot-scope="scope">
-                  <el-button @click="handleUnitAdd(scope.$index, scope.row)" type="text" size="small" :disabled="disabled[scope.$index]===scope.row.unit">添加</el-button>
+                  <el-button @click="handleUnitAdd(scope.$index, scope.row)" type="text" size="small" :disabled="disabled[scope.$index]===scope.row.name">添加</el-button>
                   <el-button @click="handleUnitDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                 </template>
               </el-table-column>
@@ -122,39 +122,58 @@ export default {
     return {
       rows: [],
       disabled: [],
+      // units: [],
     };
   },
   watch: {
     basicInfo(newVal, oldVal) {
       this.rows = [
-        [{label: 'SPU编码', value: this.basicInfo.spuCode},
-          {label: 'SPU名称', value: this.basicInfo.spuName},
-          {label: '物料类型', value: this.basicInfo.type}],
-        [{label: '物料分类', value: this.basicInfo.category,},
-        {label: '来源', value: this.basicInfo.source,},
-        {label: '用途', value: this.basicInfo.usage,}],
-        [{label: '设计图号', value: this.basicInfo.designCode,},
-          {label: '设计版次', value: this.basicInfo.designVersion,},
-          {label: '助记码', value: this.basicInfo.mnemonic,}],
-        [{label: '规格描述', value: ''},
-          {label: '多规格物料', value: false}],
-        [{label: '备注', value: this.basicInfo.note}],
-        [{label: '默认计量单位', value: '',}],
+        [{label: 'SPU编码', value: this.basicInfo.spuCode, key: 'spuCode'},
+          {label: 'SPU名称', value: this.basicInfo.spuName, key: 'spuName'},
+          {label: '物料类型', value: this.basicInfo.type, key: 'type'}],
+        [{label: '物料分类', value: this.basicInfo.category, key: 'category'},
+        {label: '来源', value: this.basicInfo.source, key: 'source'},
+        {label: '用途', value: this.basicInfo.usage, key: 'usage'}],
+        [{label: '设计图号', value: this.basicInfo.designCode, key:'designCode'},
+          {label: '设计版次', value: this.basicInfo.designVersion, key: 'designVersion'},
+          {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}],
+        [{label: '规格描述', value: '', key: 'specDesc'},
+          {label: '多规格物料', value: false, key: 'multiSpec'}],
+        [{label: '备注', value: this.basicInfo.note, key: 'note'}],
+        [{label: '默认计量单位', value: '', key: 'defaultUnit'}],
         [{label: '辅助计量单位',
-          value: [{unit: '米', factor: '1', sort: 1,},
-                  {unit: '厘米', factor: '0.3', sort: 2,},
-                  {unit: '尺', factor: '2.3', sort: 3,}]}],
+          value: [{name: '米', conversionFactor: '1', sort: 1,},
+                  {name: '厘米', conversionFactor: '0.3', sort: 2,},
+                  {name: '尺', conversionFactor: '2.3', sort: 3,}],
+          key: 'asUnit',
+        }],
       ];
     },
-    rows(newVal, oldVal) {
-      return this.rows;
-    },
+    rows: {
+      // handler should not be arrow function.
+      handler: function (newVal, oldVal) {
+        let newInfo = {};
+        for(let i of newVal) {
+          for(let j of i) {
+            newInfo[j.key] = j.value;
+          }
+        }
+        newInfo.asUnit.forEach(el => {
+          el.englishName = "";
+          el.relatedId = "";
+          el.label = "";
+        })
+        console.log(newInfo);
+        this.$emit('changeModel', newInfo);
+      },
+      deep: true,
+    }
   },
   methods: {
     pushRow() {  
       this.rows[6][0].value.push({
-        unit: '',
-        factor: '',
+        name: '',
+        conversionFactor: '',
         sort: this.rows[6][0].value.length + 1,
       });
       console.log(this.rows[6][0].value)
@@ -168,7 +187,7 @@ export default {
       let units = this.rows[6][0].value;
       if(index !== 0) {
         [units[index - 1], units[index]] = [units[index], units[index - 1]];
-        [units[index - 1].sort, units[index].sort] = [units[index].sort, units[index - 1].sort]
+        [units[index - 1].sort, units[index].sort] = [units[index].sort, units[index - 1].sort];
         this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
         this.exchangeDisable(index, index - 1);
       }
@@ -177,8 +196,8 @@ export default {
       let units = this.rows[6][0].value;
       if(index < this.rows[6][0].value.length - 1) {
         [units[index + 1], units[index]] = [units[index], units[index + 1]];
-        [units[index + 1].sort, units[index].sort] = [units[index].sort, units[index + 1].sort]
-        this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units)
+        [units[index + 1].sort, units[index].sort] = [units[index].sort, units[index + 1].sort];
+        this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
         this.exchangeDisable(index, index + 1);
       }
     },
@@ -188,11 +207,11 @@ export default {
       this.disabled[idx2] = tmp;
     },
     handleUnitAdd(index, row) {
-      if(this.rows[6][0].value.slice(-1)[0].unit !== ''){
+      if(this.rows[6][0].value.slice(-1)[0].name !== ''){
         this.pushRow();
       }
-      if(this.rows[6][0].value[index].unit !== ''){
-        this.disabled[index] = row.unit;
+      if(this.rows[6][0].value[index].name !== ''){
+        this.disabled[index] = row.name;
       }
     },
     handleUnitDelete(index, row) {
