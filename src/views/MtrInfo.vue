@@ -28,7 +28,7 @@
               <Mtr-files :data="mtrFiles"></Mtr-files>
             </el-tab-pane>
             <el-tab-pane label="采购和库存属性">
-              <Mtr-purchase-and-store @changeModel="updateControlData($event, 'mtrPurchaseAndStore')" :mtrData="mtrPurchaseAndStore"></Mtr-purchase-and-store>
+              <Mtr-purchase-and-store @changeModel="updateControlData($event, 'mtrPurchaseAndStore')" :data="mtrPurchaseAndStore"></Mtr-purchase-and-store>
             </el-tab-pane>
             <el-tab-pane label="计划类属性">
               <Mtr-plan @changeModel="updateControlData($event, 'mtrPlan')" :data="mtrPlan"></Mtr-plan>

@@ -27,7 +27,7 @@
               <Mtr-type-modify-info @changeValue="setNewSpuInfo" :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
             </div>
             <div class="table">
-              <el-tabs type="border-card">
+              <el-tabs type="border-card" value = '1'>
                 <el-tab-pane label="物料属性定义">
                   <Mtr-type-modify-table :data="mtrTypeModifyTable"></Mtr-type-modify-table>
                 </el-tab-pane>
@@ -180,6 +180,58 @@ export default {
         this.mtrSales = response.data[2];
         this.mtrQuality = response.data[3];
         this.mtrFinance = response.data[4];
+      })
+      .catch(error => {
+        this.mtrPurchaseAndStore = [
+          {
+              "propertyName": "物料制购类型",
+              "propertyValue": "制购类型1"
+          },
+          {
+              "propertyName": "ABC分类",
+              "propertyValue": "ABC分类1"
+          },
+          {
+              "propertyName": "循环盘点编码",
+              "propertyValue": "盘点编码1"
+          },
+          {
+              "propertyName": "是否批次管理",
+              "propertyValue": "true"
+          },
+          {
+              "propertyName": "是否单件管理",
+              "propertyValue": "true"
+          },
+          {
+              "propertyName": "是否进价控制",
+              "propertyValue": "true"
+          },
+          {
+              "propertyName": "默认供应商",
+              "propertyValue": "默认供应商"
+          },
+          {
+              "propertyName": "默认采购部门",
+              "propertyValue": "默认采购部门"
+          },
+          {
+              "propertyName": "默认仓库",
+              "propertyValue": "默认仓库"
+          },
+          {
+              "propertyName": "默认采购单位",
+              "propertyValue": "默认采购单位"
+          },
+          {
+              "propertyName": "默认库存单位",
+              "propertyValue": "默认库存单位"
+          },
+          {
+              "propertyName": "默认库位",
+              "propertyValue": "默认库位"
+          }
+        ];
       });
     },
     checkContainsNV(list, name) {

@@ -28,7 +28,7 @@ export default {
   name: 'MtrPurchaseAndStore',
   data() {
     return {
-      info: this.mtrData,
+      info: this.data,
       rows: [
         [{label: '物料制购类型', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},
           {label: 'ABC分类', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},
@@ -45,12 +45,12 @@ export default {
       ]
     }
   },
-  props: ["mtrData"],
+  props: ["data"],
   watch: {
-    mtrData(newVal, oldVal) {
+    data(newVal, oldVal) {
       const col_num = 3;
       this.rows=[];
-      this.mtrData.forEach((el, index) => {
+      this.data.forEach((el, index) => {
         if((index % col_num) === 0){
           this.rows.push([]);
         }
