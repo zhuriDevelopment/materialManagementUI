@@ -103,7 +103,9 @@ export default {
       defaultTreeData: {
         children: 'children',
         label: 'label'
-      }
+      },
+      nodeData: {},
+      id: 1000,
     };
   },
   methods: {
@@ -114,10 +116,124 @@ export default {
             console.log(response);
             this.treeData = [];
             this.treeData.push(response.data);
+          })
+          .catch(error => {
+            this.treeData = [{
+              "id": 0,
+              "label": "物料总分类",
+              "parentId": -1,
+              "level": 0,
+              "children": [
+                  {
+                      "id": 1,
+                      "label": "A类",
+                      "parentId": 0,
+                      "level": 1,
+                      "children": [
+                          {
+                              "id": 4,
+                              "label": "工厂用品",
+                              "parentId": 1,
+                              "level": 2,
+                              "children": [
+                                  {
+                                      "id": 7,
+                                      "label": "大型机器",
+                                      "parentId": 4,
+                                      "level": 3,
+                                      "children": []
+                                  }
+                              ]
+                          }
+                      ]
+                  },
+                  {
+                      "id": 2,
+                      "label": "B类",
+                      "parentId": 0,
+                      "level": 1,
+                      "children": [
+                          {
+                              "id": 5,
+                              "label": "仓库存货",
+                              "parentId": 2,
+                              "level": 2,
+                              "children": [
+                                  {
+                                      "id": 8,
+                                      "label": "布料",
+                                      "parentId": 5,
+                                      "level": 3,
+                                      "children": []
+                                  }
+                              ]
+                          }
+                      ]
+                  },
+                  {
+                      "id": 3,
+                      "label": "C类",
+                      "parentId": 0,
+                      "level": 1,
+                      "children": [
+                          {
+                              "id": 6,
+                              "label": "办公用品",
+                              "parentId": 3,
+                              "level": 2,
+                              "children": [
+                                  {
+                                      "id": 9,
+                                      "label": "文具类",
+                                      "parentId": 6,
+                                      "level": 3,
+                                      "children": []
+                                  }
+                              ]
+                          }
+                      ]
+                  }
+              ]
+          }];
           });
       console.log("init Tree Finished!");
     },
+    addNode(){
+      const data = this.nodeData;
+      const newChild = { id: this.id++, label: 'test', children: [] };
+      if (!data.children) {
+        this.$set(data, 'children', []);
+      }
+      data.children.push(newChild);
+    },
+    deleteNode() {
+      const searchTree = (element, id) => {
+        if(element.id === id){
+          return element;
+        } else if (element.children != null){
+            let result = null;
+            for(let i = 0; result === null && i < element.children.length; i++){
+                result = searchTree(element.children[i], id);
+            }
+            return result;
+        }
+        return null;
+      }
+      const node = searchTree(this.treeData[0], this.nodeData.id);
+      const parent = searchTree(this.treeData[0], node.parentId);
+      let children = [];
+      if(parent !== null) {
+        children = parent.children;
+      } else {
+        children = this.treeData[0];
+      }
+      const index = children.findIndex(d => d.id === this.nodeData.id);
+      children.splice(index, 1);
+      console.log(this.treeData[0])
+      console.log(parent, index);
+    },
     handleNodeClick(data) {
+      this.nodeData = data;
       console.log(data);
       console.log(data.id);
       const catId = data.id;
