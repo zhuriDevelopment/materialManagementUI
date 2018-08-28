@@ -89,7 +89,10 @@ export default {
   watch: {
     data(val) {
       console.log("MtrSkuDefs");
-      this.tableData = this.data;
+      this.tableData = [];
+      for (let i in this.data) {
+        this.tableData.push(Object.assign({}, this.data[i]));
+      }
     },
     tableData: {
       // handler should not be arrow function.

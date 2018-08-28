@@ -59,7 +59,11 @@ export default {
   props: ["data"],
   watch: {
     data(val) {
-      this.tableData = this.data;
+      console.log(`MtrDefs`);
+      this.tableData = [];
+      for (let i in this.data) {
+        this.tableData.push(Object.assign({}, this.data[i]));
+      }
     },
     tableData: {
       // handler should not be arrow function.

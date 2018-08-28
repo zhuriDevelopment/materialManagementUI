@@ -50,21 +50,21 @@
 </template>
 
 <script>
-import NavHeader from '@/components/Nav'
-import Tabs from '@/components/Tabs'
-import Breadcrumb from '@/components/Breadcrumb'
-import MtrBasicInfo from '@/components/MtrInfoPanels/MtrBasicInfo'
-import MtrDefs from '@/components/MtrInfoPanels/MtrDefs'
-import MtrSkuDefs from '@/components/MtrInfoPanels/MtrSkuDefs'
-import MtrFiles from '@/components/MtrInfoPanels/MtrFiles'
-import MtrPurchaseAndStore from '@/components/MtrInfoPanels/MtrPurchaseAndStore'
-import MtrPlan from '@/components/MtrInfoPanels/MtrPlan'
-import MtrSales from '@/components/MtrInfoPanels/MtrSales'
-import MtrQuality from '@/components/MtrInfoPanels/MtrQuality'
-import MtrFinance from '@/components/MtrInfoPanels/MtrFinance'
+import NavHeader from "@/components/Nav";
+import Tabs from "@/components/Tabs";
+import Breadcrumb from "@/components/Breadcrumb";
+import MtrBasicInfo from "@/components/MtrInfoPanels/MtrBasicInfo";
+import MtrDefs from "@/components/MtrInfoPanels/MtrDefs";
+import MtrSkuDefs from "@/components/MtrInfoPanels/MtrSkuDefs";
+import MtrFiles from "@/components/MtrInfoPanels/MtrFiles";
+import MtrPurchaseAndStore from "@/components/MtrInfoPanels/MtrPurchaseAndStore";
+import MtrPlan from "@/components/MtrInfoPanels/MtrPlan";
+import MtrSales from "@/components/MtrInfoPanels/MtrSales";
+import MtrQuality from "@/components/MtrInfoPanels/MtrQuality";
+import MtrFinance from "@/components/MtrInfoPanels/MtrFinance";
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
     NavHeader,
     Tabs,
@@ -82,14 +82,19 @@ export default {
   created() {
     this.initTabs();
   },
-  mounted(){
+  mounted() {
     this.setData();
   },
   data() {
     return {
       mtrBasicInfo: {},
+      mtrBasicInfoUpdateValue: {},
+      mtrUnitTable: {},
+      mtrUnitTableUpdateValue: [],
       mtrDefs: {},
+      mtrDefsUpdateValue: [],
       mtrSkuDefs: {},
+      mtrSkuDefsUpdateValue: [],
       mtrFiles: {},
       mtrPurchaseAndStore: {},
       mtrPurchaseAndStoreUpdateValue: [],
@@ -101,60 +106,79 @@ export default {
       mtrQualityUpdateValue: [],
       mtrFinance: {},
       mtrFinanceUpdateValue: [],
-      editableTabsValue: '',
+      editableTabsValue: "",
       editableTabs: [],
-      tabIndex: '',
-      value: '',
-      code1: '',
-      code2: '',
-      options: [{
-        value: '选项1',
-        label: '选项1'
-      }, {
-        value: '选项2',
-        label: '选项2'
-      }, {
-        value: '选项3',
-        label: '选项3'
-      }, {
-        value: '选项4',
-        label: '选项4'
-      }, {
-        value: '选项5',
-        label: '选项5'
-      }],
-      tableData:[
-        {code: '1', name: '1', class:'', desc:'',figCode:'',figVersion:'',source:'',unit:'',note:''}
+      tabIndex: "",
+      value: "",
+      code1: "",
+      code2: "",
+      options: [
+        {
+          value: "选项1",
+          label: "选项1"
+        },
+        {
+          value: "选项2",
+          label: "选项2"
+        },
+        {
+          value: "选项3",
+          label: "选项3"
+        },
+        {
+          value: "选项4",
+          label: "选项4"
+        },
+        {
+          value: "选项5",
+          label: "选项5"
+        }
       ],
-
+      tableData: [
+        {
+          code: "1",
+          name: "1",
+          class: "",
+          desc: "",
+          figCode: "",
+          figVersion: "",
+          source: "",
+          unit: "",
+          note: ""
+        }
+      ]
     };
   },
   methods: {
     initTabs() {
-      if(localStorage.materialInfoTabs !== undefined) {
+      if (localStorage.materialInfoTabs !== undefined) {
         const tabs = JSON.parse(localStorage.materialInfoTabs);
-        console.log(tabs)
+        console.log(tabs);
         this.editableTabs = tabs.list;
         this.editableTabsValue = tabs.value;
         this.tabIndex = tabs.index;
       } else {
-        const tabs = {'list': this.editableTabs, 'value': this.editableTabsValue, 'index': this.tabIndex};
-        console.log(tabs)
+        const tabs = {
+          list: this.editableTabs,
+          value: this.editableTabsValue,
+          index: this.tabIndex
+        };
+        console.log(tabs);
         localStorage.materialInfoTabs = JSON.stringify(tabs);
       }
     },
     addHome() {
-      console.log('addhome')
-      this.editableTabs = tabs.filter(tab => tab.name !== '');
+      console.log("addhome");
+      this.editableTabs = tabs.filter(tab => tab.name !== "");
       this.editableTabs.push({
-        title: '/',
-        name: '物料基本信息查询',
-      })
+        title: "/",
+        name: "物料基本信息查询"
+      });
     },
     updateTabs(tabs) {
       this.editableTabsValue = tabs.value;
       this.editableTabs = tabs.list;
-      this.tabIndex = tabs.index
+      this.tabIndex = tabs.index;
     },
     checkContainsNV(list, name) {
       for (let element in list) {
@@ -164,17 +188,17 @@ export default {
       }
       return -1;
     },
-    updateMtrData(newVal, type){
+    updateMtrData(newVal, type) {
       let flag = false;
       let unitTable = [];
       console.log("emit: ", newVal);
-      if(type === 'mtrBasicInfo'){
+      if (type === "mtrBasicInfo") {
         unitTable = newVal.asUnit;
-        delete(newVal.asUnit);
-        for(let i in newVal) {
-          if(this[type].hasOwnProperty(i)){
-            if(newVal[i] !== this[type][i]) {
-              console.log(type, i, newVal[i], this[type][i])
+        delete newVal.asUnit;
+        for (let i in newVal) {
+          if (this[type].hasOwnProperty(i)) {
+            if (newVal[i] !== this[type][i]) {
+              console.log(type, i, newVal[i], this[type][i]);
               flag = true;
               break;
             }
@@ -184,32 +208,47 @@ export default {
           }
         }
       } else {
-        if(newVal.length !== this[type].length) {
+        if (newVal.length !== this[type].length) {
           flag = true;
         } else {
-          for(let i = 0; i< newVal.length; i+=1) {
-            for(let key in newVal[i]) {
-              if(newVal[i][key] !== this[type][i][key]) {
+          for (let i = 0; i < newVal.length; i++) {
+            for (let key in newVal[i]) {
+              if (newVal[i][key] !== this[type][i][key]) {
                 flag = true;
                 break;
               }
             }
-            if(flag) {
+            if (flag) {
               break;
             }
           }
         }
       }
-      if(flag) {
-        switch(type){
-          case 'mtrBasicInfo':
+      if (flag) {
+        switch (type) {
+          case "mtrBasicInfo":
             console.log("mtrBasicInfo: ", newVal);
-            console.log("计量单位表: ",unitTable);
-          case 'mtrDefs':
+            console.log("计量单位表: ", unitTable);
+            this.mtrBasicInfoUpdateValue = [];
+            for (let key in newVal) {
+              if (this[type].hasOwnProperty(key)) {
+                if (newVal[key] !== this[type][key]) {
+                  this.mtrBasicInfoUpdateValue.push({
+                    name: key,
+                    value: newVal[key]
+                  });
+                }
+              }
+            }
+            break;
+          case "mtrDefs":
             console.log("mtrDefs: ", newVal);
-          case 'mtrSkuDefs':
+            this.mtrDefsUpdateValue = newVal;
+            break;
+          case "mtrSkuDefs":
             console.log("mtrSkuDefs: ", newVal);
-          break;
+            this.mtrSkuDefsUpdateValue = newVal;
+            break;
         }
       }
     },
@@ -220,401 +259,435 @@ export default {
         let proName = newVal[element].propertyName;
         let findIndex = 0;
         if (newValue !== oldValue) {
-          switch(type) {
+          switch (type) {
             case `mtrPurchaseAndStore`:
-              findIndex = this.checkContainsNV(this.mtrPurchaseAndStoreUpdateValue, proName);
+              findIndex = this.checkContainsNV(
+                this.mtrPurchaseAndStoreUpdateValue,
+                proName
+              );
               if (findIndex != -1) {
                 this.mtrPurchaseAndStoreUpdateValue[findIndex].value = newValue;
               } else {
                 this.mtrPurchaseAndStoreUpdateValue.push({
                   name: proName,
-                  value: newValue,
+                  value: newValue
                 });
               }
               break;
             case `mtrFinance`:
-              findIndex = this.checkContainsNV(this.mtrFinanceUpdateValue, proName);
+              findIndex = this.checkContainsNV(
+                this.mtrFinanceUpdateValue,
+                proName
+              );
               if (findIndex != -1) {
                 this.mtrFinanceUpdateValue[findIndex].value = newValue;
               } else {
                 this.mtrFinanceUpdateValue.push({
                   name: proName,
-                  value: newValue,
+                  value: newValue
                 });
               }
               break;
             case `mtrSales`:
-              findIndex = this.checkContainsNV(this.mtrSalesUpdateValue, proName);
+              findIndex = this.checkContainsNV(
+                this.mtrSalesUpdateValue,
+                proName
+              );
               if (findIndex != -1) {
                 this.mtrSalesUpdateValue[findIndex].value = newValue;
               } else {
                 this.mtrSalesUpdateValue.push({
                   name: proName,
-                  value: newValue,
+                  value: newValue
                 });
               }
               break;
             case `mtrQuality`:
-              findIndex = this.checkContainsNV(this.mtrQualityUpdateValue, proName);
+              findIndex = this.checkContainsNV(
+                this.mtrQualityUpdateValue,
+                proName
+              );
               if (findIndex != -1) {
                 this.mtrQualityUpdateValue[findIndex].value = newValue;
               } else {
                 this.mtrQualityUpdateValue.push({
                   name: proName,
-                  value: newValue,
+                  value: newValue
                 });
               }
               break;
             case `mtrPlan`:
-              findIndex = this.checkContainsNV(this.mtrPlanUpdateValue, proName);
+              findIndex = this.checkContainsNV(
+                this.mtrPlanUpdateValue,
+                proName
+              );
               if (findIndex != -1) {
                 this.mtrPlanUpdateValue[findIndex].value = newValue;
               } else {
                 this.mtrPlanUpdateValue.push({
                   name: proName,
-                  value: newValue,
+                  value: newValue
                 });
               }
               break;
           }
         }
       }
-      // console.log(this.mtrPurchaseAndStoreUpdateValue);
-      // console.log(this.mtrFinanceUpdateValue);
-      // console.log(this.mtrSalesUpdateValue);
-      // console.log(this.mtrQualityUpdateValue);
-      // console.log(this.mtrPlanUpdateValue);
       this[type] = newVal;
       // console.log(newVal, this[type]);
     },
     setData() {
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
-        "spuCode": this.$route.params.id,
-        "spuName": this.$route.query.name,
-        // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
-        "typeArr": [1, 2, 3, 5, 6, 7, 8, 9],
-      })
-      .then((response) => {
-        console.log(response);
-        // 物料基础信息
-        const _mtrBasicInfo = response.data[0][0];
-        this.mtrBasicInfo = {
-          "spuCode": _mtrBasicInfo["spuCode"],
-          "spuName": _mtrBasicInfo["spuName"],
-          "type": _mtrBasicInfo["type"],
-          "category": _mtrBasicInfo["materialCatId"],
-          "source": _mtrBasicInfo["source"],
-          "usage": _mtrBasicInfo["usage"],
-          "designCode": _mtrBasicInfo["designCode"],
-          "designVersion": _mtrBasicInfo["designVersion"],
-          "mnemonic": _mtrBasicInfo["mnemonic"],
-          "note": _mtrBasicInfo["note"],
-        };
-        // 物料定义
-        const _mtrDefs = response.data[1];
-        let _defLen = response.data[1].length;
-        this.mtrDefs = [];
-        for (let i = 0; i < _defLen; ++i) {
-          let tmpDef = {};
-          tmpDef["materialCode"] = _mtrDefs[i]["materialCode"];
-          tmpDef["materialName"] = _mtrDefs[i]["materialName"];
-          tmpDef["oldMaterialCode"] = _mtrDefs[i]["oldMaterialCode"];
-          tmpDef["barCode"] = _mtrDefs[i]["barCode"];
-          tmpDef["format1"] = `规格1`;
-          tmpDef["format2"] = `规格2`;
-          tmpDef["format3"] = `规格3`;
-          this.mtrDefs.push(tmpDef);
-        }
-        // 物料sku信息
-        const _mtrSkuDefs = response.data[2];
-        let _skuLen = response.data[2][0].length;
-        this.mtrSkuDefs = [];
-        for (let i = 0; i < _skuLen; ++i) {
-          let tmpSku = {};
-          tmpSku["skuCode"] = _mtrSkuDefs[0][i]["skuCode"];
-          tmpSku["materialCode"] = _mtrSkuDefs[1][i]["materialCode"];
-          tmpSku["unit"] = _mtrSkuDefs[2][i]["name"];
-          tmpSku["barCode"] = _mtrSkuDefs[1][i]["barCode"];
-          tmpSku["purchasePrice"] = _mtrSkuDefs[0][i]["purchasePrice"];
-          tmpSku["sellingPrice"] = _mtrSkuDefs[0][i]["sellingPrice"];
-          tmpSku["description"] = _mtrSkuDefs[0][i]["description"];
-          this.mtrSkuDefs.push(tmpSku);
-        };
-        this.mtrPurchaseAndStore = response.data[3];
-        this.mtrPlan = response.data[4];
-        this.mtrSales = response.data[5];
-        this.mtrQuality = response.data[6];
-        this.mtrFinance = response.data[7];
-      })
-      .catch((error) => {
-        console.log(error);
-        this.mtrBasicInfo =  {
-          "spuCode": '1',
-          "spuName": '111',
-          "type": '123',
-          "category": '321',
-          "source": '123',
-          "usage": '321',
-          "designCode": 'qqq',
-          "designVersion": '1.0',
-          "mnemonic": '123',
-          "note": '123',
-        };
-        this.mtrPurchaseAndStore = [
-          {
-              "propertyName": "物料制购类型",
-              "propertyValue": "制购类型1"
-          },
-          {
-              "propertyName": "ABC分类",
-              "propertyValue": "ABC分类1"
-          },
-          {
-              "propertyName": "循环盘点编码",
-              "propertyValue": "盘点编码1"
-          },
-          {
-              "propertyName": "是否批次管理",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "是否单件管理",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "是否进价控制",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "默认供应商",
-              "propertyValue": "默认供应商"
-          },
-          {
-              "propertyName": "默认采购部门",
-              "propertyValue": "默认采购部门"
-          },
-          {
-              "propertyName": "默认仓库",
-              "propertyValue": "默认仓库"
-          },
-          {
-              "propertyName": "默认采购单位",
-              "propertyValue": "默认采购单位"
-          },
-          {
-              "propertyName": "默认库存单位",
-              "propertyValue": "默认库存单位"
-          },
-          {
-              "propertyName": "默认库位",
-              "propertyValue": "默认库位"
+      this.$axios
+        .post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
+          spuCode: this.$route.params.id,
+          spuName: this.$route.query.name,
+          // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
+          typeArr: [1, 2, 3, 5, 6, 7, 8, 9]
+        })
+        .then(response => {
+          console.log(response);
+          // 物料基础信息
+          const _mtrBasicInfo = response.data[0][0];
+          this.mtrBasicInfo = {
+            spuCode: _mtrBasicInfo["spuCode"],
+            spuName: _mtrBasicInfo["spuName"],
+            type: _mtrBasicInfo["type"],
+            category: _mtrBasicInfo["materialCatId"],
+            source: _mtrBasicInfo["source"],
+            usage: _mtrBasicInfo["usage"],
+            designCode: _mtrBasicInfo["designCode"],
+            designVersion: _mtrBasicInfo["designVersion"],
+            mnemonic: _mtrBasicInfo["mnemonic"],
+            note: _mtrBasicInfo["note"]
+          };
+          // 物料定义
+          const _mtrDefs = response.data[1];
+          let _defLen = response.data[1].length;
+          this.mtrDefs = [];
+          for (let i = 0; i < _defLen; ++i) {
+            let tmpDef = {};
+            tmpDef["materialCode"] = _mtrDefs[i]["materialCode"];
+            tmpDef["materialName"] = _mtrDefs[i]["materialName"];
+            tmpDef["oldMaterialCode"] = _mtrDefs[i]["oldMaterialCode"];
+            tmpDef["barCode"] = _mtrDefs[i]["barCode"];
+            tmpDef["format1"] = `规格1`;
+            tmpDef["format2"] = `规格2`;
+            tmpDef["format3"] = `规格3`;
+            this.mtrDefs.push(tmpDef);
           }
-        ];
-        this.mtrPlan = [
-          {
-              "propertyName": "是否独立需求",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "订货提前期（天）",
-              "propertyValue": "7"
-          },
-          {
-              "propertyName": "补货政策",
-              "propertyValue": "补货政策1"
-          },
-          {
-              "propertyName": "补货周期（天）",
-              "propertyValue": "15"
-          },
-          {
-              "propertyName": "最大库存量",
-              "propertyValue": "一个仓库"
-          },
-          {
-              "propertyName": "安全库存量",
-              "propertyValue": "半个仓库"
-          },
-          {
-              "propertyName": "订货批量",
-              "propertyValue": "10批一次"
-          },
-          {
-              "propertyName": "批量政策",
-              "propertyValue": "批量政策1"
-          },
-          {
-              "propertyName": "批量周期（天）",
-              "propertyValue": "7"
-          },
-          {
-              "propertyName": "默认计划单位",
-              "propertyValue": "默认计划单位"
+          // 物料sku信息
+          const _mtrSkuDefs = response.data[2];
+          let _skuLen = response.data[2][0].length;
+          this.mtrSkuDefs = [];
+          for (let i = 0; i < _skuLen; ++i) {
+            let tmpSku = {};
+            tmpSku["skuCode"] = _mtrSkuDefs[0][i]["skuCode"];
+            tmpSku["materialCode"] = _mtrSkuDefs[1][i]["materialCode"];
+            tmpSku["unit"] = _mtrSkuDefs[2][i]["name"];
+            tmpSku["barCode"] = _mtrSkuDefs[1][i]["barCode"];
+            tmpSku["purchasePrice"] = _mtrSkuDefs[0][i]["purchasePrice"];
+            tmpSku["sellingPrice"] = _mtrSkuDefs[0][i]["sellingPrice"];
+            tmpSku["description"] = _mtrSkuDefs[0][i]["description"];
+            this.mtrSkuDefs.push(tmpSku);
           }
-        ];
-        this.mtrSales = [
-          {
-              "propertyName": "销售计划价格",
-              "propertyValue": "1000"
-          },
-          {
-              "propertyName": "计价货币",
-              "propertyValue": "计价货币1"
-          },
-          {
-              "propertyName": "是否售价控制",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "销售价格策略",
-              "propertyValue": "价格策略1"
-          },
-          {
-              "propertyName": "销价下限率（%）",
-              "propertyValue": "10"
-          },
-          {
-              "propertyName": "销售成本科目",
-              "propertyValue": "成本科目1"
-          },
-          {
-              "propertyName": "默认客户",
-              "propertyValue": "客户A"
-          },
-          {
-              "propertyName": "销售地",
-              "propertyValue": "销售地1"
-          },
-          {
-              "propertyName": "默认业务员",
-              "propertyValue": "业务员小青"
-          },
-          {
-              "propertyName": "默认销售单位",
-              "propertyValue": "默认销售单位"
-          }
-        ];
-        this.mtrQuality = [
-          {
-              "propertyName": "检验方式",
-              "propertyValue": "不检验"
-          },
-          {
-              "propertyName": "检验水准",
-              "propertyValue": "检验水准1"
-          },
-          {
-              "propertyName": "检验程度",
-              "propertyValue": "检验程度1"
-          },
-          {
-              "propertyName": "默认检验部门",
-              "propertyValue": "默认检测部门"
-          },
-          {
-              "propertyName": "检验工时（时）",
-              "propertyValue": "150"
-          },
-          {
-              "propertyName": "存储期限（天）",
-              "propertyValue": "60"
-          },
-          {
-              "propertyName": "默认检验员",
-              "propertyValue": "默认检验员"
-          },
-          {
-              "propertyName": "检验标准文件",
-              "propertyValue": "文件A"
-          }
-        ];
-        this.mtrFinance = [
-          {
-              "propertyName": "财务类别",
-              "propertyValue": "财务类别1"
-          },
-          {
-              "propertyName": "记账本位币",
-              "propertyValue": "位币1"
-          },
-          {
-              "propertyName": "会计科目",
-              "propertyValue": ""
-          },
-          {
-              "propertyName": "增值税代码",
-              "propertyValue": "默认增值税代码"
-          },
-          {
-              "propertyName": "存货计价方法",
-              "propertyValue": "计价方法1"
-          },
-          {
-              "propertyName": "成本计算方法",
-              "propertyValue": "计算方法1"
-          },
-          {
-              "propertyName": "开票类型",
-              "propertyValue": "类型1"
-          },
-        ]
-      });
-
+          this.mtrPurchaseAndStore = response.data[3];
+          this.mtrPlan = response.data[4];
+          this.mtrSales = response.data[5];
+          this.mtrQuality = response.data[6];
+          this.mtrFinance = response.data[7];
+        })
+        .catch(error => {
+          console.log(error);
+          this.mtrBasicInfo = {
+            spuCode: "1",
+            spuName: "111",
+            type: "123",
+            category: "321",
+            source: "123",
+            usage: "321",
+            designCode: "qqq",
+            designVersion: "1.0",
+            mnemonic: "123",
+            note: "123"
+          };
+          this.mtrPurchaseAndStore = [
+            {
+              propertyName: "物料制购类型",
+              propertyValue: "制购类型1"
+            },
+            {
+              propertyName: "ABC分类",
+              propertyValue: "ABC分类1"
+            },
+            {
+              propertyName: "循环盘点编码",
+              propertyValue: "盘点编码1"
+            },
+            {
+              propertyName: "是否批次管理",
+              propertyValue: "true"
+            },
+            {
+              propertyName: "是否单件管理",
+              propertyValue: "true"
+            },
+            {
+              propertyName: "是否进价控制",
+              propertyValue: "true"
+            },
+            {
+              propertyName: "默认供应商",
+              propertyValue: "默认供应商"
+            },
+            {
+              propertyName: "默认采购部门",
+              propertyValue: "默认采购部门"
+            },
+            {
+              propertyName: "默认仓库",
+              propertyValue: "默认仓库"
+            },
+            {
+              propertyName: "默认采购单位",
+              propertyValue: "默认采购单位"
+            },
+            {
+              propertyName: "默认库存单位",
+              propertyValue: "默认库存单位"
+            },
+            {
+              propertyName: "默认库位",
+              propertyValue: "默认库位"
+            }
+          ];
+          this.mtrPlan = [
+            {
+              propertyName: "是否独立需求",
+              propertyValue: "true"
+            },
+            {
+              propertyName: "订货提前期（天）",
+              propertyValue: "7"
+            },
+            {
+              propertyName: "补货政策",
+              propertyValue: "补货政策1"
+            },
+            {
+              propertyName: "补货周期（天）",
+              propertyValue: "15"
+            },
+            {
+              propertyName: "最大库存量",
+              propertyValue: "一个仓库"
+            },
+            {
+              propertyName: "安全库存量",
+              propertyValue: "半个仓库"
+            },
+            {
+              propertyName: "订货批量",
+              propertyValue: "10批一次"
+            },
+            {
+              propertyName: "批量政策",
+              propertyValue: "批量政策1"
+            },
+            {
+              propertyName: "批量周期（天）",
+              propertyValue: "7"
+            },
+            {
+              propertyName: "默认计划单位",
+              propertyValue: "默认计划单位"
+            }
+          ];
+          this.mtrSales = [
+            {
+              propertyName: "销售计划价格",
+              propertyValue: "1000"
+            },
+            {
+              propertyName: "计价货币",
+              propertyValue: "计价货币1"
+            },
+            {
+              propertyName: "是否售价控制",
+              propertyValue: "true"
+            },
+            {
+              propertyName: "销售价格策略",
+              propertyValue: "价格策略1"
+            },
+            {
+              propertyName: "销价下限率（%）",
+              propertyValue: "10"
+            },
+            {
+              propertyName: "销售成本科目",
+              propertyValue: "成本科目1"
+            },
+            {
+              propertyName: "默认客户",
+              propertyValue: "客户A"
+            },
+            {
+              propertyName: "销售地",
+              propertyValue: "销售地1"
+            },
+            {
+              propertyName: "默认业务员",
+              propertyValue: "业务员小青"
+            },
+            {
+              propertyName: "默认销售单位",
+              propertyValue: "默认销售单位"
+            }
+          ];
+          this.mtrQuality = [
+            {
+              propertyName: "检验方式",
+              propertyValue: "不检验"
+            },
+            {
+              propertyName: "检验水准",
+              propertyValue: "检验水准1"
+            },
+            {
+              propertyName: "检验程度",
+              propertyValue: "检验程度1"
+            },
+            {
+              propertyName: "默认检验部门",
+              propertyValue: "默认检测部门"
+            },
+            {
+              propertyName: "检验工时（时）",
+              propertyValue: "150"
+            },
+            {
+              propertyName: "存储期限（天）",
+              propertyValue: "60"
+            },
+            {
+              propertyName: "默认检验员",
+              propertyValue: "默认检验员"
+            },
+            {
+              propertyName: "检验标准文件",
+              propertyValue: "文件A"
+            }
+          ];
+          this.mtrFinance = [
+            {
+              propertyName: "财务类别",
+              propertyValue: "财务类别1"
+            },
+            {
+              propertyName: "记账本位币",
+              propertyValue: "位币1"
+            },
+            {
+              propertyName: "会计科目",
+              propertyValue: ""
+            },
+            {
+              propertyName: "增值税代码",
+              propertyValue: "默认增值税代码"
+            },
+            {
+              propertyName: "存货计价方法",
+              propertyValue: "计价方法1"
+            },
+            {
+              propertyName: "成本计算方法",
+              propertyValue: "计算方法1"
+            },
+            {
+              propertyName: "开票类型",
+              propertyValue: "类型1"
+            }
+          ];
+        });
     },
     submitChangeValue() {
       console.log("change!");
-      console.log(this.$route);
+      // console.log(this.$route);
       let spuCode = this.$route.params.id;
       let spuName = this.$route.query.name;
       let sendData = {
-        'spuCode': spuCode,
-        'spuName': spuName,
-        'data': [],
+        spuCode: spuCode,
+        spuName: spuName,
+        data: []
       };
       console.log(spuName);
+      if (this.mtrBasicInfoUpdateValue.length > 0) {
+        let tmpData = {
+          propertyType: 1,
+          updateValue: this.mtrBasicInfoUpdateValue
+        };
+        sendData[`data`].push(tmpData);
+        console.log(`add BasicInfo values!`);
+      }
+      if (this.mtrDefsUpdateValue.length > 0) {
+        let tmpData = {
+          propertyType: 2,
+          updateValue: this.mtrDefsUpdateValue
+        };
+        sendData[`data`].push(tmpData);
+        console.log(`add Defs Values!`);
+      }
+      if (this.mtrSkuDefsUpdateValue.length > 0) {
+        let tmpData = {
+          propertyType: 3,
+          updateValue: this.mtrSkuDefsUpdateValue
+        };
+        sendData[`data`].push(tmpData);
+        console.log(`add SkuDefs Values!`);
+      }
       if (this.mtrPurchaseAndStoreUpdateValue.length != 0) {
         let tmpData = {
-          'propertyType': 5,
-          'updateValue': this.mtrPurchaseAndStoreUpdateValue,
-          'organizationCode': 1,
+          propertyType: 5,
+          updateValue: this.mtrPurchaseAndStoreUpdateValue,
+          organizationCode: 1
         };
-        sendData['data'].push(tmpData);
+        sendData["data"].push(tmpData);
         console.log(`add PurchaseAndStore values!`);
       }
       if (this.mtrPlanUpdateValue.length != 0) {
         let tmpData = {
-          'propertyType': 6,
-          'updateValue': this.mtrPlanUpdateValue,
-          'organizationCode': 1,
+          propertyType: 6,
+          updateValue: this.mtrPlanUpdateValue,
+          organizationCode: 1
         };
-        sendData['data'].push(tmpData);
+        sendData["data"].push(tmpData);
         console.log(`add Plan values!`);
       }
       if (this.mtrSalesUpdateValue.length != 0) {
         let tmpData = {
-          'propertyType': 7,
-          'updateValue': this.mtrSalesUpdateValue,
-          'organizationCode': 1,
+          propertyType: 7,
+          updateValue: this.mtrSalesUpdateValue,
+          organizationCode: 1
         };
-        sendData['data'].push(tmpData);
+        sendData["data"].push(tmpData);
         console.log(`add Sales values!`);
       }
       if (this.mtrQualityUpdateValue.length != 0) {
         let tmpData = {
-          'propertyType': 8,
-          'updateValue': this.mtrQualityUpdateValue,
-          'organizationCode': 1,
+          propertyType: 8,
+          updateValue: this.mtrQualityUpdateValue,
+          organizationCode: 1
         };
-        sendData['data'].push(tmpData);
+        sendData["data"].push(tmpData);
         console.log(`add Quality values!`);
       }
       if (this.mtrFinanceUpdateValue.length != 0) {
         let tmpData = {
-          'propertyType': 9,
-          'updateValue': this.mtrFinanceUpdateValue,
-          'organizationCode': 1,
+          propertyType: 9,
+          updateValue: this.mtrFinanceUpdateValue,
+          organizationCode: 1
         };
-        sendData['data'].push(tmpData);
+        sendData["data"].push(tmpData);
         console.log(`add Finance values!`);
       }
       console.log(sendData);
@@ -622,92 +695,91 @@ export default {
         .then((response) => {
           console.log(response);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.home{
+.home {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  .body{
+  .body {
     flex: 1;
     display: flex;
     flex-direction: row;
-    .main-nav{
+    .main-nav {
       padding-top: 200px;
       min-width: 200px;
       border-right: 1px solid black;
     }
-    .content{
+    .content {
       flex: 1;
       display: flex;
       flex-direction: column;
       width: calc(~"100% - 250px");
       margin: 10px;
-      .button-row{
+      .button-row {
         margin-bottom: 15px;
       }
-      .cards{
+      .cards {
         height: 50px;
         margin-bottom: 15px;
       }
-      .card{
+      .card {
         display: flex;
         flex-direction: column;
         flex: 1;
-        .el-tabs{
+        .el-tabs {
           // height: 100%;
           display: flex;
           flex-direction: column;
         }
-        .el-tab-pane{
+        .el-tab-pane {
           overflow: scroll;
           max-height: 500px;
         }
       }
-      .search{
+      .search {
         height: 50px;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         margin: 0 20px;
-        .inputs{
+        .inputs {
           display: flex;
           flex-direction: row;
           align-items: center;
         }
-        .bar{
+        .bar {
           display: flex;
           flex-direction: row;
           align-items: center;
           min-width: 150px;
-          .title{
+          .title {
             min-width: 60px;
             font-size: 15px;
             margin: 0 10px 0 25px;
             text-align: left;
-
           }
         }
-        .adv-search{
+        .adv-search {
           margin: 0 20px;
           cursor: pointer;
         }
-        .search-btn{
+        .search-btn {
           margin: 0 20px;
         }
       }
-      .table{
+      .table {
         width: calc(~"100% - 80px");
         padding: 10px;
       }
-      .pagination{
+      .pagination {
         height: 50px;
         display: flex;
         flex-direction: row;
