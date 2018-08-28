@@ -15,49 +15,56 @@
           </el-table-column>
           <el-table-column
             property="skuCode"
-            label="SKU编码">
+            label="SKU编码"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['skuCode']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             property="materialCode"
-            label="物料编码">
+            label="物料编码"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['materialCode']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             property="unit"
-            label="计量单位">
+            label="计量单位"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['unit']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             property="barCode"
-            label="条形码">
+            label="条形码"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['barCode']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             property="purchasePrice"
-            label="采购价格（元）">
+            label="采购价格（元）"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['purchasePrice']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             property="sellingPrice"
-            label="销售价格（元）">
+            label="销售价格（元）"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['sellingPrice']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             property="description"
-            label="备注">
+            label="备注"
+            width="200">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['description']"></el-input>
             </template>

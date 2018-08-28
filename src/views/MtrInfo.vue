@@ -370,6 +370,8 @@ export default {
             tmpDef["materialName"] = _mtrDefs[i]["materialName"];
             tmpDef["oldMaterialCode"] = _mtrDefs[i]["oldMaterialCode"];
             tmpDef["barCode"] = _mtrDefs[i]["barCode"];
+            tmpDef["purchasePrice"] = _mtrDefs[i]["purchasePrice"];
+            tmpDef["sellingPrice"] = _mtrDefs[i]['sellingPrice'];
             tmpDef["format1"] = `规格1`;
             tmpDef["format2"] = `规格2`;
             tmpDef["format3"] = `规格3`;
@@ -630,6 +632,11 @@ export default {
         console.log(`add BasicInfo values!`);
       }
       if (this.mtrDefsUpdateValue.length > 0) {
+        for (let i in this.mtrDefsUpdateValue) {
+          delete this.mtrDefsUpdateValue[i].format1;
+          delete this.mtrDefsUpdateValue[i].format2;
+          delete this.mtrDefsUpdateValue[i].format3;
+        }
         let tmpData = {
           propertyType: 2,
           updateValue: this.mtrDefsUpdateValue

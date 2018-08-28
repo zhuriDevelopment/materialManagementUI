@@ -11,12 +11,12 @@
             type="index"
             label="序号"
             fixed="left"
-            width="60px">
+            width="60">
           </el-table-column>
           <el-table-column
             v-for="(p,index) in Object.keys(tableData[0])"
-            width="150"
             :key="index"
+            width="160"
             :label="labels[index]">
             <template slot-scope="scope">
               <!-- <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.barCode"></el-input>               -->
@@ -43,13 +43,15 @@ export default {
   name: 'MtrDefs',
   data() {
     return {
-      labels: ['物料编码','物料名称','旧物料编码','条形码','规格1','规格2','规格3'],
+      labels: ['物料编码','物料名称','旧物料编码','条形码','采购价格','销售价格','规格1','规格2','规格3'],
       disabled: [],
       tableData: [{
         materialCode: 'B12343',
         materialName: '布料',
         oldMaterialCode: 'B12333',
         barCode: '123321',
+        purchasePrice: '0',
+        sellingPrice: '0',
         format1: '规格1',
         format2: '规格2',
         format3: '规格3',

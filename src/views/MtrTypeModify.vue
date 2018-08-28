@@ -119,83 +119,7 @@ export default {
             this.treeData.push(response.data);
           })
           .catch(error => {
-            this.treeData = [{
-              "id": 0,
-              "label": "物料总分类",
-              "parentId": -1,
-              "level": 0,
-              "children": [
-                  {
-                      "id": 1,
-                      "label": "A类",
-                      "parentId": 0,
-                      "level": 1,
-                      "children": [
-                          {
-                              "id": 4,
-                              "label": "工厂用品",
-                              "parentId": 1,
-                              "level": 2,
-                              "children": [
-                                  {
-                                      "id": 7,
-                                      "label": "大型机器",
-                                      "parentId": 4,
-                                      "level": 3,
-                                      "children": []
-                                  }
-                              ]
-                          }
-                      ]
-                  },
-                  {
-                      "id": 2,
-                      "label": "B类",
-                      "parentId": 0,
-                      "level": 1,
-                      "children": [
-                          {
-                              "id": 5,
-                              "label": "仓库存货",
-                              "parentId": 2,
-                              "level": 2,
-                              "children": [
-                                  {
-                                      "id": 8,
-                                      "label": "布料",
-                                      "parentId": 5,
-                                      "level": 3,
-                                      "children": []
-                                  }
-                              ]
-                          }
-                      ]
-                  },
-                  {
-                      "id": 3,
-                      "label": "C类",
-                      "parentId": 0,
-                      "level": 1,
-                      "children": [
-                          {
-                              "id": 6,
-                              "label": "办公用品",
-                              "parentId": 3,
-                              "level": 2,
-                              "children": [
-                                  {
-                                      "id": 9,
-                                      "label": "文具类",
-                                      "parentId": 6,
-                                      "level": 3,
-                                      "children": []
-                                  }
-                              ]
-                          }
-                      ]
-                  }
-              ]
-          }];
+            console.log(`error in initing tree`, error);
           });
       console.log("init Tree Finished!");
     },
@@ -229,10 +153,10 @@ export default {
           this.$message({
             type: 'info',
             message: '取消输入'
-          });       
+          });
         });
       }
-      
+
     },
     deleteNode() {
       const searchTree = (element, id) => {
@@ -325,56 +249,7 @@ export default {
         this.mtrFinance = response.data[4];
       })
       .catch(error => {
-        this.mtrPurchaseAndStore = [
-          {
-              "propertyName": "物料制购类型",
-              "propertyValue": "制购类型1"
-          },
-          {
-              "propertyName": "ABC分类",
-              "propertyValue": "ABC分类1"
-          },
-          {
-              "propertyName": "循环盘点编码",
-              "propertyValue": "盘点编码1"
-          },
-          {
-              "propertyName": "是否批次管理",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "是否单件管理",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "是否进价控制",
-              "propertyValue": "true"
-          },
-          {
-              "propertyName": "默认供应商",
-              "propertyValue": "默认供应商"
-          },
-          {
-              "propertyName": "默认采购部门",
-              "propertyValue": "默认采购部门"
-          },
-          {
-              "propertyName": "默认仓库",
-              "propertyValue": "默认仓库"
-          },
-          {
-              "propertyName": "默认采购单位",
-              "propertyValue": "默认采购单位"
-          },
-          {
-              "propertyName": "默认库存单位",
-              "propertyValue": "默认库存单位"
-          },
-          {
-              "propertyName": "默认库位",
-              "propertyValue": "默认库位"
-          }
-        ];
+        console.log(`error in setNewSpuInfo`, error);
       });
     },
     checkContainsNV(list, name) {
@@ -451,11 +326,6 @@ export default {
           }
         }
       }
-      console.log(this.mtrPurchaseAndStoreUpdateValue);
-      console.log(this.mtrFinanceUpdateValue);
-      console.log(this.mtrSalesUpdateValue);
-      console.log(this.mtrQualityUpdateValue);
-      console.log(this.mtrPlanUpdateValue);
       this[type] = newVal;
       // console.log(newVal, this[type]);
     },

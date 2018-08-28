@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col col-2">
           <div class="label">{{rows[3][0].label}}</div>
           <div class="inputbar">
@@ -27,7 +27,7 @@
         <div class="col">
           <el-checkbox v-model="rows[3][1].value">{{rows[3][1].label}}</el-checkbox>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col col-2">
           <div class="label">{{rows[4][0].label}}</div>
@@ -137,8 +137,9 @@ export default {
         [{label: '设计图号', value: this.basicInfo.designCode, key:'designCode'},
           {label: '设计版次', value: this.basicInfo.designVersion, key: 'designVersion'},
           {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}],
-        [{label: '规格描述', value: '', key: 'specDesc'},
-          {label: '多规格物料', value: false, key: 'multiSpec'}],
+        // [{label: '规格描述', value: '', key: 'specDesc'},
+        //   {label: '多规格物料', value: false, key: 'multiSpec'}],
+        [],
         [{label: '备注', value: this.basicInfo.note, key: 'note'}],
         [{label: '默认计量单位', value: '', key: 'defaultUnit'}],
         [{label: '辅助计量单位',
@@ -170,7 +171,7 @@ export default {
     }
   },
   methods: {
-    pushRow() {  
+    pushRow() {
       this.rows[6][0].value.push({
         name: '',
         conversionFactor: '',
