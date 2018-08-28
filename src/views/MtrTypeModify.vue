@@ -12,6 +12,7 @@
           <div class="leftTree">
             <div class="treebuttons">
               <el-button type="text" @click="addNode">添加</el-button>
+              <el-button type="text" @click="editNode">编辑</el-button>
               <el-button type="text" @click="deleteNode">删除</el-button>
             </div>
             <el-tree
@@ -200,11 +201,38 @@ export default {
     },
     addNode(){
       const data = this.nodeData;
-      const newChild = { id: this.id++, label: 'test', children: [] };
+      const newChild = { id: this.id++, label: 'test', children: [], parentId: data.id };
       if (!data.children) {
         this.$set(data, 'children', []);
       }
       data.children.push(newChild);
+    },
+    editNode() {
+      const data = this.nodeData;
+      console.log('node:', data);
+      if(!data.hasOwnProperty('id')){
+        this.$message({
+          type: 'info',
+          message: '请先选择节点'
+        });
+      } else {
+        this.$prompt('修改节点名', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+          data.label = value;
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+      }
+      
     },
     deleteNode() {
       const searchTree = (element, id) => {
@@ -229,8 +257,7 @@ export default {
       }
       const index = children.findIndex(d => d.id === this.nodeData.id);
       children.splice(index, 1);
-      console.log(this.treeData[0])
-      console.log(parent, index);
+      this.treeData =  Object.assign([], this.treeData, []);
     },
     handleNodeClick(data) {
       this.nodeData = data;
@@ -467,7 +494,6 @@ export default {
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
-          padding-left: 20px;
           .el-button {
             padding-left: 10px;
           }
