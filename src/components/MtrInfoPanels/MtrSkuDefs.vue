@@ -18,7 +18,7 @@
             label="SKU编码"
             width="200">
             <template slot-scope="scope">
-              <el-input v-model="tableData[scope.$index]['skuCode']"></el-input>
+              <el-input v-model="tableData[scope.$index]['skuCode']" :disabled="disabled[scope.$index]===scope.row.skuCode"></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -90,6 +90,7 @@ export default {
   data() {
     return {
       tableData: [],
+      disabled: [],
     };
   },
   props: ["data"],
@@ -99,6 +100,7 @@ export default {
       this.tableData = [];
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));
+        this.disabled.push(this.data[i].skuCode);
       }
     },
     tableData: {
@@ -132,12 +134,17 @@ export default {
       });
     },
     handleSkuDefAdd(index, row) {
-      this.pushRow();
+      if(row.skuCode !== ''){
+        this.pushRow();
+        this.disabled[index] = row.skuCode;
+      }
     },
     handleSkuDefDelete(index, row) {
       this.tableData.splice(index, 1);
+      this.disabled.splice(index,1);
       if (this.tableData.length === 0) {
         this.pushRow();
+        this.disabled = [];
       }
     }
   }

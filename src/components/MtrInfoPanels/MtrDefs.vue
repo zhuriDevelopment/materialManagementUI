@@ -19,7 +19,7 @@
             width="160"
             :label="labels[index]">
             <template slot-scope="scope">
-              <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.barCode"></el-input>              
+              <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.materialCode && labels[index] ==='物料编码'"></el-input>              
             </template>
           </el-table-column>
           <el-table-column
@@ -64,7 +64,7 @@ export default {
       this.tableData = [];
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));
-        this.disabled.push(this.data[i].barCode);
+        this.disabled.push(this.data[i].materialCode);
       }
     },
     tableData: {
@@ -99,8 +99,8 @@ export default {
     },
     handleAdd(index, row) {
       console.log(index, row);
-      if(row.barCode !== '' && row.materialCode !== ''){
-        this.disabled[index] = row.barCode;
+      if(row.materialCode !== ''){
+        this.disabled[index] = row.materialCode;
         this.pushRow();
       };
     },
