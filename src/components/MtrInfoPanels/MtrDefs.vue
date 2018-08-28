@@ -19,8 +19,7 @@
             width="160"
             :label="labels[index]">
             <template slot-scope="scope">
-              <!-- <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.barCode"></el-input>               -->
-              <el-input v-model="tableData[scope.$index][p]"></el-input>
+              <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.barCode"></el-input>              
             </template>
           </el-table-column>
           <el-table-column
@@ -28,7 +27,7 @@
             fixed="right"
             width="150">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="handleAdd(scope.$index, scope.row)" :disabled="disabled[scope.$index]===scope.row.barCode">添加</el-button>
+              <el-button type="text" size="mini" @click="handleAdd(scope.$index, scope.row)">添加</el-button>
               <el-button type="text" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -65,6 +64,7 @@ export default {
       this.tableData = [];
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));
+        this.disabled.push(this.data[i].barCode);
       }
     },
     tableData: {
@@ -99,8 +99,10 @@ export default {
     },
     handleAdd(index, row) {
       console.log(index, row);
-      this.disabled[index] = row.barCode;
-      this.pushRow();
+      if(row.barCode !== '' && row.materialCode !== ''){
+        this.disabled[index] = row.barCode;
+        this.pushRow();
+      };
     },
     handleDelete(index, row) {
       console.log(index, row);

@@ -412,6 +412,17 @@ export default {
             mnemonic: "123",
             note: "123"
           };
+          this.mtrDefs = [{
+            materialCode: 'B12343',
+            materialName: '布料',
+            oldMaterialCode: 'B12333',
+            barCode: '123321',
+            purchasePrice: '0',
+            sellingPrice: '0',
+            format1: '规格1',
+            format2: '规格2',
+            format3: '规格3',
+          }];
           this.mtrPurchaseAndStore = [
             {
               propertyName: "物料制购类型",
