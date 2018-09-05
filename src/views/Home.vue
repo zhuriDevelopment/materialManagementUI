@@ -10,26 +10,51 @@
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
           <div class="search">
-            <div class="inputs">
-              <div class="bar">
-                <div class="title">物料分类</div>
-                <el-select v-model="value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
+            <div class="input-group">
+              <div class="inputs">
+                <div class="bar">
+                  <div class="title">物料类型</div>
+                  <el-select v-model="materialType" placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="bar">
+                  <div class="title">物料编码</div>
+                  <el-input v-model="materialCode"></el-input>
+                </div>
+                <div class="bar">
+                  <div class="title">助记码</div>
+                  <el-input v-model="mnemonic"></el-input>
+                </div>
               </div>
-              <div class="bar">
-                <div class="title">物料编码</div>
-                <el-input v-model="code1"></el-input>
+              <!-- <div class="inputs">
+                <div class="bar">
+                  <div class="title">spu编码</div>
+                  <el-input v-model="spuCode"></el-input>
+                </div>
+                <div class="bar">
+                  <div class="title">SPU名称</div>
+                    <el-input v-model="spuName"></el-input>
+                  </div>
+                </div>
+                <div class="bar">
+                  <div class="title">物料分类</div>
+                    <el-input v-model="materialCategory"></el-input>
+                  </div>
+                </div>
               </div>
-              <div class="bar">
-                <div class="title">助记码</div>
-                <el-input v-model="code2"></el-input>
-              </div>
+              <div class="inputs">
+                <div class="bar">
+                  <div class="title">物料描述</div>
+                    <el-input v-model="description"></el-input>
+                  </div>
+                </div>
+              </div> -->
             </div>
             <div class="adv-search">高级搜索</div>
             <el-button class="search-btn">搜索</el-button>
@@ -111,23 +136,22 @@
             </el-pagination> -->
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import NavHeader from '@/components/Nav'
-import Tabs from '@/components/Tabs'
-import Breadcrumb from '@/components/Breadcrumb'
+import NavHeader from "@/components/Nav";
+import Tabs from "@/components/Tabs";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
     NavHeader,
     Tabs,
-    Breadcrumb,
+    Breadcrumb
   },
   created() {
     this.initTabs();
@@ -135,69 +159,93 @@ export default {
   },
   data() {
     return {
-      editableTabsValue: '/',
-      editableTabs: [{
-        title: '物料基本信息查询',
-        name: '/'
-      }],
-      tabIndex: '0',
-      value: '',
-      code1: '',
-      code2: '',
-      options: [{
-        value: '选项1',
-        label: '选项1'
-      }, {
-        value: '选项2',
-        label: '选项2'
-      }],
-      tableData:[
-        {code: '1', name: '1', class:'', desc:'',figCode:'',figVersion:'',source:'',unit:'',note:''}
+      editableTabsValue: "/",
+      editableTabs: [
+        {
+          title: "物料基本信息查询",
+          name: "/"
+        }
       ],
-      pageNumberString: '共搜索出100条数据',
+      tabIndex: "0",
+      materialType: "",
+      materialCode: "",
+      mnemonic: "",
+      spuCode: "",
+      spuName: "",
+      materialCategory: "",
+      description: "",
+      options: [
+        {
+          value: "选项1",
+          label: "选项1"
+        },
+        {
+          value: "选项2",
+          label: "选项2"
+        }
+      ],
+      tableData: [
+        {
+          code: "1",
+          name: "1",
+          class: "",
+          desc: "",
+          figCode: "",
+          figVersion: "",
+          source: "",
+          unit: "",
+          note: ""
+        }
+      ],
+      pageNumberString: "共搜索出100条数据"
     };
   },
   methods: {
     initTabs() {
-      if(localStorage.materialInfoTabs !== undefined) {
+      if (localStorage.materialInfoTabs !== undefined) {
         const tabs = JSON.parse(localStorage.materialInfoTabs);
-        console.log(tabs)
+        console.log(tabs);
         this.editableTabs = tabs.list;
         this.editableTabsValue = tabs.value;
         this.tabIndex = tabs.index;
-        console.log(this.editableTabs)
+        console.log(this.editableTabs);
       } else {
-        const tabs = {'list': this.editableTabs, 'value': this.editableTabsValue, 'index': this.tabIndex};
-        console.log(tabs)
+        const tabs = {
+          list: this.editableTabs,
+          value: this.editableTabsValue,
+          index: this.tabIndex
+        };
+        console.log(tabs);
         localStorage.materialInfoTabs = JSON.stringify(tabs);
       }
     },
     addHome() {
-      this.editableTabs = tabs.filter(tab => tab.name !== '');
+      this.editableTabs = tabs.filter(tab => tab.name !== "");
       this.editableTabs.push({
-        title: '/',
-        name: '物料基本信息查询',
-      })
+        title: "/",
+        name: "物料基本信息查询"
+      });
     },
     updateTabs(tabs) {
       this.editableTabsValue = tabs.value;
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index;
-      console.log('emit: ', tabs);
+      console.log("emit: ", tabs);
     },
     clickRow(row, event, column) {
-      console.log(column)
-      if(column.label !== '操作'){
-        this.$router.push({path: `/MtrInfo/${row.code}?name=${row.name}`});
+      console.log(column);
+      if (column.label !== "操作") {
+        this.$router.push({ path: `/MtrInfo/${row.code}?name=${row.name}` });
       }
     },
-    handleClick(row){
+    handleClick(row) {
       console.log(row);
-      this.$router.push({path: `/MtrInfo/${row.code}?name=${row.name}`});
+      this.$router.push({ path: `/MtrInfo/${row.code}?name=${row.name}` });
     },
     getTableData() {
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getAllBaseInfo`)
-        .then((response) => {
+      this.$axios
+        .post(`${window.$config.HOST}/MaterialManagement/getAllBaseInfo`)
+        .then(response => {
           console.log(response);
           let basedatas = response.data[0];
           let catdatas = response.data[1];
@@ -215,91 +263,93 @@ export default {
             tmpvalue["unit"] = unitdatas[i]["name"];
             tmpvalue["note"] = basedatas[i]["note"];
             this.tableData.push(tmpvalue);
-            this.pageNumberString = "共搜索出" + basedatas.length + "条数据"
+            this.pageNumberString = "共搜索出" + basedatas.length + "条数据";
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     }
-  },
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.home{
+.home {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  .header{
+  .header {
     height: 50px;
     border-bottom: 1px solid black;
     line-height: 50px;
   }
-  .body{
+  .body {
     flex: 1;
     display: flex;
     flex-direction: row;
-    .main-nav{
+    .main-nav {
       padding-top: 200px;
       min-width: 200px;
       border-right: 1px solid black;
     }
-    .content{
+    .content {
       flex: 1;
       display: flex;
       flex-direction: column;
       width: calc(~"100% - 250px");
       margin: 10px;
-      .cards{
+      .cards {
         height: 50px;
         margin-bottom: 25px;
       }
-      .card{
+      .card {
         display: flex;
         flex-direction: column;
       }
-      .search{
-        height: 50px;
+      .search {
+        // height: 50px;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         margin: 0 20px;
-        .inputs{
+        .input-group {
           display: flex;
-          flex-direction: row;
-          align-items: center;
-        }
-        .bar{
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          min-width: 150px;
-          .title{
-            min-width: 60px;
-            font-size: 15px;
-            margin: 0 10px 0 25px;
-            text-align: left;
-
+          flex-direction: column;
+          .inputs {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          }
+          .bar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            min-width: 150px;
+            .title {
+              min-width: 60px;
+              font-size: 15px;
+              margin: 0 10px 0 25px;
+              text-align: left;
+            }
           }
         }
-        .adv-search{
+        .adv-search {
           margin: 0 20px;
           cursor: pointer;
         }
-        .search-btn{
+        .search-btn {
           margin: 0 20px;
         }
       }
-      .table{
+      .table {
         width: calc(~"100% - 80px");
         padding: 10px;
       }
-      .pagination{
+      .pagination {
         height: 50px;
         display: flex;
         flex-direction: row;
