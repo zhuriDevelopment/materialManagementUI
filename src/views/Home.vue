@@ -32,33 +32,32 @@
                   <el-input v-model="mnemonic"></el-input>
                 </div>
               </div>
-              <!-- <div class="inputs">
+              <div class="inputs" v-show="showAdv">
                 <div class="bar">
-                  <div class="title">spu编码</div>
+                  <div class="title">SPU编码</div>
                   <el-input v-model="spuCode"></el-input>
                 </div>
                 <div class="bar">
                   <div class="title">SPU名称</div>
-                    <el-input v-model="spuName"></el-input>
-                  </div>
+                  <el-input v-model="spuName"></el-input>
                 </div>
                 <div class="bar">
                   <div class="title">物料分类</div>
-                    <el-input v-model="materialCategory"></el-input>
-                  </div>
+                  <el-input v-model="materialCategory"></el-input>
                 </div>
               </div>
-              <div class="inputs">
+              <div class="inputs" v-show="showAdv">
                 <div class="bar">
                   <div class="title">物料描述</div>
-                    <el-input v-model="description"></el-input>
-                  </div>
+                  <el-input v-model="description"></el-input>
                 </div>
-              </div> -->
+              </div>
             </div>
-            <div class="adv-search">高级搜索</div>
-            <el-button class="search-btn">搜索</el-button>
-            <el-button type="primary" class="add-info">新建物料信息</el-button>
+            <div class="buttons">
+              <div class="adv-search" @click="showAdvSearch">高级搜索</div>
+              <el-button class="search-btn">搜索</el-button>
+              <el-button type="primary" class="add-info">新建物料信息</el-button>
+            </div>
           </div>
           <div class="table">
             <el-table
@@ -197,7 +196,8 @@ export default {
           note: ""
         }
       ],
-      pageNumberString: "共搜索出100条数据"
+      pageNumberString: "共搜索出100条数据",
+      showAdv: false,
     };
   },
   methods: {
@@ -269,6 +269,9 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    showAdvSearch() {
+      this.showAdv = !this.showAdv;
     }
   }
 };
@@ -323,12 +326,14 @@ export default {
             display: flex;
             flex-direction: row;
             align-items: center;
+            margin-bottom: 15px;
           }
           .bar {
             display: flex;
             flex-direction: row;
             align-items: center;
             min-width: 150px;
+            flex: 1;
             .title {
               min-width: 60px;
               font-size: 15px;
@@ -337,9 +342,19 @@ export default {
             }
           }
         }
+        .buttons{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          align-self: flex-start;
+          & > div, button{
+            margin-bottom: 15px;
+          }
+        }
         .adv-search {
-          margin: 0 20px;
+          margin-left: 25px;
           cursor: pointer;
+          white-space: nowrap;
         }
         .search-btn {
           margin: 0 20px;
