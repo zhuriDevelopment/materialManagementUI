@@ -117,7 +117,7 @@
 
 export default {
   name: 'MtrBasicInfo',
-  props: ["basicInfo"],
+  props: ["basicInfo", "units"],
   data() {
     return {
       rows: [],
@@ -127,28 +127,34 @@ export default {
   },
   watch: {
     basicInfo(newVal, oldVal) {
-      this.rows = [
-        [{label: 'SPU编码', value: this.basicInfo.spuCode, key: 'spuCode'},
+      if (this.rows.length < 2) {
+        this.rows = [[], [], [], [], [], [], []];
+      }
+      this.rows[0] = [{label: 'SPU编码', value: this.basicInfo.spuCode, key: 'spuCode'},
           {label: 'SPU名称', value: this.basicInfo.spuName, key: 'spuName'},
-          {label: '物料类型', value: this.basicInfo.type, key: 'type'}],
-        [{label: '物料分类', value: this.basicInfo.category, key: 'category'},
+          {label: '物料类型', value: this.basicInfo.type, key: 'type'}];
+      this.rows[1] = [{label: '物料分类', value: this.basicInfo.category, key: 'category'},
         {label: '来源', value: this.basicInfo.source, key: 'source'},
-        {label: '用途', value: this.basicInfo.usage, key: 'usage'}],
-        [{label: '设计图号', value: this.basicInfo.designCode, key:'designCode'},
+        {label: '用途', value: this.basicInfo.usage, key: 'usage'}];
+      this.rows[2] = [{label: '设计图号', value: this.basicInfo.designCode, key:'designCode'},
           {label: '设计版次', value: this.basicInfo.designVersion, key: 'designVersion'},
-          {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}],
-        // [{label: '规格描述', value: '', key: 'specDesc'},
-        //   {label: '多规格物料', value: false, key: 'multiSpec'}],
-        [],
-        [{label: '备注', value: this.basicInfo.note, key: 'note'}],
-        [{label: '默认计量单位', value: '', key: 'defaultUnit'}],
-        [{label: '辅助计量单位',
-          value: [{name: '米', conversionFactor: '1', sort: 1,},
-                  {name: '厘米', conversionFactor: '0.3', sort: 2,},
-                  {name: '尺', conversionFactor: '2.3', sort: 3,}],
+          {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}];
+      this.rows[4] = [{label: '备注', value: this.basicInfo.note, key: 'note'}];
+      this.rows[5] = [{label: '默认计量单位', value: '', key: 'defaultUnit'}];
+      console.log(`basicInfo`, `this.rows`, this.rows);
+    },
+    units(newVal, oldVal) {
+      if (this.rows.length < 2) {
+        this.rows = [[], [], [], [], [], [], []];
+      }
+      this.rows[6] = [
+        {
+          label: '辅助计量单位',
+          value: this.units,
           key: 'asUnit',
-        }],
+        }
       ];
+      console.log(`units`, `this.rows`, this.rows);
     },
     rows: {
       // handler should not be arrow function.

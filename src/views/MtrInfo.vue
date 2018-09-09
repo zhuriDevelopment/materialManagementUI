@@ -16,7 +16,7 @@
           </div>
           <el-tabs type="border-card" value="1">
             <el-tab-pane label="物料基本信息">
-              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" :basicInfo="mtrBasicInfo"></Mtr-basic-info>
+              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" :basicInfo="mtrBasicInfo" :units="mtrBasicInfoUnits"></Mtr-basic-info>
             </el-tab-pane>
             <el-tab-pane label="物料定义">
               <Mtr-defs @changeModel="updateMtrData($event, 'mtrDefs')" :data="mtrDefs"></Mtr-defs>
@@ -88,7 +88,9 @@ export default {
   data() {
     return {
       mtrBasicInfo: {},
+      mtrBasicInfoUnits: {},
       mtrBasicInfoUpdateValue: {},
+      mtrBasicInfoUnitsUpdateValue: {},
       mtrUnitTable: {},
       mtrUnitTableUpdateValue: [],
       mtrDefs: {},
@@ -342,7 +344,7 @@ export default {
           spuCode: this.$route.params.id,
           spuName: this.$route.query.name,
           // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
-          typeArr: [1, 2, 3, 5, 6, 7, 8, 9]
+          typeArr: [1, 2, 3, 5, 6, 7, 8, 9, 10]
         })
         .then(response => {
           console.log(response);
@@ -360,6 +362,9 @@ export default {
             mnemonic: _mtrBasicInfo["mnemonic"],
             note: _mtrBasicInfo["note"]
           };
+          // 物料基础信息中的物料单位
+          const _mtrBasicInfoUnits = response.data[8];
+          this.mtrBasicInfoUnits = _mtrBasicInfoUnits;
           // 物料定义
           const _mtrDefs = response.data[1];
           let _defLen = response.data[1].length;
