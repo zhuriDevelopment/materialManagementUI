@@ -122,6 +122,7 @@ export default {
     return {
       rows: [],
       disabled: [],
+      defaultUnit: "",
       // units: [],
     };
   },
@@ -150,11 +151,23 @@ export default {
       this.rows[6] = [
         {
           label: '辅助计量单位',
-          value: this.units,
+          value: this.units[1],
           key: 'asUnit',
         }
       ];
-      console.log(`units`, `this.rows`, this.rows);
+      this.units[0].forEach(el => {
+        el.value = el.name;
+      });
+      this.defaultUnit = this.units[0][0].name;
+      this.rows[5] = [
+        {
+          label: '默认计量单位',
+          value: this.defaultUnit,
+          key: 'defaultUnit',
+          options: this.units[0]
+        }
+      ];
+      console.log(`units`, `this.rows`, this.rows, this.units);
     },
     rows: {
       // handler should not be arrow function.
