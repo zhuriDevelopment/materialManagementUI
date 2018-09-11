@@ -14,14 +14,15 @@
               <div class="inputs">
                 <div class="bar">
                   <div class="title">物料类型</div>
-                  <el-select v-model="materialType" placeholder="请选择">
+                  <!-- <el-select v-model="materialType" placeholder="请选择">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
                     </el-option>
-                  </el-select>
+                  </el-select> -->
+                  <el-input v-model="materialType"></el-input>
                 </div>
                 <div class="bar">
                   <div class="title">物料编码</div>
@@ -54,8 +55,9 @@
               </div>
             </div>
             <div class="buttons">
-              <div class="adv-search" @click="showAdvSearch">高级搜索</div>
-              <el-button class="search-btn">搜索</el-button>
+              <!-- <div class="adv-search" @click="showAdvSearch">高级搜索</div> -->
+              <el-button type="text" class="adv-search" @click="showAdvSearch">高级搜索</el-button>
+              <el-button class="search-btn" @click="searchWithParams">搜索</el-button>
               <el-button type="primary" class="add-info">新建物料信息</el-button>
             </div>
           </div>
@@ -272,6 +274,69 @@ export default {
     },
     showAdvSearch() {
       this.showAdv = !this.showAdv;
+    },
+    searchWithParams() {
+      let allEmptyFlag = 1;
+      let sendData = {};
+      if (this.materialType !== "") {
+        sendData[`materialType`] = this.materialType;
+        allEmptyFlag = 0;
+      }
+      if (this.materialCode !== "") {
+        sendData[`materialCode`] = this.materialCode;
+        allEmptyFlag = 0;
+      }
+      if (this.mnemonic !== "") {
+        sendData[`mnemonic`] = this.mnemonic;
+        allEmptyFlag = 0;
+      }
+      if (this.spuCode !== "") {
+        sendData[`spuCode`] = this.spuCode;
+        allEmptyFlag = 0;
+      }
+      if (this.spuName !== "") {
+        sendData[`spuName`] = this.spuName;
+        allEmptyFlag = 0;
+      }
+      if (this.materialCategory !== "") {
+        sendData[`materialCategory`] = this.materialCategory;
+        allEmptyFlag = 0;
+      }
+      if (this.description !== "") {
+        sendData[`description`] = this.description;
+        allEmptyFlag = 0;
+      }
+      console.log(`searchParams: `, sendData);
+      if (allEmptyFlag === 1) {
+        this.getTableData();
+      } else {
+        this.$axios
+          .post(`${window.$config.HOST}/MaterialManagement/getBaseInfo`, sendData)
+          .then(response => {
+            console.log(response);
+            let basedatas = response.data[0];
+            let catdatas = response.data[1];
+            let unitdatas = response.data[2];
+            this.tableData = [];
+            for (let i = 0; i < basedatas.length; ++i) {
+              let tmpvalue = {};
+              tmpvalue["code"] = basedatas[i]["spuCode"];
+              tmpvalue["name"] = basedatas[i]["spuName"];
+              tmpvalue["class"] = catdatas[i]["name"];
+              tmpvalue["desc"] = basedatas[i]["description"];
+              tmpvalue["figCode"] = basedatas[i]["designCode"];
+              tmpvalue["figVersion"] = basedatas[i]["designVersion"];
+              tmpvalue["source"] = basedatas[i]["source"];
+              tmpvalue["unit"] = unitdatas[i]["name"];
+              tmpvalue["note"] = basedatas[i]["note"];
+              this.tableData.push(tmpvalue);
+              this.pageNumberString = "共搜索出" + basedatas.length + "条数据";
+            }
+          })
+          .catch(error => {
+            console.log(`searchWithParams error: `, error);
+          });
+      }
     }
   }
 };

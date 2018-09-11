@@ -73,11 +73,27 @@
                 width="50">
               </el-table-column>
               <el-table-column
+                property="label"
+                label="单位标识"
+                width="120">
+                <template slot-scope="scope">
+                  <el-input v-model="rows[6][0].value[scope.$index]['label']" :disabled="disabled[scope.$index]===scope.row.name"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column
                 property="name"
-                label="计量单位"
+                label="名称"
                 width="120">
                 <template slot-scope="scope">
                   <el-input v-model="rows[6][0].value[scope.$index]['name']" :disabled="disabled[scope.$index]===scope.row.name"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column
+                property="englishName"
+                label="英文名称"
+                width="120">
+                <template slot-scope="scope">
+                  <el-input v-model="rows[6][0].value[scope.$index]['englishName']" :disabled="disabled[scope.$index]===scope.row.name"></el-input>
                 </template>
               </el-table-column>
               <el-table-column
@@ -148,23 +164,29 @@ export default {
       if (this.rows.length < 2) {
         this.rows = [[], [], [], [], [], [], []];
       }
+      this.units[1].forEach(el => {
+        delete el.id;
+      });
       this.rows[6] = [
         {
           label: '辅助计量单位',
-          value: this.units[1],
+          // value: this.units[1],
+          value: Object.assign([], this.units[1]),
           key: 'asUnit',
         }
       ];
       this.units[0].forEach(el => {
         el.value = el.name;
+        delete el.id;
       });
-      this.defaultUnit = this.units[0][0].name;
+      this.defaultUnit = Object.assign({}, this.units[0][0].name);
       this.rows[5] = [
         {
           label: '默认计量单位',
           value: this.defaultUnit,
           key: 'defaultUnit',
-          options: this.units[0]
+          // options: this.units[0]
+          options: Object.assign([], this.units[0]),
         }
       ];
       console.log(`units`, `this.rows`, this.rows, this.units);
@@ -178,11 +200,11 @@ export default {
             newInfo[j.key] = j.value;
           }
         }
-        newInfo.asUnit.forEach(el => {
-          el.englishName = "";
-          el.relatedId = "";
-          el.label = "";
-        })
+        // newInfo.asUnit.forEach(el => {
+        //   el.englishName = "";
+        //   el.relatedId = "";
+        //   el.label = "";
+        // })
         console.log(newInfo);
         this.$emit('changeModel', newInfo);
       },
@@ -192,11 +214,14 @@ export default {
   methods: {
     pushRow() {
       this.rows[6][0].value.push({
+        label: '',
         name: '',
+        englishName: '',
         conversionFactor: '',
+        relatedId: '',
         sort: this.rows[6][0].value.length + 1,
       });
-      console.log(this.rows[6][0].value)
+      console.log(`pushRow`, this.rows[6][0].value)
     },
     reverseValue(x, y){
       // console.log(x, y)
@@ -206,18 +231,24 @@ export default {
     handleUnitUp(index, row){
       let units = this.rows[6][0].value;
       if(index !== 0) {
+        console.log(`handleUnitUp`, units[index - 1], units[index], `index = `, index);
         [units[index - 1], units[index]] = [units[index], units[index - 1]];
         [units[index - 1].sort, units[index].sort] = [units[index].sort, units[index - 1].sort];
+        console.log(`After handleUnitUp`, units, this.rows[6][0].value);
         this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
+        console.log(`After reassign`, this.rows[6][0].value);
         this.exchangeDisable(index, index - 1);
       }
     },
     handleUnitDown(index, row){
       let units = this.rows[6][0].value;
       if(index < this.rows[6][0].value.length - 1) {
+        console.log(`handleUnitDown`, units[index + 1], units[index], `index = `, index);
         [units[index + 1], units[index]] = [units[index], units[index + 1]];
         [units[index + 1].sort, units[index].sort] = [units[index].sort, units[index + 1].sort];
+        console.log(`After haneldUnitDown`, units, this.rows[6][0].value);
         this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
+        console.log(`After reassign`, this.rows[6][0].value);
         this.exchangeDisable(index, index + 1);
       }
     },
@@ -227,6 +258,7 @@ export default {
       this.disabled[idx2] = tmp;
     },
     handleUnitAdd(index, row) {
+      console.log(`handleUnitAdd`, index, row, `disabled`, this.disabled);
       if(this.rows[6][0].value.slice(-1)[0].name !== ''){
         this.pushRow();
       }
@@ -235,6 +267,7 @@ export default {
       }
     },
     handleUnitDelete(index, row) {
+      console.log(`handleUnitDelete`, index, row, `disabled`, this.disabled, `this.rows[6]`, this.rows[6]);
       this.rows[6][0].value.splice(index, 1);
       if(this.rows[6][0].value.length === 0){
         this.pushRow();
@@ -290,7 +323,7 @@ export default {
           flex: 1;
         }
         .el-table{
-          max-width: 600px;
+          max-width: 900px;
         }
       }
     }
