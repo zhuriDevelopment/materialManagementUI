@@ -20,6 +20,9 @@ export default {
           // children: [{
           //   label: '三级 1-1-1'
           // }]
+        }, {
+          id: 2,
+          label: '物料分类管理',
         }]
       }],
       defaultProps: {
@@ -34,6 +37,9 @@ export default {
       console.log(data);
       if(data.label === "物料信息管理"){
         this.$router.push('/');
+      }
+      if (data.label === '物料分类管理') {
+        this.$router.push("/MtrTypeModify");
       }
     }
   }

@@ -190,7 +190,7 @@ export default {
           // options: this.units[0]
         }
       ];
-      this.$set(this.rows[5], 'options', this.units[0])
+      this.$set(this.rows[5][0], 'options', this.units[0])
       // console.log(`units`, `this.rows`, this.rows, this.units);
     },
     rows: {
@@ -278,14 +278,16 @@ export default {
       if(this.rows[6][0].value.slice(-1)[0].name !== ''){
         this.pushRow();
       }
-      if(this.rows[6][0].value[index].name !== ''){
-        this.disabled[index] = row.name;
-      }
+      // if(this.rows[6][0].value[index].name !== ''){
+      //   this.disabled[index] = row.name;
+      // }
     },
     handleUnitDelete(index, row) {
       // console.log(`handleUnitDelete`, index, row, `disabled`, this.disabled, `this.rows[6]`, this.rows[6]);
-      this.rows[6][0].value.splice(index, 1);
-      this.disabled.splice(index, 1);
+      if (this.rows[6][0].value[index].name !== '') {
+        this.rows[6][0].value.splice(index, 1);
+        this.disabled.splice(index, 1);
+      }
       if(this.rows[6][0].value.length === 0){
         this.pushRow();
       }
@@ -299,6 +301,7 @@ export default {
 .Mtr-basic-info {
   display: flex;
   flex-direction: column;
+  height: 800px;
   .upper{
     display: flex;
     flex-direction: column;
