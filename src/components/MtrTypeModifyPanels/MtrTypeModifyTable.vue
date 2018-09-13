@@ -15,42 +15,91 @@
           </el-table-column>
           <el-table-column
             prop="type"
-            label="属性类别">
+            label="属性类别"
+            width="160">
             <template slot-scope="scope">
-              <el-input v-model="tableData[scope.$index]['type']"></el-input>
+              <el-select v-model="tableData[scope.$index]['type'].toString()" placeholder="属性类别">
+                <el-option
+                  key="1"
+                  label='关键属性'
+                  value="1">
+                </el-option>
+                <el-option
+                  key="2"
+                  label='非关键属性'
+                  value="2">
+                </el-option>
+                <el-option
+                  key="3"
+                  label='批号属性'
+                  value="3">
+                </el-option>
+                <el-option
+                  key="4"
+                  label='规格属性'
+                  value="4">
+                </el-option>
+              </el-select>
             </template>
           </el-table-column>
           <el-table-column
             prop="label"
-            label="属性标识">
+            label="属性标识"
+            width="160">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['label']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             prop="name"
-            label="属性名">
+            label="属性名"
+            width="160">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['name']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             prop="rangetype"
-            label="取值范围类型">
+            label="取值范围类型"
+            width="160">
             <template slot-scope="scope">
-              <el-input v-model="tableData[scope.$index]['rangetype']"></el-input>
+              <!-- <el-input v-model="tableData[scope.$index]['rangetype']"></el-input> -->
+              <el-select v-model="tableData[scope.$index]['rangetype'].toString()" placeholder="属性类别">
+                <el-option
+                  key="1"
+                  label="任意文本"
+                  value="1">
+                </el-option>
+                <el-option
+                  key="2"
+                  label="最大最小值"
+                  value="2">
+                </el-option>
+                <el-option
+                  key="3"
+                  label="指定范围单选"
+                  value="3">
+                </el-option>
+                <el-option
+                  key="4"
+                  label="指定范围多选"
+                  value="4">
+                </el-option>
+              </el-select>
             </template>
           </el-table-column>
           <el-table-column
             prop="range"
-            label="取值范围">
+            label="取值范围"
+            width="160">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['range']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
             prop="sort"
-            label="排序号">
+            label="排序号"
+            width="100">
             <template slot-scope="scope">
                   <i class="el-icon-sort-up" @click="handleUnitUp(scope.$index, scope.row)" :class="{'disabled': scope.$index === 0}"></i>
                   <i class="el-icon-sort-down"  @click="handleUnitDown(scope.$index, scope.row)" :class="{'disabled': scope.$index === tableData.length-1}"></i>

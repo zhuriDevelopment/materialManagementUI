@@ -242,7 +242,7 @@ export default {
         "spuCode": spuCode,
         "spuName": spuName,
         // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
-        "typeArr": [5, 6, 7, 8, 9],
+        "typeArr": [5, 6, 7, 8, 9, 11],
       })
       .then((response) => {
         console.log(response);
@@ -251,6 +251,21 @@ export default {
         this.mtrSales = response.data[2];
         this.mtrQuality = response.data[3];
         this.mtrFinance = response.data[4];
+        let len = response.data[5][1].length;
+        this.mtrTypeModifyTable = [];
+        for (let i = 0; i < len; ++i) {
+          let tmp = {};
+          tmp["type"] = response.data[5][1][i].type;
+          tmp["label"] = response.data[5][1][i].label;
+          tmp["name"] = response.data[5][1][i].name;
+          let rangeObject = JSON.parse(response.data[5][1][i].range);
+          console.log(`rangeObject`, rangeObject);
+          tmp["rangetype"] = rangeObject.type;
+          tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
+          tmp["sort"] = response.data[5][1][i].sort;
+          this.mtrTypeModifyTable.push(tmp);
+        }
+
       })
       .catch(error => {
         console.log(`error in setNewSpuInfo`, error);

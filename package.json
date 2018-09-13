@@ -12,6 +12,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
+    "@vue/devtools": "^4.1.5",
     "axios": "^0.18.0",
     "element-ui": "^2.4.4",
     "isomorphic-fetch": "^2.2.1",
@@ -60,8 +61,8 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "^2.0.2",
-    "less": "^2.7.2",
-    "less-loader": "^4.0.2",
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0",
     "lolex": "^1.5.2",
     "mocha": "^3.2.0",
     "opn": "^4.0.2",
