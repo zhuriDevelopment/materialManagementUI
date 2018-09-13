@@ -2,7 +2,9 @@
   <div class="home">
     <Nav-header></Nav-header>
     <div class="body">
-      <div class="main-nav">MainMenu</div>
+      <div class="main-nav">
+        <Nav-tree></Nav-tree>
+      </div>
       <div class="content">
         <div class="cards">
           <Tabs :tabValue="editableTabsValue" :tabList="editableTabs" :tabIndex="tabIndex" @updateTabs="updateTabs"></Tabs>
@@ -60,6 +62,7 @@
 import NavHeader from "@/components/Nav";
 import Tabs from "@/components/Tabs";
 import Breadcrumb from "@/components/Breadcrumb";
+import NavTree from "@/components/MainNavTree";
 import MtrTypeModifyInfo from "@/components/MtrTypeModifyPanels/MtrTypeModifyInfo";
 import MtrTypeModifyTable from "@/components/MtrTypeModifyPanels/MtrTypeModifyTable";
 import MtrPurchaseAndStore from "@/components/MtrInfoPanels/MtrPurchaseAndStore";
@@ -74,6 +77,7 @@ export default {
     NavHeader,
     Tabs,
     Breadcrumb,
+    NavTree,
     MtrTypeModifyInfo,
     MtrTypeModifyTable,
     MtrPurchaseAndStore,
@@ -343,7 +347,7 @@ export default {
     display: flex;
     flex-direction: row;
     .main-nav {
-      padding-top: 200px;
+      padding-top: 20px;
       min-width: 200px;
       border-right: 1px solid black;
     }

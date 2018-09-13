@@ -58,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="showTable">
         <div class="col col-2">
           <div class="label">{{rows[6][0].label}}</div>
           <div class="inputbar">
@@ -140,6 +140,7 @@ export default {
       disabled: [],
       defaultUnit: "",
       // units: [],
+      showTable: true,
     };
   },
   watch: {
@@ -158,23 +159,24 @@ export default {
           {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}];
       this.rows[4] = [{label: '备注', value: this.basicInfo.note, key: 'note'}];
       this.rows[5] = [{label: '默认计量单位', value: '', key: 'defaultUnit'}];
-      console.log(`basicInfo`, `this.rows`, this.rows);
+      this.rows[6] = [
+        {
+          label: '辅助计量单位',
+          value: this.units[1],
+          key: 'asUnit',
+        }
+      ];
+      // console.log(`basicInfo`, `this.rows`, this.rows);
     },
     units(newVal, oldVal) {
       if (this.rows.length < 2) {
         this.rows = [[], [], [], [], [], [], []];
       }
+      // console.log(this.units);
       this.units[1].forEach(el => {
         delete el.id;
       });
-      this.rows[6] = [
-        {
-          label: '辅助计量单位',
-          // value: this.units[1],
-          value: Object.assign([], this.units[1]),
-          key: 'asUnit',
-        }
-      ];
+      this.rows[6].value = Object.assign([], this.units[1], []);
       this.units[0].forEach(el => {
         el.value = el.name;
         delete el.id;
@@ -186,10 +188,10 @@ export default {
           value: this.defaultUnit,
           key: 'defaultUnit',
           // options: this.units[0]
-          options: Object.assign([], this.units[0]),
         }
       ];
-      console.log(`units`, `this.rows`, this.rows, this.units);
+      this.$set(this.rows[5], 'options', this.units[0])
+      // console.log(`units`, `this.rows`, this.rows, this.units);
     },
     rows: {
       // handler should not be arrow function.
@@ -205,7 +207,7 @@ export default {
         //   el.relatedId = "";
         //   el.label = "";
         // })
-        console.log(newInfo);
+        // console.log(newInfo);
         this.$emit('changeModel', newInfo);
       },
       deep: true,
@@ -219,7 +221,7 @@ export default {
         englishName: '',
         conversionFactor: '',
         relatedId: '',
-        sort: this.rows[6][0].value.length + 1,
+        sort: this.rows[6][0].value.length + 2,
       });
       console.log(`pushRow`, this.rows[6][0].value)
     },
@@ -231,25 +233,39 @@ export default {
     handleUnitUp(index, row){
       let units = this.rows[6][0].value;
       if(index !== 0) {
+        this.showTable = false;
         console.log(`handleUnitUp`, units[index - 1], units[index], `index = `, index);
         [units[index - 1], units[index]] = [units[index], units[index - 1]];
         [units[index - 1].sort, units[index].sort] = [units[index].sort, units[index - 1].sort];
-        console.log(`After handleUnitUp`, units, this.rows[6][0].value);
-        this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
-        console.log(`After reassign`, this.rows[6][0].value);
+        // console.log(`After handleUnitUp`, units, this.rows[6][0].value);
+        // this.rows[6][0].value = Object.assign([], units, []);
+        this.$set(this.rows[6][0], 'value', units);
+        // console.log(`After reassign`, this.rows[6][0].value);
         this.exchangeDisable(index, index - 1);
+        console.log(`handleUnitUp`, this.rows[6][0].value[0].name, `index = `, index);
+        console.log(this.disabled)
+        this.$nextTick(function() {
+          this.showTable = true;
+        });
       }
     },
     handleUnitDown(index, row){
       let units = this.rows[6][0].value;
       if(index < this.rows[6][0].value.length - 1) {
-        console.log(`handleUnitDown`, units[index + 1], units[index], `index = `, index);
+        this.showTable = false;
+        // console.log(`handleUnitDown`, units[index + 1], units[index], `index = `, index);
         [units[index + 1], units[index]] = [units[index], units[index + 1]];
         [units[index + 1].sort, units[index].sort] = [units[index].sort, units[index + 1].sort];
-        console.log(`After haneldUnitDown`, units, this.rows[6][0].value);
-        this.rows[6][0].value = Object.assign([], this.rows[6][0].value, units);
-        console.log(`After reassign`, this.rows[6][0].value);
+        // console.log(`After haneldUnitDown`, units, this.rows[6][0].value);
+        // this.rows[6][0].value = Object.assign([], units, []);
+        this.$set(this.rows[6][0], 'value', units);
+        // console.log(`After reassign`, this.rows[6][0].value);
         this.exchangeDisable(index, index + 1);
+        console.log(`handleUnitDown`, this.rows[6][0].value[0].name, `index = `, index);
+        console.log(this.disabled)
+        this.$nextTick(function() {
+          this.showTable = true;
+        });
       }
     },
     exchangeDisable(idx1, idx2) {
@@ -258,7 +274,7 @@ export default {
       this.disabled[idx2] = tmp;
     },
     handleUnitAdd(index, row) {
-      console.log(`handleUnitAdd`, index, row, `disabled`, this.disabled);
+      // console.log(`handleUnitAdd`, index, row, `disabled`, this.disabled);
       if(this.rows[6][0].value.slice(-1)[0].name !== ''){
         this.pushRow();
       }
@@ -267,8 +283,9 @@ export default {
       }
     },
     handleUnitDelete(index, row) {
-      console.log(`handleUnitDelete`, index, row, `disabled`, this.disabled, `this.rows[6]`, this.rows[6]);
+      // console.log(`handleUnitDelete`, index, row, `disabled`, this.disabled, `this.rows[6]`, this.rows[6]);
       this.rows[6][0].value.splice(index, 1);
+      this.disabled.splice(index, 1);
       if(this.rows[6][0].value.length === 0){
         this.pushRow();
       }

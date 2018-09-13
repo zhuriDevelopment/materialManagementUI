@@ -2,7 +2,9 @@
   <div class="home">
     <Nav-header></Nav-header>
     <div class="body">
-      <div class="main-nav">MainMenu</div>
+      <div class="main-nav">
+        <Nav-tree></Nav-tree>
+      </div>
       <div class="content">
         <div class="cards">
           <Tabs :tabValue="editableTabsValue" :tabList="editableTabs" :tabIndex="tabIndex" @updateTabs="updateTabs"></Tabs>
@@ -14,7 +16,7 @@
               <el-button type="primary" icon="el-icon-check" @click="submitChangeValue">提交</el-button>
             </el-row>
           </div>
-          <el-tabs type="border-card" value="1">
+          <el-tabs type="border-card" value="0">
             <el-tab-pane label="物料基本信息">
               <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" :basicInfo="mtrBasicInfo" :units="mtrBasicInfoUnits"></Mtr-basic-info>
             </el-tab-pane>
@@ -53,6 +55,7 @@
 import NavHeader from "@/components/Nav";
 import Tabs from "@/components/Tabs";
 import Breadcrumb from "@/components/Breadcrumb";
+import NavTree from "@/components/MainNavTree";
 import MtrBasicInfo from "@/components/MtrInfoPanels/MtrBasicInfo";
 import MtrDefs from "@/components/MtrInfoPanels/MtrDefs";
 import MtrSkuDefs from "@/components/MtrInfoPanels/MtrSkuDefs";
@@ -63,12 +66,14 @@ import MtrSales from "@/components/MtrInfoPanels/MtrSales";
 import MtrQuality from "@/components/MtrInfoPanels/MtrQuality";
 import MtrFinance from "@/components/MtrInfoPanels/MtrFinance";
 
+
 export default {
   name: "home",
   components: {
     NavHeader,
     Tabs,
     Breadcrumb,
+    NavTree,
     MtrBasicInfo,
     MtrDefs,
     MtrSkuDefs,
@@ -77,7 +82,7 @@ export default {
     MtrPlan,
     MtrSales,
     MtrQuality,
-    MtrFinance
+    MtrFinance,
   },
   created() {
     this.initTabs();
@@ -148,7 +153,8 @@ export default {
           unit: "",
           note: ""
         }
-      ]
+      ],
+      
     };
   },
   methods: {
@@ -193,14 +199,14 @@ export default {
     updateMtrData(newVal, type) {
       let flag = false;
       let unitTable = [];
-      console.log("emit: ", newVal);
+      // console.log("emit: ", newVal);
       if (type === "mtrBasicInfo") {
         unitTable = newVal.asUnit;
         delete newVal.asUnit;
         for (let i in newVal) {
           if (this[type].hasOwnProperty(i)) {
             if (newVal[i] !== this[type][i]) {
-              console.log(type, i, newVal[i], this[type][i]);
+              // console.log(type, i, newVal[i], this[type][i]);
               flag = true;
               break;
             }
@@ -229,8 +235,8 @@ export default {
       if (flag) {
         switch (type) {
           case "mtrBasicInfo":
-            console.log("mtrBasicInfo: ", newVal);
-            console.log("计量单位表: ", unitTable);
+            // console.log("mtrBasicInfo: ", newVal);
+            // console.log("计量单位表: ", unitTable);
             this.mtrBasicInfoUpdateValue = [];
             for (let key in newVal) {
               if (this[type].hasOwnProperty(key)) {
@@ -735,7 +741,7 @@ export default {
     display: flex;
     flex-direction: row;
     .main-nav {
-      padding-top: 200px;
+      padding-top: 20px;
       min-width: 200px;
       border-right: 1px solid black;
     }

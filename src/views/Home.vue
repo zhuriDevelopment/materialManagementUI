@@ -2,7 +2,9 @@
   <div class="home">
     <nav-header></nav-header>
     <div class="body">
-      <div class="main-nav">MainMenu</div>
+      <div class="main-nav">
+        <Nav-tree></Nav-tree>
+      </div>
       <div class="content">
         <div class="cards">
           <Tabs :tabValue="editableTabsValue" :tabList="editableTabs" :tabIndex="tabIndex" @updateTabs="updateTabs"></Tabs>
@@ -146,13 +148,15 @@
 import NavHeader from "@/components/Nav";
 import Tabs from "@/components/Tabs";
 import Breadcrumb from "@/components/Breadcrumb";
+import NavTree from "@/components/MainNavTree";
 
 export default {
   name: "home",
   components: {
     NavHeader,
     Tabs,
-    Breadcrumb
+    Breadcrumb,
+    NavTree
   },
   created() {
     this.initTabs();
@@ -200,6 +204,19 @@ export default {
       ],
       pageNumberString: "共搜索出100条数据",
       showAdv: false,
+      treeData: [{
+        label: '系统',
+        children: [{
+          label: '物料信息管理',
+          // children: [{
+          //   label: '三级 1-1-1'
+          // }]
+        }]
+      }],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     };
   },
   methods: {
@@ -359,7 +376,7 @@ export default {
     display: flex;
     flex-direction: row;
     .main-nav {
-      padding-top: 200px;
+      padding-top: 20px;
       min-width: 200px;
       border-right: 1px solid black;
     }
