@@ -18,7 +18,9 @@
           </div>
           <el-tabs type="border-card" value="0">
             <el-tab-pane label="物料基本信息">
-              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" :basicInfo="mtrBasicInfo" :units="mtrBasicInfoUnits"></Mtr-basic-info>
+              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" 
+                :basicInfo="mtrBasicInfo" 
+                :units="mtrBasicInfoUnits"></Mtr-basic-info>
             </el-tab-pane>
             <el-tab-pane label="物料定义">
               <Mtr-defs @changeModel="updateMtrData($event, 'mtrDefs')" :data="mtrDefs"></Mtr-defs>
@@ -199,9 +201,12 @@ export default {
     updateMtrData(newVal, type) {
       let flag = false;
       let unitTable = [];
-      // console.log("emit: ", newVal);
+      let defaultUnit = [];
+      console.log("emit: ", newVal);
+      console.log("origin: ", this[type]);
       if (type === "mtrBasicInfo") {
         unitTable = newVal.asUnit;
+        defaultUnit = newVal.defaultUnit;
         delete newVal.asUnit;
         for (let i in newVal) {
           if (this[type].hasOwnProperty(i)) {
@@ -211,6 +216,7 @@ export default {
               break;
             }
           } else {
+            console.log("new element! => ", i);
             flag = true;
             break;
           }
@@ -235,8 +241,9 @@ export default {
       if (flag) {
         switch (type) {
           case "mtrBasicInfo":
-            // console.log("mtrBasicInfo: ", newVal);
-            // console.log("计量单位表: ", unitTable);
+            console.log("mtrBasicInfo: ", newVal);
+            console.log("计量单位表: ", unitTable);
+            console.log("默认计量单位：", defaultUnit);
             this.mtrBasicInfoUpdateValue = [];
             for (let key in newVal) {
               if (this[type].hasOwnProperty(key)) {
@@ -248,6 +255,10 @@ export default {
                 }
               }
             }
+            this.mtrUnitTableUpdateValue = [];
+            this.mtrUnitTableUpdateValue.push(defaultUnit);
+            this.mtrUnitTableUpdateValue.push(unitTable);
+            console.log("mtrUnitTableUpdateValue: ", this.mtrUnitTableUpdateValue);
             break;
           case "mtrDefs":
             console.log("mtrDefs: ", newVal);
@@ -720,6 +731,14 @@ export default {
         console.log(`add Finance values!`);
       }
       console.log(sendData);
+      if (this.mtrUnitTableUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 10,
+          updateValue: this.mtrUnitTableUpdateValue,
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add Unit Values!`);
+      }
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
         .then((response) => {
           console.log(response);

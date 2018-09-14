@@ -47,12 +47,12 @@
         <div class="col">
           <div class="label">{{rows[5][0].label}}</div>
           <div class="inputbar">
-            <el-select v-model="rows[5][0].value" placeholder="请选择">
+            <el-select v-model="defaultUnit" placeholder="请选择">
               <el-option
                 v-for="item in rows[5][0].options"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value">
+                :key="item.name"
+                :label="item.name"
+                :value="item.name">
               </el-option>
             </el-select>
           </div>
@@ -158,7 +158,7 @@ export default {
           {label: '设计版次', value: this.basicInfo.designVersion, key: 'designVersion'},
           {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}];
       this.rows[4] = [{label: '备注', value: this.basicInfo.note, key: 'note'}];
-      this.rows[5] = [{label: '默认计量单位', value: '', key: 'defaultUnit'}];
+      this.rows[5] = [{label: '默认计量单位', value: this.defaultUnit, key: 'defaultUnit'}];
       this.rows[6] = [
         {
           label: '辅助计量单位',
@@ -169,6 +169,7 @@ export default {
       // console.log(`basicInfo`, `this.rows`, this.rows);
     },
     units(newVal, oldVal) {
+      console.log(`计量单位值`, this.units);
       if (this.rows.length < 2) {
         this.rows = [[], [], [], [], [], [], []];
       }
@@ -177,11 +178,18 @@ export default {
         delete el.id;
       });
       this.rows[6].value = Object.assign([], this.units[1], []);
-      this.units[0].forEach(el => {
+      // this.units[0].forEach(el => {
+      //   el.value = el.name;
+      //   delete el.id;
+      // });
+      let defaultOptions = Object.assign([], this.units[1], []);
+      defaultOptions.forEach(el => {
         el.value = el.name;
-        delete el.id;
-      });
-      this.defaultUnit = Object.assign({}, this.units[0][0].name);
+        // delete el.id;
+      })
+      this.defaultUnit = this.units[0][0].name;
+      // this.$set(this.defaultUnit, this.units[0][0].name);
+      // this.defaultUnit = Object.assign({}, this.units[0][0].name);
       this.rows[5] = [
         {
           label: '默认计量单位',
@@ -190,8 +198,20 @@ export default {
           // options: this.units[0]
         }
       ];
-      this.$set(this.rows[5][0], 'options', this.units[0])
-      // console.log(`units`, `this.rows`, this.rows, this.units);
+      // this.$set(this.rows[5][0], 'options', this.units[0])
+      this.$set(this.rows[5][0], 'options', defaultOptions);
+      console.log(`units`, `this.rows`, this.rows, this.units);
+      console.log(`defaultOptions`, defaultOptions);
+      console.log(`defaultUnit`, this.defaultUnit);
+    },
+    defaultUnit: {
+      handler: function (newVal, oldVal) {
+        console.log(`defaultUnit Change!`, this.defaultUnit);
+        this.$set(this.rows[5][0], 'value', this.defaultUnit);
+        console.log(`this.rows[5]`, this.rows[5]);
+        this.rows = Object.assign([], this.rows, []);
+      },
+      deep: true,
     },
     rows: {
       // handler should not be arrow function.
@@ -207,7 +227,7 @@ export default {
         //   el.relatedId = "";
         //   el.label = "";
         // })
-        // console.log(newInfo);
+        // console.log(`newInfo`, newInfo);
         this.$emit('changeModel', newInfo);
       },
       deep: true,
@@ -221,7 +241,7 @@ export default {
         englishName: '',
         conversionFactor: '',
         relatedId: '',
-        sort: this.rows[6][0].value.length + 2,
+        sort: this.rows[6][0].value.length + 1,
       });
       console.log(`pushRow`, this.rows[6][0].value)
     },
