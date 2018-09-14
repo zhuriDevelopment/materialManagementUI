@@ -139,34 +139,37 @@ export default {
       rows: [],
       disabled: [],
       defaultUnit: "",
-      // units: [],
       showTable: true,
     };
   },
   watch: {
-    basicInfo(newVal, oldVal) {
-      if (this.rows.length < 2) {
-        this.rows = [[], [], [], [], [], [], []];
-      }
-      this.rows[0] = [{label: 'SPU编码', value: this.basicInfo.spuCode, key: 'spuCode'},
-          {label: 'SPU名称', value: this.basicInfo.spuName, key: 'spuName'},
-          {label: '物料类型', value: this.basicInfo.type, key: 'type'}];
-      this.rows[1] = [{label: '物料分类', value: this.basicInfo.category, key: 'category'},
-        {label: '来源', value: this.basicInfo.source, key: 'source'},
-        {label: '用途', value: this.basicInfo.usage, key: 'usage'}];
-      this.rows[2] = [{label: '设计图号', value: this.basicInfo.designCode, key:'designCode'},
-          {label: '设计版次', value: this.basicInfo.designVersion, key: 'designVersion'},
-          {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}];
-      this.rows[4] = [{label: '备注', value: this.basicInfo.note, key: 'note'}];
-      this.rows[5] = [{label: '默认计量单位', value: this.defaultUnit, key: 'defaultUnit'}];
-      this.rows[6] = [
-        {
-          label: '辅助计量单位',
-          value: this.units[1],
-          key: 'asUnit',
+    basicInfo: {
+      handler: function (newVal, oldVal) {
+        if (this.rows.length < 2) {
+          this.rows = [[], [], [], [], [], [], []];
         }
-      ];
-      // console.log(`basicInfo`, `this.rows`, this.rows);
+        this.rows[0] = [{label: 'SPU编码', value: this.basicInfo.spuCode, key: 'spuCode'},
+            {label: 'SPU名称', value: this.basicInfo.spuName, key: 'spuName'},
+            {label: '物料类型', value: this.basicInfo.type, key: 'type'}];
+        this.rows[1] = [{label: '物料分类', value: this.basicInfo.category, key: 'category'},
+          {label: '来源', value: this.basicInfo.source, key: 'source'},
+          {label: '用途', value: this.basicInfo.usage, key: 'usage'}];
+        this.rows[2] = [{label: '设计图号', value: this.basicInfo.designCode, key:'designCode'},
+            {label: '设计版次', value: this.basicInfo.designVersion, key: 'designVersion'},
+            {label: '助记码', value: this.basicInfo.mnemonic, key: 'mnemonic'}];
+        this.rows[4] = [{label: '备注', value: this.basicInfo.note, key: 'note'}];
+        this.rows[5] = [{label: '默认计量单位', value: this.defaultUnit, key: 'defaultUnit'}];
+        this.rows[6] = [
+          {
+            label: '辅助计量单位',
+            value: this.units[1],
+            key: 'asUnit',
+          }
+        ];
+        this.rows = Object.assign([], this.rows, []);
+        console.log(`basicInfo`, `this.rows`, this.rows);
+      },
+      deep: true,
     },
     units(newVal, oldVal) {
       console.log(`计量单位值`, this.units);
@@ -185,11 +188,8 @@ export default {
       let defaultOptions = Object.assign([], this.units[1], []);
       defaultOptions.forEach(el => {
         el.value = el.name;
-        // delete el.id;
       })
       this.defaultUnit = this.units[0][0].name;
-      // this.$set(this.defaultUnit, this.units[0][0].name);
-      // this.defaultUnit = Object.assign({}, this.units[0][0].name);
       this.rows[5] = [
         {
           label: '默认计量单位',
@@ -198,7 +198,6 @@ export default {
           // options: this.units[0]
         }
       ];
-      // this.$set(this.rows[5][0], 'options', this.units[0])
       this.$set(this.rows[5][0], 'options', defaultOptions);
       console.log(`units`, `this.rows`, this.rows, this.units);
       console.log(`defaultOptions`, defaultOptions);
@@ -222,16 +221,11 @@ export default {
             newInfo[j.key] = j.value;
           }
         }
-        // newInfo.asUnit.forEach(el => {
-        //   el.englishName = "";
-        //   el.relatedId = "";
-        //   el.label = "";
-        // })
         // console.log(`newInfo`, newInfo);
         this.$emit('changeModel', newInfo);
       },
       deep: true,
-    }
+    },
   },
   methods: {
     pushRow() {

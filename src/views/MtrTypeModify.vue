@@ -482,6 +482,15 @@ export default {
         .table {
           margin-top: 20px;
         }
+        .el-tabs {
+          // height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        .el-tab-pane {
+          overflow: scroll;
+          max-height: 500px;
+        }
       }
     }
   }

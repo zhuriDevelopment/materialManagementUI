@@ -60,7 +60,7 @@
               <!-- <div class="adv-search" @click="showAdvSearch">高级搜索</div> -->
               <el-button type="text" class="adv-search" @click="showAdvSearch">高级搜索</el-button>
               <el-button class="search-btn" @click="searchWithParams">搜索</el-button>
-              <el-button type="primary" class="add-info">新建物料信息</el-button>
+              <el-button type="primary" class="add-info" @click="createMtrInfos">新建物料信息</el-button>
             </div>
           </div>
           <div class="table">
@@ -260,6 +260,9 @@ export default {
     handleClick(row) {
       console.log(row);
       this.$router.push({ path: `/MtrInfo/${row.code}?name=${row.name}` });
+    },
+    createMtrInfos() {
+      this.$router.push({ path: `/MtrInfo/newCode?name=newName `});
     },
     getTableData() {
       this.$axios

@@ -30,13 +30,13 @@ export default {
     return {
       info: this.data,
       rows: [
-        [{label: '财务类别', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '记账本位币', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '会计科目', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '增值税代码', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '存货计价方法', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '成本计算方法', value: '', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
-        [{label: '开票方法', value: '一般发票', options: [{label: '选项1', value: 'option1'}, {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]},],
+        [{label: '财务类别', value: '', options: [{label: '默认财务类别', value: '默认财务类别'}]},],
+        [{label: '记账本位币', value: '', options: [{label: '默认记账本位币', value: '默认记账本位币'}]},],
+        [{label: '会计科目', value: '', options: [{label: '默认会计科目', value: '默认会计科目'}]},],
+        [{label: '增值税代码', value: '', options: [{label: '默认增值税代码', value: '默认增值税代码'}]},],
+        [{label: '存货计价方法', value: '', options: [{label: '默认存货计价方法', value: '默认存货计价方法'}]},],
+        [{label: '成本计算方法', value: '', options: [{label: '默认成本计算方法', value: '默认成本计算方法'}]},],
+        [{label: '开票方法', value: '一般发票', options: [{label: '默认开票方法', value: '默认开票方法'}]},],
       ]
     }
   },

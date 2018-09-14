@@ -102,6 +102,9 @@ export default {
         this.tableData.push(Object.assign({}, this.data[i]));
         this.disabled.push(this.data[i].skuCode);
       }
+      if (this.tableData.length == 0) {
+        this.pushRow();
+      }
     },
     tableData: {
       // handler should not be arrow function.

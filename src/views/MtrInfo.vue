@@ -94,6 +94,8 @@ export default {
   },
   data() {
     return {
+      spuCode: "",
+      spuName: "",
       mtrBasicInfo: {},
       mtrBasicInfoUnits: {},
       mtrBasicInfoUpdateValue: {},
@@ -244,6 +246,8 @@ export default {
             console.log("mtrBasicInfo: ", newVal);
             console.log("计量单位表: ", unitTable);
             console.log("默认计量单位：", defaultUnit);
+            this.spuCode = newVal.spuCode;
+            this.spuName = newVal.spuName;
             this.mtrBasicInfoUpdateValue = [];
             for (let key in newVal) {
               if (this[type].hasOwnProperty(key)) {
@@ -255,9 +259,16 @@ export default {
                 }
               }
             }
+            console.log(`mtrBasicInfoUpdateValue: `, this.mtrBasicInfoUpdateValue);
             this.mtrUnitTableUpdateValue = [];
             this.mtrUnitTableUpdateValue.push(defaultUnit);
-            this.mtrUnitTableUpdateValue.push(unitTable);
+            this.mtrUnitTableUpdateValue.push([]);
+            for (let i in unitTable) {
+              if (unitTable[i].name !== "") {
+                this.mtrUnitTableUpdateValue[1].push(unitTable[i]);
+              }
+            }
+            // this.mtrUnitTableUpdateValue.push(unitTable);
             console.log("mtrUnitTableUpdateValue: ", this.mtrUnitTableUpdateValue);
             break;
           case "mtrDefs":
@@ -356,306 +367,542 @@ export default {
       // console.log(newVal, this[type]);
     },
     setData() {
-      this.$axios
-        .post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
-          spuCode: this.$route.params.id,
-          spuName: this.$route.query.name,
-          // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
-          typeArr: [1, 2, 3, 5, 6, 7, 8, 9, 10]
-        })
-        .then(response => {
-          console.log(response);
-          // 物料基础信息
-          const _mtrBasicInfo = response.data[0][0];
-          this.mtrBasicInfo = {
-            spuCode: _mtrBasicInfo["spuCode"],
-            spuName: _mtrBasicInfo["spuName"],
-            type: _mtrBasicInfo["type"],
-            category: _mtrBasicInfo["materialCatId"],
-            source: _mtrBasicInfo["source"],
-            usage: _mtrBasicInfo["usage"],
-            designCode: _mtrBasicInfo["designCode"],
-            designVersion: _mtrBasicInfo["designVersion"],
-            mnemonic: _mtrBasicInfo["mnemonic"],
-            note: _mtrBasicInfo["note"]
-          };
-          // 物料基础信息中的物料单位
-          const _mtrBasicInfoUnits = response.data[8];
-          this.mtrBasicInfoUnits = _mtrBasicInfoUnits;
-          // 物料定义
-          const _mtrDefs = response.data[1];
-          let _defLen = response.data[1].length;
-          this.mtrDefs = [];
-          for (let i = 0; i < _defLen; ++i) {
-            let tmpDef = {};
-            tmpDef["materialCode"] = _mtrDefs[i]["materialCode"];
-            tmpDef["materialName"] = _mtrDefs[i]["materialName"];
-            tmpDef["oldMaterialCode"] = _mtrDefs[i]["oldMaterialCode"];
-            tmpDef["barCode"] = _mtrDefs[i]["barCode"];
-            tmpDef["purchasePrice"] = _mtrDefs[i]["purchasePrice"];
-            tmpDef["sellingPrice"] = _mtrDefs[i]['sellingPrice'];
-            tmpDef["format1"] = `规格1`;
-            tmpDef["format2"] = `规格2`;
-            tmpDef["format3"] = `规格3`;
-            this.mtrDefs.push(tmpDef);
+      if (this.$route.params.id !== 'newCode' && this.$route.query.name !== 'newName') {
+        this.$axios
+          .post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
+            spuCode: this.$route.params.id,
+            spuName: this.$route.query.name,
+            // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
+            typeArr: [1, 2, 3, 5, 6, 7, 8, 9, 10]
+          })
+          .then(response => {
+            console.log(`ajax response`, response);
+            // 物料基础信息
+            const _mtrBasicInfo = response.data[0][0];
+            this.mtrBasicInfo = {
+              spuCode: _mtrBasicInfo["spuCode"],
+              spuName: _mtrBasicInfo["spuName"],
+              type: _mtrBasicInfo["type"],
+              category: _mtrBasicInfo["materialCatId"],
+              source: _mtrBasicInfo["source"],
+              usage: _mtrBasicInfo["usage"],
+              designCode: _mtrBasicInfo["designCode"],
+              designVersion: _mtrBasicInfo["designVersion"],
+              mnemonic: _mtrBasicInfo["mnemonic"],
+              note: _mtrBasicInfo["note"]
+            };
+            // 物料基础信息中的物料单位
+            const _mtrBasicInfoUnits = response.data[8];
+            this.mtrBasicInfoUnits = _mtrBasicInfoUnits;
+            // 物料定义
+            const _mtrDefs = response.data[1];
+            let _defLen = response.data[1].length;
+            this.mtrDefs = [];
+            for (let i = 0; i < _defLen; ++i) {
+              let tmpDef = {};
+              tmpDef["materialCode"] = _mtrDefs[i]["materialCode"];
+              tmpDef["materialName"] = _mtrDefs[i]["materialName"];
+              tmpDef["oldMaterialCode"] = _mtrDefs[i]["oldMaterialCode"];
+              tmpDef["barCode"] = _mtrDefs[i]["barCode"];
+              tmpDef["purchasePrice"] = _mtrDefs[i]["purchasePrice"];
+              tmpDef["sellingPrice"] = _mtrDefs[i]['sellingPrice'];
+              tmpDef["format1"] = `规格1`;
+              tmpDef["format2"] = `规格2`;
+              tmpDef["format3"] = `规格3`;
+              this.mtrDefs.push(tmpDef);
+            }
+            // 物料sku信息
+            const _mtrSkuDefs = response.data[2];
+            let _skuLen = response.data[2][0].length;
+            this.mtrSkuDefs = [];
+            for (let i = 0; i < _skuLen; ++i) {
+              let tmpSku = {};
+              tmpSku["skuCode"] = _mtrSkuDefs[0][i]["skuCode"];
+              tmpSku["materialCode"] = _mtrSkuDefs[1][i]["materialCode"];
+              tmpSku["unit"] = _mtrSkuDefs[2][i]["name"];
+              tmpSku["barCode"] = _mtrSkuDefs[1][i]["barCode"];
+              tmpSku["purchasePrice"] = _mtrSkuDefs[0][i]["purchasePrice"];
+              tmpSku["sellingPrice"] = _mtrSkuDefs[0][i]["sellingPrice"];
+              tmpSku["description"] = _mtrSkuDefs[0][i]["description"];
+              this.mtrSkuDefs.push(tmpSku);
+            }
+            this.mtrPurchaseAndStore = response.data[3];
+            this.mtrPlan = response.data[4];
+            this.mtrSales = response.data[5];
+            this.mtrQuality = response.data[6];
+            this.mtrFinance = response.data[7];
+          })
+          .catch(error => {
+            console.log(error);
+            this.mtrBasicInfo = {
+              spuCode: "1",
+              spuName: "111",
+              type: "123",
+              category: "321",
+              source: "123",
+              usage: "321",
+              designCode: "qqq",
+              designVersion: "1.0",
+              mnemonic: "123",
+              note: "123"
+            };
+            this.mtrDefs = [{
+              materialCode: 'B12343',
+              materialName: '布料',
+              oldMaterialCode: 'B12333',
+              barCode: '123321',
+              purchasePrice: '0',
+              sellingPrice: '0',
+              format1: '规格1',
+              format2: '规格2',
+              format3: '规格3',
+            }];
+            this.mtrPurchaseAndStore = [
+              {
+                propertyName: "物料制购类型",
+                propertyValue: "制购类型1"
+              },
+              {
+                propertyName: "ABC分类",
+                propertyValue: "ABC分类1"
+              },
+              {
+                propertyName: "循环盘点编码",
+                propertyValue: "盘点编码1"
+              },
+              {
+                propertyName: "是否批次管理",
+                propertyValue: "true"
+              },
+              {
+                propertyName: "是否单件管理",
+                propertyValue: "true"
+              },
+              {
+                propertyName: "是否进价控制",
+                propertyValue: "true"
+              },
+              {
+                propertyName: "默认供应商",
+                propertyValue: "默认供应商"
+              },
+              {
+                propertyName: "默认采购部门",
+                propertyValue: "默认采购部门"
+              },
+              {
+                propertyName: "默认仓库",
+                propertyValue: "默认仓库"
+              },
+              {
+                propertyName: "默认采购单位",
+                propertyValue: "默认采购单位"
+              },
+              {
+                propertyName: "默认库存单位",
+                propertyValue: "默认库存单位"
+              },
+              {
+                propertyName: "默认库位",
+                propertyValue: "默认库位"
+              }
+            ];
+            this.mtrPlan = [
+              {
+                propertyName: "是否独立需求",
+                propertyValue: "true"
+              },
+              {
+                propertyName: "订货提前期（天）",
+                propertyValue: "7"
+              },
+              {
+                propertyName: "补货政策",
+                propertyValue: "补货政策1"
+              },
+              {
+                propertyName: "补货周期（天）",
+                propertyValue: "15"
+              },
+              {
+                propertyName: "最大库存量",
+                propertyValue: "一个仓库"
+              },
+              {
+                propertyName: "安全库存量",
+                propertyValue: "半个仓库"
+              },
+              {
+                propertyName: "订货批量",
+                propertyValue: "10批一次"
+              },
+              {
+                propertyName: "批量政策",
+                propertyValue: "批量政策1"
+              },
+              {
+                propertyName: "批量周期（天）",
+                propertyValue: "7"
+              },
+              {
+                propertyName: "默认计划单位",
+                propertyValue: "默认计划单位"
+              }
+            ];
+            this.mtrSales = [
+              {
+                propertyName: "销售计划价格",
+                propertyValue: "1000"
+              },
+              {
+                propertyName: "计价货币",
+                propertyValue: "计价货币1"
+              },
+              {
+                propertyName: "是否售价控制",
+                propertyValue: "true"
+              },
+              {
+                propertyName: "销售价格策略",
+                propertyValue: "价格策略1"
+              },
+              {
+                propertyName: "销价下限率（%）",
+                propertyValue: "10"
+              },
+              {
+                propertyName: "销售成本科目",
+                propertyValue: "成本科目1"
+              },
+              {
+                propertyName: "默认客户",
+                propertyValue: "客户A"
+              },
+              {
+                propertyName: "销售地",
+                propertyValue: "销售地1"
+              },
+              {
+                propertyName: "默认业务员",
+                propertyValue: "业务员小青"
+              },
+              {
+                propertyName: "默认销售单位",
+                propertyValue: "默认销售单位"
+              }
+            ];
+            this.mtrQuality = [
+              {
+                propertyName: "检验方式",
+                propertyValue: "不检验"
+              },
+              {
+                propertyName: "检验水准",
+                propertyValue: "检验水准1"
+              },
+              {
+                propertyName: "检验程度",
+                propertyValue: "检验程度1"
+              },
+              {
+                propertyName: "默认检验部门",
+                propertyValue: "默认检测部门"
+              },
+              {
+                propertyName: "检验工时（时）",
+                propertyValue: "150"
+              },
+              {
+                propertyName: "存储期限（天）",
+                propertyValue: "60"
+              },
+              {
+                propertyName: "默认检验员",
+                propertyValue: "默认检验员"
+              },
+              {
+                propertyName: "检验标准文件",
+                propertyValue: "文件A"
+              }
+            ];
+            this.mtrFinance = [
+              {
+                propertyName: "财务类别",
+                propertyValue: "财务类别1"
+              },
+              {
+                propertyName: "记账本位币",
+                propertyValue: "位币1"
+              },
+              {
+                propertyName: "会计科目",
+                propertyValue: ""
+              },
+              {
+                propertyName: "增值税代码",
+                propertyValue: "默认增值税代码"
+              },
+              {
+                propertyName: "存货计价方法",
+                propertyValue: "计价方法1"
+              },
+              {
+                propertyName: "成本计算方法",
+                propertyValue: "计算方法1"
+              },
+              {
+                propertyName: "开票类型",
+                propertyValue: "类型1"
+              }
+            ];
+          });
+      } else {
+        console.log(`add new infos!`);
+        this.mtrBasicInfo = {
+          spuCode: '',
+          spuName: '',
+          type: '',
+          category: '',
+          source: '',
+          usage: '',
+          designCode: '',
+          designVersion: '',
+          mnemonic: '',
+          note: ''
+        };
+        this.mtrBasicInfoUnits = [[{
+          label: '',
+          name: '',
+          englishName: '',
+          conversionFactor: '',
+          relatedId: '',
+          sort: 1,
+        }], 
+        [{
+          label: '',
+          name: '',
+          englishName: '',
+          conversionFactor: '',
+          relatedId: '',
+          sort: 1,
+        }]];
+        this.mtrDefs = [];
+        this.mtrSkuDefs = [];
+        this.mtrPurchaseAndStore = [
+          {
+            propertyName: "物料制购类型",
+            propertyValue: "制购类型1"
+          },
+          {
+            propertyName: "ABC分类",
+            propertyValue: "ABC分类1"
+          },
+          {
+            propertyName: "循环盘点编码",
+            propertyValue: "盘点编码1"
+          },
+          {
+            propertyName: "是否批次管理",
+            propertyValue: "true"
+          },
+          {
+            propertyName: "是否单件管理",
+            propertyValue: "true"
+          },
+          {
+            propertyName: "是否进价控制",
+            propertyValue: "true"
+          },
+          {
+            propertyName: "默认供应商",
+            propertyValue: "默认供应商"
+          },
+          {
+            propertyName: "默认采购部门",
+            propertyValue: "默认采购部门"
+          },
+          {
+            propertyName: "默认仓库",
+            propertyValue: "默认仓库"
+          },
+          {
+            propertyName: "默认采购单位",
+            propertyValue: "默认采购单位"
+          },
+          {
+            propertyName: "默认库存单位",
+            propertyValue: "默认库存单位"
+          },
+          {
+            propertyName: "默认库位",
+            propertyValue: "默认库位"
           }
-          // 物料sku信息
-          const _mtrSkuDefs = response.data[2];
-          let _skuLen = response.data[2][0].length;
-          this.mtrSkuDefs = [];
-          for (let i = 0; i < _skuLen; ++i) {
-            let tmpSku = {};
-            tmpSku["skuCode"] = _mtrSkuDefs[0][i]["skuCode"];
-            tmpSku["materialCode"] = _mtrSkuDefs[1][i]["materialCode"];
-            tmpSku["unit"] = _mtrSkuDefs[2][i]["name"];
-            tmpSku["barCode"] = _mtrSkuDefs[1][i]["barCode"];
-            tmpSku["purchasePrice"] = _mtrSkuDefs[0][i]["purchasePrice"];
-            tmpSku["sellingPrice"] = _mtrSkuDefs[0][i]["sellingPrice"];
-            tmpSku["description"] = _mtrSkuDefs[0][i]["description"];
-            this.mtrSkuDefs.push(tmpSku);
+        ];
+        this.mtrPlan = [
+          {
+            propertyName: "是否独立需求",
+            propertyValue: "true"
+          },
+          {
+            propertyName: "订货提前期（天）",
+            propertyValue: "7"
+          },
+          {
+            propertyName: "补货政策",
+            propertyValue: "补货政策1"
+          },
+          {
+            propertyName: "补货周期（天）",
+            propertyValue: "15"
+          },
+          {
+            propertyName: "最大库存量",
+            propertyValue: "一个仓库"
+          },
+          {
+            propertyName: "安全库存量",
+            propertyValue: "半个仓库"
+          },
+          {
+            propertyName: "订货批量",
+            propertyValue: "10批一次"
+          },
+          {
+            propertyName: "批量政策",
+            propertyValue: "批量政策1"
+          },
+          {
+            propertyName: "批量周期（天）",
+            propertyValue: "7"
+          },
+          {
+            propertyName: "默认计划单位",
+            propertyValue: "默认计划单位"
           }
-          this.mtrPurchaseAndStore = response.data[3];
-          this.mtrPlan = response.data[4];
-          this.mtrSales = response.data[5];
-          this.mtrQuality = response.data[6];
-          this.mtrFinance = response.data[7];
-        })
-        .catch(error => {
-          console.log(error);
-          this.mtrBasicInfo = {
-            spuCode: "1",
-            spuName: "111",
-            type: "123",
-            category: "321",
-            source: "123",
-            usage: "321",
-            designCode: "qqq",
-            designVersion: "1.0",
-            mnemonic: "123",
-            note: "123"
-          };
-          this.mtrDefs = [{
-            materialCode: 'B12343',
-            materialName: '布料',
-            oldMaterialCode: 'B12333',
-            barCode: '123321',
-            purchasePrice: '0',
-            sellingPrice: '0',
-            format1: '规格1',
-            format2: '规格2',
-            format3: '规格3',
-          }];
-          this.mtrPurchaseAndStore = [
-            {
-              propertyName: "物料制购类型",
-              propertyValue: "制购类型1"
-            },
-            {
-              propertyName: "ABC分类",
-              propertyValue: "ABC分类1"
-            },
-            {
-              propertyName: "循环盘点编码",
-              propertyValue: "盘点编码1"
-            },
-            {
-              propertyName: "是否批次管理",
-              propertyValue: "true"
-            },
-            {
-              propertyName: "是否单件管理",
-              propertyValue: "true"
-            },
-            {
-              propertyName: "是否进价控制",
-              propertyValue: "true"
-            },
-            {
-              propertyName: "默认供应商",
-              propertyValue: "默认供应商"
-            },
-            {
-              propertyName: "默认采购部门",
-              propertyValue: "默认采购部门"
-            },
-            {
-              propertyName: "默认仓库",
-              propertyValue: "默认仓库"
-            },
-            {
-              propertyName: "默认采购单位",
-              propertyValue: "默认采购单位"
-            },
-            {
-              propertyName: "默认库存单位",
-              propertyValue: "默认库存单位"
-            },
-            {
-              propertyName: "默认库位",
-              propertyValue: "默认库位"
-            }
-          ];
-          this.mtrPlan = [
-            {
-              propertyName: "是否独立需求",
-              propertyValue: "true"
-            },
-            {
-              propertyName: "订货提前期（天）",
-              propertyValue: "7"
-            },
-            {
-              propertyName: "补货政策",
-              propertyValue: "补货政策1"
-            },
-            {
-              propertyName: "补货周期（天）",
-              propertyValue: "15"
-            },
-            {
-              propertyName: "最大库存量",
-              propertyValue: "一个仓库"
-            },
-            {
-              propertyName: "安全库存量",
-              propertyValue: "半个仓库"
-            },
-            {
-              propertyName: "订货批量",
-              propertyValue: "10批一次"
-            },
-            {
-              propertyName: "批量政策",
-              propertyValue: "批量政策1"
-            },
-            {
-              propertyName: "批量周期（天）",
-              propertyValue: "7"
-            },
-            {
-              propertyName: "默认计划单位",
-              propertyValue: "默认计划单位"
-            }
-          ];
-          this.mtrSales = [
-            {
-              propertyName: "销售计划价格",
-              propertyValue: "1000"
-            },
-            {
-              propertyName: "计价货币",
-              propertyValue: "计价货币1"
-            },
-            {
-              propertyName: "是否售价控制",
-              propertyValue: "true"
-            },
-            {
-              propertyName: "销售价格策略",
-              propertyValue: "价格策略1"
-            },
-            {
-              propertyName: "销价下限率（%）",
-              propertyValue: "10"
-            },
-            {
-              propertyName: "销售成本科目",
-              propertyValue: "成本科目1"
-            },
-            {
-              propertyName: "默认客户",
-              propertyValue: "客户A"
-            },
-            {
-              propertyName: "销售地",
-              propertyValue: "销售地1"
-            },
-            {
-              propertyName: "默认业务员",
-              propertyValue: "业务员小青"
-            },
-            {
-              propertyName: "默认销售单位",
-              propertyValue: "默认销售单位"
-            }
-          ];
-          this.mtrQuality = [
-            {
-              propertyName: "检验方式",
-              propertyValue: "不检验"
-            },
-            {
-              propertyName: "检验水准",
-              propertyValue: "检验水准1"
-            },
-            {
-              propertyName: "检验程度",
-              propertyValue: "检验程度1"
-            },
-            {
-              propertyName: "默认检验部门",
-              propertyValue: "默认检测部门"
-            },
-            {
-              propertyName: "检验工时（时）",
-              propertyValue: "150"
-            },
-            {
-              propertyName: "存储期限（天）",
-              propertyValue: "60"
-            },
-            {
-              propertyName: "默认检验员",
-              propertyValue: "默认检验员"
-            },
-            {
-              propertyName: "检验标准文件",
-              propertyValue: "文件A"
-            }
-          ];
-          this.mtrFinance = [
-            {
-              propertyName: "财务类别",
-              propertyValue: "财务类别1"
-            },
-            {
-              propertyName: "记账本位币",
-              propertyValue: "位币1"
-            },
-            {
-              propertyName: "会计科目",
-              propertyValue: ""
-            },
-            {
-              propertyName: "增值税代码",
-              propertyValue: "默认增值税代码"
-            },
-            {
-              propertyName: "存货计价方法",
-              propertyValue: "计价方法1"
-            },
-            {
-              propertyName: "成本计算方法",
-              propertyValue: "计算方法1"
-            },
-            {
-              propertyName: "开票类型",
-              propertyValue: "类型1"
-            }
-          ];
-        });
+        ];
+        this.mtrSales = [
+          {
+            propertyName: "销售计划价格",
+            propertyValue: "1000"
+          },
+          {
+            propertyName: "计价货币",
+            propertyValue: "计价货币1"
+          },
+          {
+            propertyName: "是否售价控制",
+            propertyValue: "true"
+          },
+          {
+            propertyName: "销售价格策略",
+            propertyValue: "价格策略1"
+          },
+          {
+            propertyName: "销价下限率（%）",
+            propertyValue: "10"
+          },
+          {
+            propertyName: "销售成本科目",
+            propertyValue: "成本科目1"
+          },
+          {
+            propertyName: "默认客户",
+            propertyValue: "客户A"
+          },
+          {
+            propertyName: "销售地",
+            propertyValue: "销售地1"
+          },
+          {
+            propertyName: "默认业务员",
+            propertyValue: "业务员小青"
+          },
+          {
+            propertyName: "默认销售单位",
+            propertyValue: "默认销售单位"
+          }
+        ];
+        this.mtrQuality = [
+          {
+            propertyName: "检验方式",
+            propertyValue: "不检验"
+          },
+          {
+            propertyName: "检验水准",
+            propertyValue: "检验水准1"
+          },
+          {
+            propertyName: "检验程度",
+            propertyValue: "检验程度1"
+          },
+          {
+            propertyName: "默认检验部门",
+            propertyValue: "默认检测部门"
+          },
+          {
+            propertyName: "检验工时（时）",
+            propertyValue: "150"
+          },
+          {
+            propertyName: "存储期限（天）",
+            propertyValue: "60"
+          },
+          {
+            propertyName: "默认检验员",
+            propertyValue: "默认检验员"
+          },
+          {
+            propertyName: "检验标准文件",
+            propertyValue: "文件A"
+          }
+        ];
+        this.mtrFinance = [
+          {
+            propertyName: "财务类别",
+            propertyValue: "财务类别1"
+          },
+          {
+            propertyName: "记账本位币",
+            propertyValue: "位币1"
+          },
+          {
+            propertyName: "会计科目",
+            propertyValue: "默认会计科目"
+          },
+          {
+            propertyName: "增值税代码",
+            propertyValue: "默认增值税代码"
+          },
+          {
+            propertyName: "存货计价方法",
+            propertyValue: "计价方法1"
+          },
+          {
+            propertyName: "成本计算方法",
+            propertyValue: "计算方法1"
+          },
+          {
+            propertyName: "开票类型",
+            propertyValue: "类型1"
+          }
+        ];
+      }
     },
     submitChangeValue() {
       console.log("change!");
       // console.log(this.$route);
       let spuCode = this.$route.params.id;
       let spuName = this.$route.query.name;
+      if (spuCode === 'newCode' && spuName === 'newName') {
+        spuCode = this.spuCode;
+        spuName = this.spuName;
+      }
       let sendData = {
         spuCode: spuCode,
         spuName: spuName,
         data: []
       };
-      console.log(spuName);
+      console.log(`spuCode`, spuCode, `spuName`, spuName);
       if (this.mtrBasicInfoUpdateValue.length > 0) {
         let tmpData = {
           propertyType: 1,
@@ -730,7 +977,6 @@ export default {
         sendData["data"].push(tmpData);
         console.log(`add Finance values!`);
       }
-      console.log(sendData);
       if (this.mtrUnitTableUpdateValue.length != 0) {
         let tmpData = {
           propertyType: 10,
@@ -739,10 +985,11 @@ export default {
         sendData["data"].push(tmpData);
         console.log(`add Unit Values!`);
       }
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
-        .then((response) => {
-          console.log(response);
-        });
+      console.log(sendData);
+      // this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
+      //   .then((response) => {
+      //     console.log(response);
+      //   });
     }
   }
 };

@@ -44,17 +44,18 @@ export default {
     return {
       labels: ['物料编码','物料名称','旧物料编码','条形码','采购价格','销售价格','规格1','规格2','规格3'],
       disabled: [],
-      tableData: [{
-        materialCode: 'B12343',
-        materialName: '布料',
-        oldMaterialCode: 'B12333',
-        barCode: '123321',
-        purchasePrice: '0',
-        sellingPrice: '0',
-        format1: '规格1',
-        format2: '规格2',
-        format3: '规格3',
-      }],
+      // tableData: [{
+      //   materialCode: 'B12343',
+      //   materialName: '布料',
+      //   oldMaterialCode: 'B12333',
+      //   barCode: '123321',
+      //   purchasePrice: '0',
+      //   sellingPrice: '0',
+      //   format1: '规格1',
+      //   format2: '规格2',
+      //   format3: '规格3',
+      // }],
+      tableData: [{}],
     };
   },
   props: ["data"],
@@ -65,6 +66,9 @@ export default {
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));
         this.disabled.push(this.data[i].materialCode);
+      }
+      if (this.tableData.length == 0) {
+        this.pushRow();
       }
     },
     tableData: {

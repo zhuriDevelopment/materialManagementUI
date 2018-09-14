@@ -30,11 +30,11 @@ export default {
     return {
       info: this.data,
       rows: [
-        [{label: '是否独立需求', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '订货提前期（天）', value: ''},],
-        [{label: '补货政策', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '补货周期（天）', value: ''},],
+        [{label: '是否独立需求', value: '', options: [{label: '默认独立需求', value: '默认独立需求'}]}, {label: '订货提前期（天）', value: ''},],
+        [{label: '补货政策', value: '', options: [{label: '默认补货政策', value: '默认补货政策'}]}, {label: '补货周期（天）', value: ''},],
         [{label: '最大库存量', value: ''}, {label: '安全库存量', value: ''},],
         [{label: '订货批量', value: ''},],
-        [{label: '批量政策', value: '', options: [{label: '选项1', value: 'option1'} , {label: '选项2', value: 'option2'}, {label: '选项3', value: 'option3'}]}, {label: '批量周期（天）', value: ''},],
+        [{label: '批量政策', value: '', options: [{label: '默认批量政策', value: '默认批量政策'}]}, {label: '批量周期（天）', value: ''},],
         [{label: '默认计划单位', value: ''},],
       ]
     }
