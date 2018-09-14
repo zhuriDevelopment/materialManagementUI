@@ -18,7 +18,7 @@
             label="属性类别"
             width="160">
             <template slot-scope="scope">
-              <el-select v-model="tableData[scope.$index]['type'].toString()" placeholder="属性类别">
+              <el-select v-model="tableData[scope.$index]['type']" placeholder="属性类别">
                 <el-option
                   key="1"
                   label='关键属性'
@@ -64,7 +64,7 @@
             width="160">
             <template slot-scope="scope">
               <!-- <el-input v-model="tableData[scope.$index]['rangetype']"></el-input> -->
-              <el-select v-model="tableData[scope.$index]['rangetype'].toString()" placeholder="属性类别">
+              <el-select v-model="tableData[scope.$index]['rangetype']" placeholder="属性类别">
                 <el-option
                   key="1"
                   label="任意文本"
@@ -94,6 +94,14 @@
             width="160">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['range']"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="range"
+            label="属性值"
+            width="160">
+            <template slot-scope="scope">
+              <el-input v-model="tableData[scope.$index]['value']"></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -145,6 +153,34 @@ export default {
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));
       }
+    },
+    tableData: {
+      handler: function (newVal, oldVal) {
+        console.log(`newVal`, newVal);
+        let data = Object.assign([], data, newVal);
+        console.log(`data`, data);
+        let result = [[], []];
+        for (let i in data) {
+          let element1 = {};
+          let element2 = {};
+          element1["materialCode"] = "-1";
+          element1["value"] = data[i].value;
+          element2["type"] = parseInt(data[i].type);
+          element2["label"] = data[i].label;
+          element2["name"] = data[i].name;
+          let rangeObject = {};
+          rangeObject.type = parseInt(data[i].rangetype);
+          rangeObject.upper = data[i].range.split('-')[1].trim();
+          rangeObject.lower = data[i].range.split('-')[0].trim();
+          element2["range"] = JSON.stringify(rangeObject);
+          element2["sort"] = data[i].sort;
+          result[0].push(element1);
+          result[1].push(element2);
+        }
+        console.log(`tableData Result`, result);
+        this.$emit('changeValue', result);
+      },
+      deep: true,
     },
   },
   methods: {

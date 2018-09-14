@@ -27,12 +27,12 @@
           </div>
           <div class="rightInfos">
             <div class="baseInfos">
-              <Mtr-type-modify-info @changeValue="setNewSpuInfo" :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
+              <Mtr-type-modify-info @changeValue="setNewSpuInfo" @updateAll="updateAllData" :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
             </div>
             <div class="table">
               <el-tabs type="border-card" value = '1'>
                 <el-tab-pane label="物料属性定义">
-                  <Mtr-type-modify-table :data="mtrTypeModifyTable"></Mtr-type-modify-table>
+                  <Mtr-type-modify-table @changeValue="setNewBaseProp" :data="mtrTypeModifyTable"></Mtr-type-modify-table>
                 </el-tab-pane>
                 <el-tab-pane label="采购和库存属性">
                   <Mtr-purchase-and-store @changeModel="updateControlData($event, 'mtrPurchaseAndStore')" :data="mtrPurchaseAndStore"></Mtr-purchase-and-store>
@@ -93,7 +93,8 @@ export default {
   data() {
     return {
       mtrTypeModifyInfo: {},
-      mtrTypeModifyTable: {},
+      mtrTypeModifyTable: [],
+      mtrTypeModifyTableUpdateValue: [],
       mtrPurchaseAndStore: {},
       mtrPurchaseAndStoreUpdateValue: [],
       mtrPlan: {},
@@ -104,6 +105,8 @@ export default {
       mtrQualityUpdateValue: [],
       mtrFinance: {},
       mtrFinanceUpdateValue: [],
+      spuCode: '',
+      spuName: '',
       treeData: [],
       defaultTreeData: {
         children: 'children',
@@ -236,8 +239,17 @@ export default {
       this.tabIndex = tabs.index;
       console.log("emit: ", tabs);
     },
+    setNewBaseProp(updateData) {
+      this.mtrTypeModifyTableUpdateValue = Object.assign([], updateData);
+      let len = this.mtrTypeModifyTableUpdateValue[0].length;
+      for (let i = 0; i < len; ++i) {
+        this.mtrTypeModifyTableUpdateValue[0]["spuCode"] = this.spuCode;
+      }
+    },
     setNewSpuInfo(spuCode, spuName) {
       console.log(spuCode, spuName);
+      this.spuCode = spuCode;
+      this.spuName = spuName;
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
         "spuCode": spuCode,
         "spuName": spuName,
@@ -255,17 +267,17 @@ export default {
         this.mtrTypeModifyTable = [];
         for (let i = 0; i < len; ++i) {
           let tmp = {};
-          tmp["type"] = response.data[5][1][i].type;
+          tmp["type"] = response.data[5][1][i].type.toString();
           tmp["label"] = response.data[5][1][i].label;
           tmp["name"] = response.data[5][1][i].name;
           let rangeObject = JSON.parse(response.data[5][1][i].range);
           console.log(`rangeObject`, rangeObject);
-          tmp["rangetype"] = rangeObject.type;
+          tmp["rangetype"] = rangeObject.type.toString();
           tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
           tmp["sort"] = response.data[5][1][i].sort;
+          tmp["value"] = response.data[5][0][i].value;
           this.mtrTypeModifyTable.push(tmp);
         }
-
       })
       .catch(error => {
         console.log(`error in setNewSpuInfo`, error);
@@ -347,6 +359,71 @@ export default {
       }
       this[type] = newVal;
       // console.log(newVal, this[type]);
+    },
+    updateAllData() {
+      console.log(`Please Update All Values!`);
+      let sendData = {
+        spuCode: this.spuCode,
+        spuName: this.spuName,
+        data: [],
+      };
+      if (this.mtrPurchaseAndStoreUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 5,
+          updateValue: this.mtrPurchaseAndStoreUpdateValue,
+          organizationCode: 1
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add PurchaseAndStore values!`);
+      }
+      if (this.mtrPlanUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 6,
+          updateValue: this.mtrPlanUpdateValue,
+          organizationCode: 1
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add Plan values!`);
+      }
+      if (this.mtrSalesUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 7,
+          updateValue: this.mtrSalesUpdateValue,
+          organizationCode: 1
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add Sales values!`);
+      }
+      if (this.mtrQualityUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 8,
+          updateValue: this.mtrQualityUpdateValue,
+          organizationCode: 1
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add Quality values!`);
+      }
+      if (this.mtrFinanceUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 9,
+          updateValue: this.mtrFinanceUpdateValue,
+          organizationCode: 1
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add Finance values!`);
+      }
+      if (this.mtrTypeModifyTableUpdateValue.length != 0) {
+        let tmpData = {
+          propertyType: 11,
+          updateValue: this.mtrTypeModifyTableUpdateValue,
+        };
+        sendData["data"].push(tmpData);
+        console.log(`add mtrTypeModifyTableValue!`);
+      }
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
+        .then((response) => {
+          console.log(response);
+        });
     },
   }
 };

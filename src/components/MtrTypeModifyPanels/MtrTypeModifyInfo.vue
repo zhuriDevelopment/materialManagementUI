@@ -34,7 +34,7 @@
         </el-select>
       </div>
       <div class="col col-2">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="updateInFatherComponent">保存</el-button>
       </div>
     </div>
   </div>
@@ -146,6 +146,9 @@ export default {
       const model = this.inputBoxData[idx].model;
       this.inputBoxData[1-idx].model = (idx === 0) ? this.code2Name[model] : this.name2Code[model];
       this.$emit('changeValue', this.inputBoxData[0].model, this.inputBoxData[1].model);
+    },
+    updateInFatherComponent() {
+      this.$emit('updateAll');
     },
   }
 }
