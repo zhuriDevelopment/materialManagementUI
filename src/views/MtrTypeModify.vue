@@ -270,7 +270,7 @@ export default {
           tmp["type"] = response.data[5][1][i].type.toString();
           tmp["label"] = response.data[5][1][i].label;
           tmp["name"] = response.data[5][1][i].name;
-          let rangeObject = JSON.parse(response.data[5][1][i].range);
+          let rangeObject = JSON.parse(response.data[5][1][i].valueRange);
           console.log(`rangeObject`, rangeObject);
           tmp["rangetype"] = rangeObject.type.toString();
           tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
