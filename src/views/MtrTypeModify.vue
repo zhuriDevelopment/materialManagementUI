@@ -247,8 +247,37 @@ export default {
         this.mtrTypeModifyTableUpdateValue[0]["spuCode"] = this.spuCode;
       }
     },
-    setNewCatInfo(catId, catName) {
-      console.log(`setNewCatInfo`, catId, catName);
+    setNewCatInfo(catCode, catName) {
+      console.log(`setNewCatInfo`, catCode, catName);
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfoWithCatCodeAndCatName`, {
+        "code": catCode,
+        "name": catName,
+        "typeArr": [5, 6, 7, 8, 9, 11]
+      }).then((response) => {
+        console.log(`setNewCatInfo response:`, response);
+        this.mtrPurchaseAndStore = response.data[0];
+        this.mtrPlan = response.data[1];
+        this.mtrSales = response.data[2];
+        this.mtrQuality = response.data[3];
+        this.mtrFinance = response.data[4];
+        let len = response.data[5].length;
+        this.mtrTypeModifyTable = [];
+        for (let i = 0; i < len; ++i) {
+          let tmp = {};
+          tmp["type"] = response.data[5][i].type.toString();
+          tmp["label"] = response.data[5][i].label;
+          tmp["name"] = response.data[5][i].name;
+          let rangeObject = JSON.parse(response.data[5][i].valueRange);
+          console.log(`rangeObject`, rangeObject);
+          tmp["rangetype"] = rangeObject.type.toString();
+          tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
+          tmp["sort"] = response.data[5][i].sort;
+          tmp["value"] = response.data[5][i].value;
+          this.mtrTypeModifyTable.push(tmp);
+        }
+      }).catch(error => {
+        console.log(`error in setNewSpuInfo`, error);
+      });
       // console.log(spuCode, spuName);
       // this.spuCode = spuCode;
       // this.spuName = spuName;
