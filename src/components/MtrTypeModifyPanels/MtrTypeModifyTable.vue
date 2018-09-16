@@ -96,14 +96,14 @@
               <el-input v-model="tableData[scope.$index]['range']"></el-input>
             </template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="range"
             label="属性值"
             width="160">
             <template slot-scope="scope">
               <el-input v-model="tableData[scope.$index]['value']"></el-input>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             prop="sort"
             label="排序号"
@@ -164,7 +164,7 @@ export default {
           let element1 = {};
           let element2 = {};
           element1["materialCode"] = "-1";
-          element1["value"] = data[i].value;
+          // element1["value"] = data[i].value;
           element2["type"] = parseInt(data[i].type);
           element2["label"] = data[i].label;
           element2["name"] = data[i].name;

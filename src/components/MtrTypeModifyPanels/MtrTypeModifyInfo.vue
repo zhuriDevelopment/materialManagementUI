@@ -3,12 +3,13 @@
     <div class="row">
       <div class="col" v-for="(col, index) in inputBoxData">
         <div class="label">{{col.label}}</div>
-        <!-- <el-input
+        <el-input
           :placeholder="col.holder"
           v-model="col.model"
+          @change="selectchange"
           clearable>
-        </el-input> -->
-        <el-select
+        </el-input>
+        <!-- <el-select
           :placeholder="col.holder"
           @change="selectchange(index)"
           v-model="col.model">
@@ -18,7 +19,7 @@
             :label="item.label"
             :value="item.value">
           </el-option>
-        </el-select>
+        </el-select> -->
       </div>
     </div>
     <div class="row">
@@ -62,8 +63,10 @@ export default {
         label: '物料类别',
         options: [],
       }],
-      spuCodeArr: [],
-      spuNameArr: [],
+      // spuCodeArr: [],
+      // spuNameArr: [],
+      catCode: '',
+      catName: '',
       typeArr: [
         {label: '无类别', value: '0'},
         {label: '原材料', value: '1'},
@@ -71,64 +74,75 @@ export default {
         {label: '成品', value: '3'},
         {label: '设备', value: '4'},
       ],
-      spuCodeModel: '',
-      spuNameModel: '',
+      // spuCodeModel: '',
+      // spuNameModel: '',
       typeModel: '',
-      code2Name: {},
-      name2Code: {},
+      // code2Name: {},
+      // name2Code: {},
     }
   },
   props: ["data"],
   watch: {
     data(newVal, oldVal) {
-      console.log("pass data in mtr type info!");
-      console.log(this.data);
-      if (this.data.baseData.length > 0) {
-        this.spuCodeArr = [];
-        this.spuNameArr = [];
-        for (let baseInfo in this.data.baseData) {
-          this.spuCodeArr.push(this.data.baseData[baseInfo].spuCode);
-          this.spuNameArr.push(this.data.baseData[baseInfo].spuName);
-          this.code2Name[this.data.baseData[baseInfo].spuCode] = this.data.baseData[baseInfo].spuName;
-        }
-        const invertObj = obj =>
-          Object.keys(obj).reduce((acc, key)=>{
-            acc[obj[key]] = key;
-            return acc;
-          }, {});
-        this.name2Code = invertObj(this.code2Name);
-        let spuCodeOptions = [];
-        let spuNameOptions = [];
-        for (let spuCode in this.spuCodeArr) {
-          spuCodeOptions.push({
-            label: this.spuCodeArr[spuCode],
-            value: this.spuCodeArr[spuCode],
-          });
-        };
-        for (let spuName in this.spuNameArr) {
-          spuNameOptions.push({
-            label: this.spuNameArr[spuName],
-            value: this.spuNameArr[spuName],
-          })
-        };
-        this.spuCodeModel = this.spuCodeArr[0];
-        this.spuNameModel = this.spuNameArr[0];
-        this.inputBoxData = [
-          {
-            label: '分类编码',
-            model: this.spuCodeModel,
-            holder: '请选择分类编码',
-            options: spuCodeOptions,
-          },
-          {
-            label: '分类名称',
-            model: this.spuNameModel,
-            holder: '请选择分类名称',
-            options: spuNameOptions,
-          }
-        ];
+      console.log("pass data in mtr type info!", this.data);
+      if (this.data.length > 0) {
+        // this.spuCodeArr = [];
+        // this.spuNameArr = [];
+        // for (let baseInfo in this.data.baseData) {
+        //   this.spuCodeArr.push(this.data.baseData[baseInfo].spuCode);
+        //   this.spuNameArr.push(this.data.baseData[baseInfo].spuName);
+        //   this.code2Name[this.data.baseData[baseInfo].spuCode] = this.data.baseData[baseInfo].spuName;
+        // }
+        this.catCode = this.data[0].code;
+        this.catName = this.data[0].name;
+        this.inputBoxData = [{
+          label: '分类编码',
+          model: this.catCode,
+          holder: '请输入分类编码',
+        }, {
+          label: '分类名称',
+          model: this.catName,
+          holder: '请输入分类名称',
+        }];
+        this.inputBoxData = Object.assign([], this.inputBoxData);
+        // const invertObj = obj =>
+        //   Object.keys(obj).reduce((acc, key)=>{
+        //     acc[obj[key]] = key;
+        //     return acc;
+        //   }, {});
+        // this.name2Code = invertObj(this.code2Name);
+        // let spuCodeOptions = [];
+        // let spuNameOptions = [];
+        // for (let spuCode in this.spuCodeArr) {
+        //   spuCodeOptions.push({
+        //     label: this.spuCodeArr[spuCode],
+        //     value: this.spuCodeArr[spuCode],
+        //   });
+        // };
+        // for (let spuName in this.spuNameArr) {
+        //   spuNameOptions.push({
+        //     label: this.spuNameArr[spuName],
+        //     value: this.spuNameArr[spuName],
+        //   })
+        // };
+        // this.spuCodeModel = this.spuCodeArr[0];
+        // this.spuNameModel = this.spuNameArr[0];
+        // this.inputBoxData = [
+        //   {
+        //     label: '分类编码',
+        //     model: this.spuCodeModel,
+        //     holder: '请选择分类编码',
+        //     options: spuCodeOptions,
+        //   },
+        //   {
+        //     label: '分类名称',
+        //     model: this.spuNameModel,
+        //     holder: '请选择分类名称',
+        //     options: spuNameOptions,
+        //   }
+        // ];
         this.$emit('changeValue', this.inputBoxData[0].model, this.inputBoxData[1].model);
-        this.typeModel = this.data.catData[0].type.toString(); // 这里传typemodel
+        this.typeModel = this.data[0].type.toString(); // 这里传typemodel
         this.selectData = [{
           model: this.typeModel,
           label: '物料类别',
@@ -140,11 +154,11 @@ export default {
     },
   },
   methods: {
-    selectchange(idx) {
+    selectchange(value) {
       console.log("change!");
-      console.log(idx);
-      const model = this.inputBoxData[idx].model;
-      this.inputBoxData[1-idx].model = (idx === 0) ? this.code2Name[model] : this.name2Code[model];
+      console.log(value);
+      // const model = this.inputBoxData[idx].model;
+      // this.inputBoxData[1-idx].model = (idx === 0) ? this.code2Name[model] : this.name2Code[model];
       this.$emit('changeValue', this.inputBoxData[0].model, this.inputBoxData[1].model);
     },
     updateInFatherComponent() {

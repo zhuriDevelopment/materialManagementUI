@@ -27,7 +27,7 @@
           </div>
           <div class="rightInfos">
             <div class="baseInfos">
-              <Mtr-type-modify-info @changeValue="setNewSpuInfo" @updateAll="updateAllData" :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
+              <Mtr-type-modify-info @changeValue="setNewCatInfo" @updateAll="updateAllData" :data="mtrTypeModifyInfo"></Mtr-type-modify-info>
             </div>
             <div class="table">
               <el-tabs type="border-card" value = '1'>
@@ -121,7 +121,7 @@ export default {
       console.log("initing Tree!");
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategory`, {})
           .then((response) => {
-            console.log(response);
+            console.log(`treeData = `, response);
             this.treeData = [];
             this.treeData.push(response.data);
           })
@@ -192,20 +192,21 @@ export default {
     },
     handleNodeClick(data) {
       this.nodeData = data;
-      console.log(data);
-      console.log(data.id);
+      console.log(`handleNodeClick data`, data);
+      console.log(`data.id`, data.id);
       const catId = data.id;
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getAllMaterialBaseByCategoryInfos`, {
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategoryInfosWithId`, {
         "id": catId,
       })
       .then((response) => {
-        console.log(response);
-        const baseData = response.data[0];
-        const catData = response.data[1];
-        this.mtrTypeModifyInfo = {
-          "baseData": baseData,
-          "catData": catData,
-        };
+        console.log(`handleNodeClick resposne`, response);
+        this.mtrTypeModifyInfo = response.data[0];
+        // const baseData = response.data[0];
+        // const catData = response.data[1];
+        // this.mtrTypeModifyInfo = {
+        //   "baseData": baseData,
+        //   "catData": catData,
+        // };
       });
     },
     initTabs() {
@@ -246,42 +247,43 @@ export default {
         this.mtrTypeModifyTableUpdateValue[0]["spuCode"] = this.spuCode;
       }
     },
-    setNewSpuInfo(spuCode, spuName) {
-      console.log(spuCode, spuName);
-      this.spuCode = spuCode;
-      this.spuName = spuName;
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
-        "spuCode": spuCode,
-        "spuName": spuName,
-        // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
-        "typeArr": [5, 6, 7, 8, 9, 11],
-      })
-      .then((response) => {
-        console.log(response);
-        this.mtrPurchaseAndStore = response.data[0];
-        this.mtrPlan = response.data[1];
-        this.mtrSales = response.data[2];
-        this.mtrQuality = response.data[3];
-        this.mtrFinance = response.data[4];
-        let len = response.data[5][1].length;
-        this.mtrTypeModifyTable = [];
-        for (let i = 0; i < len; ++i) {
-          let tmp = {};
-          tmp["type"] = response.data[5][1][i].type.toString();
-          tmp["label"] = response.data[5][1][i].label;
-          tmp["name"] = response.data[5][1][i].name;
-          let rangeObject = JSON.parse(response.data[5][1][i].valueRange);
-          console.log(`rangeObject`, rangeObject);
-          tmp["rangetype"] = rangeObject.type.toString();
-          tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
-          tmp["sort"] = response.data[5][1][i].sort;
-          tmp["value"] = response.data[5][0][i].value;
-          this.mtrTypeModifyTable.push(tmp);
-        }
-      })
-      .catch(error => {
-        console.log(`error in setNewSpuInfo`, error);
-      });
+    setNewCatInfo(catId, catName) {
+      console.log(`setNewCatInfo`, catId, catName);
+      // console.log(spuCode, spuName);
+      // this.spuCode = spuCode;
+      // this.spuName = spuName;
+      // this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
+      //   "spuCode": spuCode,
+      //   "spuName": spuName,
+      //   // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
+      //   "typeArr": [5, 6, 7, 8, 9, 11],
+      // })
+      // .then((response) => {
+      //   console.log(response);
+      //   this.mtrPurchaseAndStore = response.data[0];
+      //   this.mtrPlan = response.data[1];
+      //   this.mtrSales = response.data[2];
+      //   this.mtrQuality = response.data[3];
+      //   this.mtrFinance = response.data[4];
+      //   let len = response.data[5][1].length;
+      //   this.mtrTypeModifyTable = [];
+      //   for (let i = 0; i < len; ++i) {
+      //     let tmp = {};
+      //     tmp["type"] = response.data[5][1][i].type.toString();
+      //     tmp["label"] = response.data[5][1][i].label;
+      //     tmp["name"] = response.data[5][1][i].name;
+      //     let rangeObject = JSON.parse(response.data[5][1][i].valueRange);
+      //     console.log(`rangeObject`, rangeObject);
+      //     tmp["rangetype"] = rangeObject.type.toString();
+      //     tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
+      //     tmp["sort"] = response.data[5][1][i].sort;
+      //     tmp["value"] = response.data[5][0][i].value;
+      //     this.mtrTypeModifyTable.push(tmp);
+      //   }
+      // })
+      // .catch(error => {
+      //   console.log(`error in setNewSpuInfo`, error);
+      // });
     },
     checkContainsNV(list, name) {
       for (let element in list) {
