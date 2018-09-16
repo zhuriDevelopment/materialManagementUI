@@ -105,8 +105,8 @@ export default {
       mtrQualityUpdateValue: [],
       mtrFinance: {},
       mtrFinanceUpdateValue: [],
-      spuCode: '',
-      spuName: '',
+      catCode: '',
+      catName: '',
       treeData: [],
       defaultTreeData: {
         children: 'children',
@@ -249,6 +249,8 @@ export default {
     },
     setNewCatInfo(catCode, catName) {
       console.log(`setNewCatInfo`, catCode, catName);
+      this.catCode = catCode;
+      this.catName = catName;
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfoWithCatCodeAndCatName`, {
         "code": catCode,
         "name": catName,
@@ -272,7 +274,6 @@ export default {
           tmp["rangetype"] = rangeObject.type.toString();
           tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
           tmp["sort"] = response.data[5][i].sort;
-          tmp["value"] = response.data[5][i].value;
           this.mtrTypeModifyTable.push(tmp);
         }
       }).catch(error => {
@@ -392,10 +393,10 @@ export default {
       // console.log(newVal, this[type]);
     },
     updateAllData() {
-      console.log(`Please Update All Values!`);
+      console.log(`Update All Values!`);
       let sendData = {
-        spuCode: this.spuCode,
-        spuName: this.spuName,
+        code: this.catCode,
+        name: this.catName,
         data: [],
       };
       if (this.mtrPurchaseAndStoreUpdateValue.length != 0) {
@@ -451,7 +452,8 @@ export default {
         sendData["data"].push(tmpData);
         console.log(`add mtrTypeModifyTableValue!`);
       }
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
+      console.log(`sendData`, sendData);
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfoWithCatCodeAndCatName`, sendData)
         .then((response) => {
           console.log(response);
         });
