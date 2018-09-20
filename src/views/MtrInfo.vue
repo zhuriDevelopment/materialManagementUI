@@ -18,8 +18,8 @@
           </div>
           <el-tabs type="border-card" value="0">
             <el-tab-pane label="物料基本信息">
-              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')" 
-                :basicInfo="mtrBasicInfo" 
+              <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')"
+                :basicInfo="mtrBasicInfo"
                 :units="mtrBasicInfoUnits"></Mtr-basic-info>
             </el-tab-pane>
             <el-tab-pane label="物料定义">
@@ -158,7 +158,7 @@ export default {
           note: ""
         }
       ],
-      
+
     };
   },
   methods: {
@@ -671,19 +671,19 @@ export default {
           note: ''
         };
         this.mtrBasicInfoUnits = [[{
-          label: '',
-          name: '',
-          englishName: '',
-          conversionFactor: '',
-          relatedId: '',
+          label: '初始单位',
+          name: '初始单位',
+          englishName: 'init Unit',
+          conversionFactor: '1',
+          relatedId: '0',
           sort: 1,
-        }], 
+        }],
         [{
-          label: '',
-          name: '',
-          englishName: '',
-          conversionFactor: '',
-          relatedId: '',
+          label: '初始单位',
+          name: '初始单位',
+          englishName: 'init Unit',
+          conversionFactor: '1',
+          relatedId: '0',
           sort: 1,
         }]];
         this.mtrDefs = [];
@@ -738,6 +738,13 @@ export default {
             propertyValue: "默认库位"
           }
         ];
+        this.mtrPurchaseAndStoreUpdateValue = [];
+        for (var element in this.mtrPurchaseAndStore) {
+          this.mtrPurchaseAndStoreUpdateValue.push({
+            "name": this.mtrPurchaseAndStore[element].propertyName,
+            "value": this.mtrPurchaseAndStore[element].propertyValue,
+          });
+        };
         this.mtrPlan = [
           {
             propertyName: "是否独立需求",
@@ -780,6 +787,13 @@ export default {
             propertyValue: "默认计划单位"
           }
         ];
+        this.mtrPlanUpdateValue = [];
+        for (var element in this.mtrPlan) {
+          this.mtrPlanUpdateValue.push({
+            "name": this.mtrPlan[element].propertyName,
+            "value": this.mtrPlan[element].propertyValue,
+          });
+        };
         this.mtrSales = [
           {
             propertyName: "销售计划价格",
@@ -822,6 +836,13 @@ export default {
             propertyValue: "默认销售单位"
           }
         ];
+        this.mtrSalesUpdateValue = [];
+        for (var element in this.mtrSales) {
+          this.mtrSalesUpdateValue.push({
+            "name": this.mtrSales[element].propertyName,
+            "value": this.mtrSales[element].propertyValue,
+          });
+        };
         this.mtrQuality = [
           {
             propertyName: "检验方式",
@@ -856,6 +877,13 @@ export default {
             propertyValue: "文件A"
           }
         ];
+        this.mtrQualityUpdateValue = [];
+        for (var element in this.mtrQuality) {
+          this.mtrQualityUpdateValue.push({
+            "name": this.mtrQuality[element].propertyName,
+            "value": this.mtrQuality[element].propertyValue,
+          });
+        };
         this.mtrFinance = [
           {
             propertyName: "财务类别",
@@ -886,6 +914,13 @@ export default {
             propertyValue: "类型1"
           }
         ];
+        this.mtrFinanceUpdateValue = [];
+        for (var element in this.mtrFinance) {
+          this.mtrFinanceUpdateValue.push({
+            "name": this.mtrFinance[element].propertyName,
+            "value": this.mtrFinance[element].propertyValue,
+          });
+        };
       }
     },
     submitChangeValue() {
@@ -986,10 +1021,10 @@ export default {
         console.log(`add Unit Values!`);
       }
       console.log(sendData);
-      // this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
-      //   .then((response) => {
-      //     console.log(response);
-      //   });
+      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
+        .then((response) => {
+          console.log(response);
+        });
     }
   }
 };
