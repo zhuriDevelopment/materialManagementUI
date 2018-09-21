@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     handleNodeClick(data) {
-      console.log(data);
+      // console.log(data);
       if(data.label === "物料信息管理"){
         this.$router.push('/');
       }

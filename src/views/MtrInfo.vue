@@ -16,7 +16,7 @@
               <el-button type="primary" icon="el-icon-check" @click="submitChangeValue">提交</el-button>
             </el-row>
           </div>
-          <el-tabs type="border-card" value="0">
+          <el-tabs type="border-card" value="1">
             <el-tab-pane label="物料基本信息">
               <Mtr-basic-info @changeModel="updateMtrData($event, 'mtrBasicInfo')"
                 :basicInfo="mtrBasicInfo"
@@ -165,7 +165,7 @@ export default {
     initTabs() {
       if (localStorage.materialInfoTabs !== undefined) {
         const tabs = JSON.parse(localStorage.materialInfoTabs);
-        console.log(tabs);
+        // console.log(tabs);
         this.editableTabs = tabs.list;
         this.editableTabsValue = tabs.value;
         this.tabIndex = tabs.index;
@@ -175,12 +175,12 @@ export default {
           value: this.editableTabsValue,
           index: this.tabIndex
         };
-        console.log(tabs);
+        // console.log(tabs);
         localStorage.materialInfoTabs = JSON.stringify(tabs);
       }
     },
     addHome() {
-      console.log("addhome");
+      // console.log("addhome");
       this.editableTabs = tabs.filter(tab => tab.name !== "");
       this.editableTabs.push({
         title: "/",
@@ -204,8 +204,8 @@ export default {
       let flag = false;
       let unitTable = [];
       let defaultUnit = [];
-      console.log("emit: ", newVal);
-      console.log("origin: ", this[type]);
+      // console.log("emit: ", newVal);
+      // console.log("origin: ", this[type]);
       if (type === "mtrBasicInfo") {
         unitTable = newVal.asUnit;
         defaultUnit = newVal.defaultUnit;
@@ -213,12 +213,12 @@ export default {
         for (let i in newVal) {
           if (this[type].hasOwnProperty(i)) {
             if (newVal[i] !== this[type][i]) {
-              // console.log(type, i, newVal[i], this[type][i]);
+              // // console.log(type, i, newVal[i], this[type][i]);
               flag = true;
               break;
             }
           } else {
-            console.log("new element! => ", i);
+            // console.log("new element! => ", i);
             flag = true;
             break;
           }
@@ -243,9 +243,9 @@ export default {
       if (flag) {
         switch (type) {
           case "mtrBasicInfo":
-            console.log("mtrBasicInfo: ", newVal);
-            console.log("计量单位表: ", unitTable);
-            console.log("默认计量单位：", defaultUnit);
+            // console.log("mtrBasicInfo: ", newVal);
+            // console.log("计量单位表: ", unitTable);
+            // console.log("默认计量单位：", defaultUnit);
             this.spuCode = newVal.spuCode;
             this.spuName = newVal.spuName;
             this.mtrBasicInfoUpdateValue = [];
@@ -259,7 +259,7 @@ export default {
                 }
               }
             }
-            console.log(`mtrBasicInfoUpdateValue: `, this.mtrBasicInfoUpdateValue);
+            // console.log(`mtrBasicInfoUpdateValue: `, this.mtrBasicInfoUpdateValue);
             this.mtrUnitTableUpdateValue = [];
             this.mtrUnitTableUpdateValue.push(defaultUnit);
             this.mtrUnitTableUpdateValue.push([]);
@@ -269,14 +269,14 @@ export default {
               }
             }
             // this.mtrUnitTableUpdateValue.push(unitTable);
-            console.log("mtrUnitTableUpdateValue: ", this.mtrUnitTableUpdateValue);
+            // console.log("mtrUnitTableUpdateValue: ", this.mtrUnitTableUpdateValue);
             break;
           case "mtrDefs":
-            console.log("mtrDefs: ", newVal);
+            // console.log("mtrDefs: ", newVal);
             this.mtrDefsUpdateValue = newVal;
             break;
           case "mtrSkuDefs":
-            console.log("mtrSkuDefs: ", newVal);
+            // console.log("mtrSkuDefs: ", newVal);
             this.mtrSkuDefsUpdateValue = newVal;
             break;
         }
@@ -364,7 +364,7 @@ export default {
         }
       }
       this[type] = newVal;
-      // console.log(newVal, this[type]);
+      // // console.log(newVal, this[type]);
     },
     setData() {
       if (this.$route.params.id !== 'newCode' && this.$route.query.name !== 'newName') {
@@ -376,7 +376,7 @@ export default {
             typeArr: [1, 2, 3, 5, 6, 7, 8, 9, 10]
           })
           .then(response => {
-            console.log(`ajax response`, response);
+            // console.log(`ajax response`, response);
             // 物料基础信息
             const _mtrBasicInfo = response.data[0][0];
             this.mtrBasicInfo = {
@@ -411,6 +411,7 @@ export default {
               tmpDef["format3"] = `规格3`;
               this.mtrDefs.push(tmpDef);
             }
+            
             // 物料sku信息
             const _mtrSkuDefs = response.data[2];
             let _skuLen = response.data[2][0].length;
@@ -433,7 +434,7 @@ export default {
             this.mtrFinance = response.data[7];
           })
           .catch(error => {
-            console.log(error);
+            // console.log(error);
             this.mtrBasicInfo = {
               spuCode: "1",
               spuName: "111",
@@ -657,7 +658,7 @@ export default {
             ];
           });
       } else {
-        console.log(`add new infos!`);
+        // console.log(`add new infos!`);
         this.mtrBasicInfo = {
           spuCode: '',
           spuName: '',
@@ -924,8 +925,8 @@ export default {
       }
     },
     submitChangeValue() {
-      console.log("change!");
-      // console.log(this.$route);
+      // console.log("change!");
+      // // console.log(this.$route);
       let spuCode = this.$route.params.id;
       let spuName = this.$route.query.name;
       if (spuCode === 'newCode' && spuName === 'newName') {
@@ -937,14 +938,14 @@ export default {
         spuName: spuName,
         data: []
       };
-      console.log(`spuCode`, spuCode, `spuName`, spuName);
+      // console.log(`spuCode`, spuCode, `spuName`, spuName);
       if (this.mtrBasicInfoUpdateValue.length > 0) {
         let tmpData = {
           propertyType: 1,
           updateValue: this.mtrBasicInfoUpdateValue
         };
         sendData[`data`].push(tmpData);
-        console.log(`add BasicInfo values!`);
+        // console.log(`add BasicInfo values!`);
       }
       if (this.mtrDefsUpdateValue.length > 0) {
         for (let i in this.mtrDefsUpdateValue) {
@@ -957,7 +958,7 @@ export default {
           updateValue: this.mtrDefsUpdateValue
         };
         sendData[`data`].push(tmpData);
-        console.log(`add Defs Values!`);
+        // console.log(`add Defs Values!`);
       }
       if (this.mtrSkuDefsUpdateValue.length > 0) {
         let tmpData = {
@@ -965,7 +966,7 @@ export default {
           updateValue: this.mtrSkuDefsUpdateValue
         };
         sendData[`data`].push(tmpData);
-        console.log(`add SkuDefs Values!`);
+        // console.log(`add SkuDefs Values!`);
       }
       if (this.mtrPurchaseAndStoreUpdateValue.length != 0) {
         let tmpData = {
@@ -974,7 +975,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add PurchaseAndStore values!`);
+        // console.log(`add PurchaseAndStore values!`);
       }
       if (this.mtrPlanUpdateValue.length != 0) {
         let tmpData = {
@@ -983,7 +984,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Plan values!`);
+        // console.log(`add Plan values!`);
       }
       if (this.mtrSalesUpdateValue.length != 0) {
         let tmpData = {
@@ -992,7 +993,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Sales values!`);
+        // console.log(`add Sales values!`);
       }
       if (this.mtrQualityUpdateValue.length != 0) {
         let tmpData = {
@@ -1001,7 +1002,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Quality values!`);
+        // console.log(`add Quality values!`);
       }
       if (this.mtrFinanceUpdateValue.length != 0) {
         let tmpData = {
@@ -1010,7 +1011,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Finance values!`);
+        // console.log(`add Finance values!`);
       }
       if (this.mtrUnitTableUpdateValue.length != 0) {
         let tmpData = {
@@ -1018,12 +1019,12 @@ export default {
           updateValue: this.mtrUnitTableUpdateValue,
         };
         sendData["data"].push(tmpData);
-        console.log(`add Unit Values!`);
+        // console.log(`add Unit Values!`);
       }
-      console.log(sendData);
+      // console.log(sendData);
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         });
     }
   }

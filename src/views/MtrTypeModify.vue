@@ -118,17 +118,17 @@ export default {
   },
   methods: {
     initTree() {
-      console.log("initing Tree!");
+      // console.log("initing Tree!");
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategory`, {})
           .then((response) => {
-            console.log(`treeData = `, response);
+            // console.log(`treeData = `, response);
             this.treeData = [];
             this.treeData.push(response.data);
           })
           .catch(error => {
-            console.log(`error in initing tree`, error);
+            // console.log(`error in initing tree`, error);
           });
-      console.log("init Tree Finished!");
+      // console.log("init Tree Finished!");
     },
     addNode(){
       const data = this.nodeData;
@@ -140,7 +140,7 @@ export default {
     },
     editNode() {
       const data = this.nodeData;
-      console.log('node:', data);
+      // console.log('node:', data);
       if(!data.hasOwnProperty('id')){
         this.$message({
           type: 'info',
@@ -192,14 +192,14 @@ export default {
     },
     handleNodeClick(data) {
       this.nodeData = data;
-      console.log(`handleNodeClick data`, data);
-      console.log(`data.id`, data.id);
+      // console.log(`handleNodeClick data`, data);
+      // console.log(`data.id`, data.id);
       const catId = data.id;
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategoryInfosWithId`, {
         "id": catId,
       })
       .then((response) => {
-        console.log(`handleNodeClick resposne`, response);
+        // console.log(`handleNodeClick resposne`, response);
         this.mtrTypeModifyInfo = response.data[0];
         // const baseData = response.data[0];
         // const catData = response.data[1];
@@ -212,18 +212,18 @@ export default {
     initTabs() {
       if (localStorage.materialInfoTabs !== undefined) {
         const tabs = JSON.parse(localStorage.materialInfoTabs);
-        console.log(tabs);
+        // console.log(tabs);
         this.editableTabs = tabs.list;
         this.editableTabsValue = tabs.value;
         this.tabIndex = tabs.index;
-        console.log(this.editableTabs);
+        // console.log(this.editableTabs);
       } else {
         const tabs = {
           list: this.editableTabs,
           value: this.editableTabsValue,
           index: this.tabIndex
         };
-        console.log(tabs);
+        // console.log(tabs);
         localStorage.materialInfoTabs = JSON.stringify(tabs);
       }
     },
@@ -238,7 +238,7 @@ export default {
       this.editableTabsValue = tabs.value;
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index;
-      console.log("emit: ", tabs);
+      // console.log("emit: ", tabs);
     },
     setNewBaseProp(updateData) {
       this.mtrTypeModifyTableUpdateValue = Object.assign([], updateData);
@@ -248,7 +248,7 @@ export default {
       }
     },
     setNewCatInfo(catCode, catName) {
-      console.log(`setNewCatInfo`, catCode, catName);
+      // console.log(`setNewCatInfo`, catCode, catName);
       this.catCode = catCode;
       this.catName = catName;
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfoWithCatCodeAndCatName`, {
@@ -256,7 +256,7 @@ export default {
         "name": catName,
         "typeArr": [5, 6, 7, 8, 9, 11]
       }).then((response) => {
-        console.log(`setNewCatInfo response:`, response);
+        // console.log(`setNewCatInfo response:`, response);
         this.mtrPurchaseAndStore = response.data[0];
         this.mtrPlan = response.data[1];
         this.mtrSales = response.data[2];
@@ -270,16 +270,16 @@ export default {
           tmp["label"] = response.data[5][i].label;
           tmp["name"] = response.data[5][i].name;
           let rangeObject = JSON.parse(response.data[5][i].valueRange);
-          console.log(`rangeObject`, rangeObject);
+          // console.log(`rangeObject`, rangeObject);
           tmp["rangetype"] = rangeObject.type.toString();
           tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
           tmp["sort"] = response.data[5][i].sort;
           this.mtrTypeModifyTable.push(tmp);
         }
       }).catch(error => {
-        console.log(`error in setNewSpuInfo`, error);
+        // console.log(`error in setNewSpuInfo`, error);
       });
-      // console.log(spuCode, spuName);
+      // // console.log(spuCode, spuName);
       // this.spuCode = spuCode;
       // this.spuName = spuName;
       // this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
@@ -289,7 +289,7 @@ export default {
       //   "typeArr": [5, 6, 7, 8, 9, 11],
       // })
       // .then((response) => {
-      //   console.log(response);
+      //   // console.log(response);
       //   this.mtrPurchaseAndStore = response.data[0];
       //   this.mtrPlan = response.data[1];
       //   this.mtrSales = response.data[2];
@@ -303,7 +303,7 @@ export default {
       //     tmp["label"] = response.data[5][1][i].label;
       //     tmp["name"] = response.data[5][1][i].name;
       //     let rangeObject = JSON.parse(response.data[5][1][i].valueRange);
-      //     console.log(`rangeObject`, rangeObject);
+      //     // console.log(`rangeObject`, rangeObject);
       //     tmp["rangetype"] = rangeObject.type.toString();
       //     tmp["range"] = rangeObject.lower + " - " + rangeObject.upper;
       //     tmp["sort"] = response.data[5][1][i].sort;
@@ -312,7 +312,7 @@ export default {
       //   }
       // })
       // .catch(error => {
-      //   console.log(`error in setNewSpuInfo`, error);
+      //   // console.log(`error in setNewSpuInfo`, error);
       // });
     },
     checkContainsNV(list, name) {
@@ -390,10 +390,10 @@ export default {
         }
       }
       this[type] = newVal;
-      // console.log(newVal, this[type]);
+      // // console.log(newVal, this[type]);
     },
     updateAllData() {
-      console.log(`Update All Values!`);
+      // console.log(`Update All Values!`);
       let sendData = {
         code: this.catCode,
         name: this.catName,
@@ -406,7 +406,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add PurchaseAndStore values!`);
+        // console.log(`add PurchaseAndStore values!`);
       }
       if (this.mtrPlanUpdateValue.length != 0) {
         let tmpData = {
@@ -415,7 +415,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Plan values!`);
+        // console.log(`add Plan values!`);
       }
       if (this.mtrSalesUpdateValue.length != 0) {
         let tmpData = {
@@ -424,7 +424,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Sales values!`);
+        // console.log(`add Sales values!`);
       }
       if (this.mtrQualityUpdateValue.length != 0) {
         let tmpData = {
@@ -433,7 +433,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Quality values!`);
+        // console.log(`add Quality values!`);
       }
       if (this.mtrFinanceUpdateValue.length != 0) {
         let tmpData = {
@@ -442,7 +442,7 @@ export default {
           organizationCode: 1
         };
         sendData["data"].push(tmpData);
-        console.log(`add Finance values!`);
+        // console.log(`add Finance values!`);
       }
       if (this.mtrTypeModifyTableUpdateValue.length != 0) {
         let tmpData = {
@@ -450,12 +450,12 @@ export default {
           updateValue: this.mtrTypeModifyTableUpdateValue,
         };
         sendData["data"].push(tmpData);
-        console.log(`add mtrTypeModifyTableValue!`);
+        // console.log(`add mtrTypeModifyTableValue!`);
       }
-      console.log(`sendData`, sendData);
+      // console.log(`sendData`, sendData);
       this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfoWithCatCodeAndCatName`, sendData)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         });
     },
   }

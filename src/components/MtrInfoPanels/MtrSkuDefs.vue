@@ -96,7 +96,7 @@ export default {
   props: ["data"],
   watch: {
     data(val) {
-      console.log("MtrSkuDefs");
+      // console.log("MtrSkuDefs");
       this.tableData = [];
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));

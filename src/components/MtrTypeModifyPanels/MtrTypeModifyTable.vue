@@ -148,7 +148,7 @@ export default {
   props: ["data"],
   watch: {
     data(val) {
-      console.log(`MtrTypeModifyTable`);
+      // console.log(`MtrTypeModifyTable`);
       this.tableData = [];
       for (let i in this.data) {
         this.tableData.push(Object.assign({}, this.data[i]));
@@ -156,9 +156,9 @@ export default {
     },
     tableData: {
       handler: function (newVal, oldVal) {
-        console.log(`newVal`, newVal);
+        // console.log(`newVal`, newVal);
         let data = Object.assign([], data, newVal);
-        console.log(`data`, data);
+        // console.log(`data`, data);
         let result = [];
         for (let i in data) {
           // let element1 = {};
@@ -188,7 +188,7 @@ export default {
           element["sort"] = data[i].sort;
           result.push(element);
         }
-        console.log(`tableData Result`, result);
+        // console.log(`tableData Result`, result);
         this.$emit('changeValue', result);
       },
       deep: true,
@@ -206,11 +206,11 @@ export default {
       })
     },
     handleAdd(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       this.pushRow();
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       this.tableData.splice(index, 1);
       if(this.tableData.length === 0){
         this.disabled = [];
@@ -225,7 +225,7 @@ export default {
         this.tableData = Object.assign([], this.tableData, baseInfos);
         this.exchangeDisable(index, index - 1);
       }
-      console.log(this.tableData);
+      // console.log(this.tableData);
     },
     handleUnitDown(index, row){
       let baseInfos = this.tableData;
@@ -235,7 +235,7 @@ export default {
         this.tableData = Object.assign([], this.tableData, baseInfos);
         this.exchangeDisable(index, index + 1);
       }
-      console.log(this.tableData);
+      // console.log(this.tableData);
     },
     exchangeDisable(idx1, idx2) {
       const tmp = this.disabled[idx1];

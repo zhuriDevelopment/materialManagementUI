@@ -223,18 +223,18 @@ export default {
     initTabs() {
       if (localStorage.materialInfoTabs !== undefined) {
         const tabs = JSON.parse(localStorage.materialInfoTabs);
-        console.log(tabs);
+        // console.log(tabs);
         this.editableTabs = tabs.list;
         this.editableTabsValue = tabs.value;
         this.tabIndex = tabs.index;
-        console.log(this.editableTabs);
+        // console.log(this.editableTabs);
       } else {
         const tabs = {
           list: this.editableTabs,
           value: this.editableTabsValue,
           index: this.tabIndex
         };
-        console.log(tabs);
+        // console.log(tabs);
         localStorage.materialInfoTabs = JSON.stringify(tabs);
       }
     },
@@ -249,16 +249,16 @@ export default {
       this.editableTabsValue = tabs.value;
       this.editableTabs = tabs.list;
       this.tabIndex = tabs.index;
-      console.log("emit: ", tabs);
+      // console.log("emit: ", tabs);
     },
     clickRow(row, event, column) {
-      console.log(column);
+      // console.log(column);
       if (column.label !== "操作") {
         this.$router.push({ path: `/MtrInfo/${row.code}?name=${row.name}` });
       }
     },
     handleClick(row) {
-      console.log(row);
+      // console.log(row);
       this.$router.push({ path: `/MtrInfo/${row.code}?name=${row.name}` });
     },
     createMtrInfos() {
@@ -268,7 +268,7 @@ export default {
       this.$axios
         .post(`${window.$config.HOST}/MaterialManagement/getAllBaseInfo`)
         .then(response => {
-          console.log(response);
+          // console.log(response);
           let basedatas = response.data[0];
           let catdatas = response.data[1];
           let unitdatas = response.data[2];
@@ -289,7 +289,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error);
+          // console.log(error);
         });
     },
     showAdvSearch() {
@@ -326,14 +326,14 @@ export default {
         sendData[`description`] = this.description;
         allEmptyFlag = 0;
       }
-      console.log(`searchParams: `, sendData);
+      // console.log(`searchParams: `, sendData);
       if (allEmptyFlag === 1) {
         this.getTableData();
       } else {
         this.$axios
           .post(`${window.$config.HOST}/MaterialManagement/getBaseInfo`, sendData)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             let basedatas = response.data[0];
             let catdatas = response.data[1];
             let unitdatas = response.data[2];
@@ -354,7 +354,7 @@ export default {
             }
           })
           .catch(error => {
-            console.log(`searchWithParams error: `, error);
+            // console.log(`searchWithParams error: `, error);
           });
       }
     }

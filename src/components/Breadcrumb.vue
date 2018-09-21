@@ -30,7 +30,7 @@ export default {
   props: ["tabList", "tabIndex","tabValue"],
   methods: {
     emit(){
-      console.log('click')
+      // console.log('click')
       this.$emit('clickHome');
     },
   }

@@ -84,7 +84,7 @@ export default {
   props: ["data"],
   watch: {
     data(newVal, oldVal) {
-      console.log("pass data in mtr type info!", this.data);
+      // console.log("pass data in mtr type info!", this.data);
       if (this.data.length > 0) {
         // this.spuCodeArr = [];
         // this.spuNameArr = [];
@@ -149,14 +149,14 @@ export default {
           options: this.typeArr,
         }];
       } else {
-        console.log("baseData empty!");
+        // console.log("baseData empty!");
       }
     },
   },
   methods: {
     selectchange(value) {
-      console.log("change!");
-      console.log(value);
+      // console.log("change!");
+      // console.log(value);
       // const model = this.inputBoxData[idx].model;
       // this.inputBoxData[1-idx].model = (idx === 0) ? this.code2Name[model] : this.name2Code[model];
       this.$emit('changeValue', this.inputBoxData[0].model, this.inputBoxData[1].model);

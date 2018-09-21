@@ -3,6 +3,7 @@
     <div class="lower">
       <div class="row">
         <el-table
+          v-if="showTable"
           :data="tableData"
           border
           highlight-current-row
@@ -19,7 +20,10 @@
             width="160"
             :label="labels[index]">
             <template slot-scope="scope">
-              <el-input v-model="tableData[scope.$index][p]" :disabled="disabled[scope.$index]===scope.row.materialCode && labels[index] ==='物料编码'"></el-input>              
+              <el-input v-model="tableData[scope.$index][p]"
+               :disabled="(disabled[scope.$index]===scope.row.materialCode && labels[index] ==='物料编码') ||
+               (scope.row[labels[index]] === undefined && index > 5)"
+               ></el-input>           
             </template>
           </el-table-column>
           <el-table-column
@@ -42,7 +46,8 @@ export default {
   name: 'MtrDefs',
   data() {
     return {
-      labels: ['物料编码','物料名称','旧物料编码','条形码','采购价格','销售价格','规格1','规格2','规格3'],
+      labels: ['物料编码','物料名称','旧物料编码','条形码','采购价格','销售价格'],
+      names: ['materialCode', 'materialName', 'oldMaterialCode', 'barCode', 'purchasePrice', 'sellingPrice'],
       disabled: [],
       // tableData: [{
       //   materialCode: 'B12343',
@@ -56,20 +61,31 @@ export default {
       //   format3: '规格3',
       // }],
       tableData: [{}],
+      flag: true,
+      showTable: true,
     };
   },
   props: ["data"],
+
   watch: {
     data(val) {
-      console.log(`MtrDefs`);
+      if(this.flag) {
+        this.getBaseProps()
+        this.flag = false;
+      }
+      // console.log(`MtrDefs`);
       this.tableData = [];
       for (let i in this.data) {
-        this.tableData.push(Object.assign({}, this.data[i]));
+        delete this.data[i].format1;
+        delete this.data[i].format2;
+        delete this.data[i].format3;
+        this.$set(this.tableData, i, this.data[i]);
         this.disabled.push(this.data[i].materialCode);
       }
       if (this.tableData.length == 0) {
         this.pushRow();
       }
+      
     },
     tableData: {
       // handler should not be arrow function.
@@ -91,25 +107,22 @@ export default {
   },
   methods: {
     pushRow() {
-      this.tableData.push({
-        materialCode: '',
-        materialName: '',
-        oldMaterialCode: '',
-        barCode: '',
-        format1: '',
-        format2: '',
-        format3: '',
-      })
+      let empObj = {};
+      empObj = this.names.reduce((acc, key) => {
+        acc[key] = '';
+        return acc;
+      }, {});
+      this.tableData.push(empObj);
     },
     handleAdd(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       if(row.materialCode !== ''){
         this.disabled[index] = row.materialCode;
         this.pushRow();
       };
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       this.disabled.splice(index,1);
       this.tableData.splice(index, 1);
       if(this.tableData.length === 0){
@@ -118,10 +131,53 @@ export default {
       }
     },
     updateValue(currentRow, oldCurrentRow) {
-      console.log("updateRowValue!");
-      console.log(currentRow);
-      console.log(oldCurrentRow);
-    }
+      // console.log("updateRowValue!");
+      // console.log(currentRow);
+      // console.log(oldCurrentRow);
+    },
+    getBaseProps() {
+      console.log("props")
+      console.log(this.data)
+      let materialCodes = this.data.map(element => {
+        return element.materialCode
+      });
+      console.log(materialCodes)
+      materialCodes = this.data.map(element => element.materialCode);
+      console.log(materialCodes)
+      this.$axios
+        .post(`${window.$config.HOST}/MaterialManagement/getMaterialBasePropsBySpuCodeAndMaterialCodes`, {
+          spuCode: this.$route.params.id,
+          materialCodes,
+          propertyType: 4
+        })
+        .then(res => {
+          console.log(res.data)
+          const propTypes = res.data;
+          let labels = [];
+          let tmpData = this.data;
+          for(let i = 0; i < propTypes.length; i += 1) {
+            for(let j = 0; j< propTypes[i].length; j += 1) {
+              console.log(propTypes[i][j])
+              const baseProp = propTypes[i][j].baseProp;
+              const value = propTypes[i][j].value;
+              if(this.labels.indexOf(baseProp.label) < 0){
+                this.labels.push(baseProp.label);
+                this.names.push(baseProp.label)
+                console.log("abc: ",this.labels)
+              }
+              tmpData[i][baseProp.label] = value;
+            }
+          }
+          this.data = tmpData;
+          console.log(this.data)
+          // const labels = propTypes.map(el => el.baseProp);
+          // console.log(propTypes)
+          this.showTable = false;
+          this.$nextTick(()=>{
+            this.showTable = true;
+          })
+        })
+    } 
   }
 };
 

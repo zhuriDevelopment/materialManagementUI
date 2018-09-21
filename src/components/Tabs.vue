@@ -42,9 +42,9 @@ export default {
   },
   props: ['tabValue', 'tabList', 'tabIndex'],
   mounted() {
-    console.log(this.$route)
+    // console.log(this.$route)
     const pathName = (this.$route.name !== 'Home') ? this.$route.name : '/';
-    console.log(pathName)
+    // console.log(pathName)
     if(this.list.filter(tab => tab.name === pathName).length === 0) {
       this.addTab(pathName, this.id, this.query);
     } else {
@@ -77,7 +77,7 @@ export default {
         this.list = tabs.filter(tab => tab.name !== targetName);
         this.idx = idx;
         if(this.list.length === 0){
-          console.log('list length === 0')
+          // console.log('list length === 0')
           activeName = '/';
           idx = 0;
           this.addTab(activeName, '');
@@ -90,23 +90,23 @@ export default {
     },
     clickTab(tab) {
       this.savePageState(tab);
-      console.log('click tab')
-      console.log(tab.name)
-      console.log(tab)
-      console.log(this.list)
-      console.log(tab.index)
-      console.log(this.list[tab.index])
+      // console.log('click tab')
+      // console.log(tab.name)
+      // console.log(tab)
+      // console.log(this.list)
+      // console.log(tab.index)
+      // console.log(this.list[tab.index])
       let name = tab.name;
       if(name === '/'){
         name = 'Home';
       }
       
-      console.log(this.$route.params);
+      // console.log(this.$route.params);
       if(this.list[tab.index].hasOwnProperty('id') && this.list[tab.index].id !== '' ) {
-        console.log("error")
+        // console.log("error")
         this.$router.push({ name, params: { id: this.list[tab.index].id }, query: this.list[tab.index].query });
       } else {
-        console.log("success")
+        // console.log("success")
         this.$router.push({ name });
       }
 
@@ -119,18 +119,18 @@ export default {
         query
       });
       this.value = name;
-      console.log('addTab: ',this.list);
+      // console.log('addTab: ',this.list);
       this.updateTabs();
     },
     updateTabs() {
       const tabs = {'list': this.list, 'value': this.value, 'index': this.idx, 'query': this.query};
-      console.log('updateTabs', tabs);
+      // console.log('updateTabs', tabs);
       this.$emit('updateTabs', tabs);
       this.savePageState(tabs);
     },
     savePageState(tab) {
       const tabs = {'list': this.list, 'value': tab.name, 'index': tab.index, 'query': tab.query};
-      console.log('save tab ', tabs);
+      // console.log('save tab ', tabs);
       localStorage.materialInfoTabs = JSON.stringify(tabs);
     },
   }

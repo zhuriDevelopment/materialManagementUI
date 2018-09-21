@@ -167,16 +167,16 @@ export default {
           }
         ];
         this.rows = Object.assign([], this.rows, []);
-        console.log(`basicInfo`, `this.rows`, this.rows);
+        // console.log(`basicInfo`, `this.rows`, this.rows);
       },
       deep: true,
     },
     units(newVal, oldVal) {
-      console.log(`计量单位值`, this.units);
+      // console.log(`计量单位值`, this.units);
       if (this.rows.length < 2) {
         this.rows = [[], [], [], [], [], [], []];
       }
-      // console.log(this.units);
+      // // console.log(this.units);
       this.units[1].forEach(el => {
         delete el.id;
       });
@@ -199,15 +199,15 @@ export default {
         }
       ];
       this.$set(this.rows[5][0], 'options', defaultOptions);
-      console.log(`units`, `this.rows`, this.rows, this.units);
-      console.log(`defaultOptions`, defaultOptions);
-      console.log(`defaultUnit`, this.defaultUnit);
+      // console.log(`units`, `this.rows`, this.rows, this.units);
+      // console.log(`defaultOptions`, defaultOptions);
+      // console.log(`defaultUnit`, this.defaultUnit);
     },
     defaultUnit: {
       handler: function (newVal, oldVal) {
-        console.log(`defaultUnit Change!`, this.defaultUnit);
+        // console.log(`defaultUnit Change!`, this.defaultUnit);
         this.$set(this.rows[5][0], 'value', this.defaultUnit);
-        console.log(`this.rows[5]`, this.rows[5]);
+        // console.log(`this.rows[5]`, this.rows[5]);
         this.rows = Object.assign([], this.rows, []);
       },
       deep: true,
@@ -221,7 +221,7 @@ export default {
             newInfo[j.key] = j.value;
           }
         }
-        // console.log(`newInfo`, newInfo);
+        // // console.log(`newInfo`, newInfo);
         this.$emit('changeModel', newInfo);
       },
       deep: true,
@@ -237,10 +237,10 @@ export default {
         relatedId: '',
         sort: this.rows[6][0].value.length + 1,
       });
-      console.log(`pushRow`, this.rows[6][0].value)
+      // console.log(`pushRow`, this.rows[6][0].value)
     },
     reverseValue(x, y){
-      // console.log(x, y)
+      // // console.log(x, y)
       [x.sort, y.sort] = [y.sort, x.sort];
       return [x, y]
     },
@@ -248,16 +248,16 @@ export default {
       let units = this.rows[6][0].value;
       if(index !== 0) {
         this.showTable = false;
-        console.log(`handleUnitUp`, units[index - 1], units[index], `index = `, index);
+        // console.log(`handleUnitUp`, units[index - 1], units[index], `index = `, index);
         [units[index - 1], units[index]] = [units[index], units[index - 1]];
         [units[index - 1].sort, units[index].sort] = [units[index].sort, units[index - 1].sort];
-        // console.log(`After handleUnitUp`, units, this.rows[6][0].value);
+        // // console.log(`After handleUnitUp`, units, this.rows[6][0].value);
         // this.rows[6][0].value = Object.assign([], units, []);
         this.$set(this.rows[6][0], 'value', units);
-        // console.log(`After reassign`, this.rows[6][0].value);
+        // // console.log(`After reassign`, this.rows[6][0].value);
         this.exchangeDisable(index, index - 1);
-        console.log(`handleUnitUp`, this.rows[6][0].value[0].name, `index = `, index);
-        console.log(this.disabled)
+        // console.log(`handleUnitUp`, this.rows[6][0].value[0].name, `index = `, index);
+        // console.log(this.disabled)
         this.$nextTick(function() {
           this.showTable = true;
         });
@@ -267,16 +267,16 @@ export default {
       let units = this.rows[6][0].value;
       if(index < this.rows[6][0].value.length - 1) {
         this.showTable = false;
-        // console.log(`handleUnitDown`, units[index + 1], units[index], `index = `, index);
+        // // console.log(`handleUnitDown`, units[index + 1], units[index], `index = `, index);
         [units[index + 1], units[index]] = [units[index], units[index + 1]];
         [units[index + 1].sort, units[index].sort] = [units[index].sort, units[index + 1].sort];
-        // console.log(`After haneldUnitDown`, units, this.rows[6][0].value);
+        // // console.log(`After haneldUnitDown`, units, this.rows[6][0].value);
         // this.rows[6][0].value = Object.assign([], units, []);
         this.$set(this.rows[6][0], 'value', units);
-        // console.log(`After reassign`, this.rows[6][0].value);
+        // // console.log(`After reassign`, this.rows[6][0].value);
         this.exchangeDisable(index, index + 1);
-        console.log(`handleUnitDown`, this.rows[6][0].value[0].name, `index = `, index);
-        console.log(this.disabled)
+        // console.log(`handleUnitDown`, this.rows[6][0].value[0].name, `index = `, index);
+        // console.log(this.disabled)
         this.$nextTick(function() {
           this.showTable = true;
         });
@@ -288,7 +288,7 @@ export default {
       this.disabled[idx2] = tmp;
     },
     handleUnitAdd(index, row) {
-      // console.log(`handleUnitAdd`, index, row, `disabled`, this.disabled);
+      // // console.log(`handleUnitAdd`, index, row, `disabled`, this.disabled);
       if(this.rows[6][0].value.slice(-1)[0].name !== ''){
         this.pushRow();
       }
@@ -297,7 +297,7 @@ export default {
       // }
     },
     handleUnitDelete(index, row) {
-      // console.log(`handleUnitDelete`, index, row, `disabled`, this.disabled, `this.rows[6]`, this.rows[6]);
+      // // console.log(`handleUnitDelete`, index, row, `disabled`, this.disabled, `this.rows[6]`, this.rows[6]);
       if (this.rows[6][0].value[index].name !== '') {
         this.rows[6][0].value.splice(index, 1);
         this.disabled.splice(index, 1);
