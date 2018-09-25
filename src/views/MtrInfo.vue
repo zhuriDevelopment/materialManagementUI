@@ -204,8 +204,9 @@ export default {
       let flag = false;
       let unitTable = [];
       let defaultUnit = [];
-      // console.log("emit: ", newVal);
-      // console.log("origin: ", this[type]);
+      console.log("emit: ", newVal);
+      console.log("origin: ", this[type]);
+      console.log(`type:`, type);
       if (type === "mtrBasicInfo") {
         unitTable = newVal.asUnit;
         defaultUnit = newVal.defaultUnit;
@@ -222,6 +223,13 @@ export default {
             flag = true;
             break;
           }
+        }
+      } else if (type === "mtrDefs") {
+        if (this.mtrDefsUpdateValue.length > 0) {
+          flag = true;
+        } else {
+          this.mtrDefsUpdateValue = this.mtrDefs;
+          flag = false;
         }
       } else {
         if (newVal.length !== this[type].length) {
@@ -272,7 +280,7 @@ export default {
             // console.log("mtrUnitTableUpdateValue: ", this.mtrUnitTableUpdateValue);
             break;
           case "mtrDefs":
-            // console.log("mtrDefs: ", newVal);
+            console.log("mtrDefs: ", newVal);
             this.mtrDefsUpdateValue = newVal;
             break;
           case "mtrSkuDefs":
@@ -947,18 +955,39 @@ export default {
         sendData[`data`].push(tmpData);
         // console.log(`add BasicInfo values!`);
       }
+      let formatData = [];
       if (this.mtrDefsUpdateValue.length > 0) {
-        for (let i in this.mtrDefsUpdateValue) {
-          delete this.mtrDefsUpdateValue[i].format1;
-          delete this.mtrDefsUpdateValue[i].format2;
-          delete this.mtrDefsUpdateValue[i].format3;
+        let mtrDefsUpdateValueTmp = Object.assign([], this.mtrDefsUpdateValue);
+        console.log(`this.mtrDefsUpdateValue`, this.mtrDefsUpdateValue);
+        console.log(`mtrDefsUpdateValueTmp`, mtrDefsUpdateValueTmp);
+        this.mtrDefsUpdateValue = [];
+        for (let element in mtrDefsUpdateValueTmp) {
+          let tmpElement = {};
+          tmpElement["barCode"] = mtrDefsUpdateValueTmp[element]["barCode"];
+          delete mtrDefsUpdateValueTmp[element]["barCode"];
+          tmpElement["materialCode"] = mtrDefsUpdateValueTmp[element]["materialCode"];
+          delete mtrDefsUpdateValueTmp[element]["materialCode"];
+          tmpElement["materialName"] = mtrDefsUpdateValueTmp[element]["materialName"];
+          delete mtrDefsUpdateValueTmp[element]["materialName"];
+          tmpElement["oldMaterialCode"] = mtrDefsUpdateValueTmp[element]["oldMaterialCode"];
+          delete mtrDefsUpdateValueTmp[element]["oldMaterialCode"];
+          tmpElement["purchasePrice"] = mtrDefsUpdateValueTmp[element]["purchasePrice"];
+          delete mtrDefsUpdateValueTmp[element]["purchasePrice"];
+          tmpElement["sellingPrice"] = mtrDefsUpdateValueTmp[element]["sellingPrice"];
+          delete mtrDefsUpdateValueTmp[element]["sellingPrice"];
+          formatData.push({
+            "materialCode": tmpElement["materialCode"],
+            "values": mtrDefsUpdateValueTmp[element],
+          });
+          this.mtrDefsUpdateValue.push(tmpElement);
         }
         let tmpData = {
           propertyType: 2,
           updateValue: this.mtrDefsUpdateValue
         };
         sendData[`data`].push(tmpData);
-        // console.log(`add Defs Values!`);
+        console.log(`add Defs Values!`, this.mtrDefsUpdateValue);
+        console.log(`construct format values!`, formatData);
       }
       if (this.mtrSkuDefsUpdateValue.length > 0) {
         let tmpData = {
@@ -1021,11 +1050,21 @@ export default {
         sendData["data"].push(tmpData);
         // console.log(`add Unit Values!`);
       }
-      // console.log(sendData);
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
-        .then((response) => {
-          // console.log(response);
+      console.log(`submitChangeValue sendData`, sendData);
+      // this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfo`, sendData)
+      //   .then((response) => {
+      //     console.log(`updateMaterialInfo response`, response);
+      //   });
+      if (formatData.length > 0) {
+        console.log(`提交更新规格信息！`);
+        this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialBasePropsBySpuCodeAndMaterialCodes`, {
+          'spuCode': spuCode,
+          'propertyType': 4,
+          'updateValue': formatData,
+        }).then((response) => {
+          console.log(`updateMaterialBasePropsBySpuCodeAndMaterialCodes response`, response);
         });
+      }
     }
   }
 };

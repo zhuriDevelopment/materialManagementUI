@@ -85,11 +85,11 @@ export default {
       if (this.tableData.length == 0) {
         this.pushRow();
       }
-      
     },
     tableData: {
       // handler should not be arrow function.
       handler: function (newVal, oldVal) {
+        console.log(`MtrDefs tableData`, `handler`);
         let d = Object.assign([], d, newVal);
         let idxs = [];
         for(let i in d) {
