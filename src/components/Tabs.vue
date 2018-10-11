@@ -21,6 +21,8 @@ export default {
         '/': '物料基本信息查询',
         'MtrInfo': '物料基本信息',
         'MtrTypeModify': '物料分类管理',
+        'Warehouse': '仓库在库查询',
+        'WarehouseUsage': '仓库使用情况查询',
       },
     };
   },
