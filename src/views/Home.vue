@@ -266,7 +266,7 @@ export default {
     },
     getTableData() {
       this.$axios
-        .post(`${window.$config.HOST}/MaterialManagement/getAllBaseInfo`)
+        .post(`${window.$config.HOST}/materialmanagement/getAllBaseInfo`)
         .then(response => {
           // console.log(response);
           let basedatas = response.data[0];

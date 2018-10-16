@@ -377,7 +377,7 @@ export default {
     setData() {
       if (this.$route.params.id !== 'newCode' && this.$route.query.name !== 'newName') {
         this.$axios
-          .post(`${window.$config.HOST}/MaterialManagement/getMaterialInfo`, {
+          .post(`${window.$config.HOST}/materialmanagement/getMaterialInfo`, {
             spuCode: this.$route.params.id,
             spuName: this.$route.query.name,
             // 附件信息以后由单独的附件管理模块进行管理，独立于物料信息管理模块
@@ -1057,7 +1057,7 @@ export default {
       //   });
       if (formatData.length > 0) {
         console.log(`提交更新规格信息！`);
-        this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialBasePropsBySpuCodeAndMaterialCodes`, {
+        this.$axios.post(`${window.$config.HOST}/materialmanagement/updateMaterialBasePropsBySpuCodeAndMaterialCodes`, {
           'spuCode': spuCode,
           'propertyType': 4,
           'updateValue': formatData,

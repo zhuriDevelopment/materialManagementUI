@@ -119,7 +119,7 @@ export default {
   methods: {
     initTree() {
       // console.log("initing Tree!");
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategory`, {})
+      this.$axios.post(`${window.$config.HOST}/materialmanagement/getMaterialCategory`, {})
           .then((response) => {
             // console.log(`treeData = `, response);
             this.treeData = [];
@@ -195,7 +195,7 @@ export default {
       // console.log(`handleNodeClick data`, data);
       // console.log(`data.id`, data.id);
       const catId = data.id;
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialCategoryInfosWithId`, {
+      this.$axios.post(`${window.$config.HOST}/materialmanagement/getMaterialCategoryInfosWithId`, {
         "id": catId,
       })
       .then((response) => {
@@ -251,7 +251,7 @@ export default {
       // console.log(`setNewCatInfo`, catCode, catName);
       this.catCode = catCode;
       this.catName = catName;
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/getMaterialInfoWithCatCodeAndCatName`, {
+      this.$axios.post(`${window.$config.HOST}/materialmanagement/getMaterialInfoWithCatCodeAndCatName`, {
         "code": catCode,
         "name": catName,
         "typeArr": [5, 6, 7, 8, 9, 11]
@@ -453,7 +453,7 @@ export default {
         // console.log(`add mtrTypeModifyTableValue!`);
       }
       // console.log(`sendData`, sendData);
-      this.$axios.post(`${window.$config.HOST}/MaterialManagement/updateMaterialInfoWithCatCodeAndCatName`, sendData)
+      this.$axios.post(`${window.$config.HOST}/materialmanagement/updateMaterialInfoWithCatCodeAndCatName`, sendData)
         .then((response) => {
           // console.log(response);
         });
