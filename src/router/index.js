@@ -5,7 +5,8 @@ import Home from '@/views/Home';
 import MtrInfo from '@/views/MtrInfo';
 import MtrTypeModify from '@/views/MtrTypeModify';
 import Warehouse from '@/views/Warehouse/Warehouse';
-import WarehouseUsage from '@/views/Warehouse/Usage'
+import WarehouseUsage from '@/views/Warehouse/Usage';
+import WarehouseAdjust from '@/views/Warehouse/Adjust';
 
 Vue.use(Router);
 
@@ -37,6 +38,11 @@ export default new Router({
       path: '/WarehouseUsage',
       name: 'WarehouseUsage',
       component: WarehouseUsage,
+    },
+    {
+      path: '/WarehouseAdjust',
+      name: 'WarehouseAdjust',
+      component: WarehouseAdjust,
     },
   ],
 });

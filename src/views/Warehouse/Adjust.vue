@@ -1,5 +1,5 @@
 <template>
-  <div class="WarehouseUsage">
+  <div class="WarehouseAdjust">
     <Nav-header></Nav-header>
     <div class="body">
       <div class="main-nav">
@@ -11,21 +11,60 @@
         </div>
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
-          <div class="search row">
-              <div class="col" :class="{'short': index > 1}" v-for="(col, index) in selectData">
-                <div class="label" :class="{'short-label': index > 2}">{{col.label}}</div>
-                <el-select v-model="col.model" :class="{'short': index > 1}" placeholder="请选择">
-                  <el-option
-                    v-for="item in col.options"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                  </el-option>
-                </el-select>
+          <div class="search">
+              <div class="row">
+                <div class="col">
+                  <div class="title">调整单号: </div>
+                  <el-input v-model="inputs.aId"></el-input>
+                </div>
+                <div class="col">
+                  <div class="title">调整日期: </div>
+                  <el-input v-model="inputs.aDate"></el-input>
+                </div>
+                <div class="col">
+                  <div class="title">申请人: </div>
+                  <el-select v-model="inputs.name" placeholder="请选择">
+                    <el-option
+                      v-for="item in inputs.options[0]"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+                </div>
               </div>
-              <div class="col col-2">
+              <div class="row">
+                <div class="col">
+                  <div class="title">操作仓库: </div>
+                  <el-select v-model="inputs.operation" placeholder="请选择">
+                    <el-option
+                      v-for="item in inputs.options[1]"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="col">
+                  <div class="title">操作员: </div>
+                  <el-select v-model="inputs.operator" placeholder="请选择">
+                    <el-option
+                      v-for="item in inputs.options[1]"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="col">
+                  <div class="title">原因: </div>
+                  <el-input v-model="inputs.reason" placeholder="请选择"></el-input>
+                </div>
+              </div>
+              <div class="row"></div>
+              <!-- <div class="col col-2">
                 <el-button type="primary" @click="search">搜索</el-button>
-              </div>
+              </div> -->
             
           </div>
           
@@ -69,7 +108,7 @@ import Tabs from "@/components/Tabs";
 import Breadcrumb from "@/components/BreadcrumbWarehouse";
 import NavTree from "@/components/MainNavTree";
 export default {
-  name: "WarehouseUsage",
+  name: "WarehouseAdjust",
   components: {
     NavHeader,
     Tabs,
@@ -81,6 +120,15 @@ export default {
   },
   data() {
     return {
+      inputs:{
+        aId: '',
+        aData: '',
+        name: '',
+        operation: '',
+        operator: '',
+        reason: '',
+        options: [['admin'],[''], ['操作员1']],
+      },
       warehouse: '',
       materialType: '',
       materialCode: '',
@@ -149,7 +197,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.WarehouseUsage {
+.WarehouseAdjust {
   width: 100%;
   height: 100%;
   display: flex;
@@ -213,45 +261,39 @@ export default {
         }
       }
       .search {
-        & .row {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      
+        margin: 0 20px;
+        .row{
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+          width: 100%;
         }
         .col{
             display: flex;
             flex-direction: row;
             align-items: center;
-            width: 400px;
+            width: 300px;
             margin: 15px 0;
-            &.short{
-              width: 260px;
+            .el-select, .el-input{
+                width: 200px;
             }
-            .label {
-              font-size: 14px;
-              width: 100px;
+            .title {
+              width: 80px;
               white-space: nowrap;
-              &.short-label{
-                width: 30px;
-              }
+              text-align: left;
             }
-            .el-select{
-              &.short{
-                width: 120px;
-              }
-              width: 150px;
-              padding-left: 0px;
-            }
+            
           }
           .col-2{
             justify-content: flex-end;
           }
         // height: 50px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        margin: 0 20px;
+        
         .input-group {
           display: flex;
           flex-direction: column;

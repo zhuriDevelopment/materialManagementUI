@@ -23,6 +23,7 @@ export default {
         'MtrTypeModify': '物料分类管理',
         'Warehouse': '仓库在库查询',
         'WarehouseUsage': '仓库使用情况查询',
+        'WarehouseAdjust': '库位调整',
       },
     };
   },
