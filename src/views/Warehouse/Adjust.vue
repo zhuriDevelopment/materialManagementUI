@@ -61,7 +61,17 @@
                   <el-input v-model="inputs.reason" placeholder="请选择"></el-input>
                 </div>
               </div>
-              <div class="row"></div>
+              <div class="row">
+                <div class="col col-1">
+                  <div class="title">备注: </div>
+                  <el-input
+                    type="textarea"
+                    :rows="2"
+                    placeholder="请输入内容"
+                    v-model="inputs.textarea">
+                  </el-input>
+                </div>
+              </div>
               <!-- <div class="col col-2">
                 <el-button type="primary" @click="search">搜索</el-button>
               </div> -->
@@ -75,10 +85,8 @@
               highlight-current-row
               style="width: 100%">
               <el-table-column
-                type="index"
-                label="序号"
-                fixed="left"
-                width="60">
+                type="selection"
+                width="55">
               </el-table-column>
               <el-table-column
                 v-for="(p,index) in Object.keys(tableData[0])"
@@ -127,6 +135,7 @@ export default {
         operation: '',
         operator: '',
         reason: '',
+        textarea: '',
         options: [['admin'],[''], ['操作员1']],
       },
       warehouse: '',
@@ -279,7 +288,10 @@ export default {
             align-items: center;
             width: 300px;
             margin: 15px 0;
-            .el-select, .el-input{
+            &.col-1{
+              width: 100%;
+            }
+            .el-select, .el-input, .el-textarea{
                 width: 200px;
             }
             .title {
