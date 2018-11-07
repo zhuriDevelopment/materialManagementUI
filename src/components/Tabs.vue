@@ -24,6 +24,8 @@ export default {
         'Warehouse': '仓库在库查询',
         'WarehouseUsage': '仓库使用情况查询',
         'WarehouseAdjust': '库位调整',
+        'WarehouseAssembly': '商品组装',
+        
       },
     };
   },

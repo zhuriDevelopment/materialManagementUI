@@ -7,6 +7,7 @@ import MtrTypeModify from '@/views/MtrTypeModify';
 import Warehouse from '@/views/Warehouse/Warehouse';
 import WarehouseUsage from '@/views/Warehouse/Usage';
 import WarehouseAdjust from '@/views/Warehouse/Adjust';
+import WarehouseAssembly from '@/views/Warehouse/Assembly';
 
 Vue.use(Router);
 
@@ -44,5 +45,10 @@ export default new Router({
       name: 'WarehouseAdjust',
       component: WarehouseAdjust,
     },
+    {
+      path: '/WarehouseAssembly',
+      name: 'WarehouseAssembly',
+      component: WarehouseAssembly,
+    }
   ],
 });

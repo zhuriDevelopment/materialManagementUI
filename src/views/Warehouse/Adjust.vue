@@ -84,19 +84,8 @@
               border
               highlight-current-row
               style="width: 100%">
-              <el-table-column
-                type="selection"
-                width="55"
-                fixed
-              >
+              <el-table-column type="selection" width="55" fixed>
               </el-table-column>
-              <!-- <el-table-column
-                v-for="(p,index) in Object.keys(tableData[0])"
-                :key="index"
-                :prop="p"
-                width="160"
-                :label="labels[index]">
-              </el-table-column> -->
               <el-table-column
                 v-for="(p,index) in Object.keys(tableData[0])"
                 :key="index"
@@ -104,6 +93,16 @@
                 :label="labels[index]">
                 <template slot-scope="scope">
                   <div v-if="[1,2].includes(index)">{{tableData[scope.$index][p]}}</div>
+                  <el-select 
+                    v-else-if="[3].includes(index)" 
+                    v-model="tableData[scope.$index][p]">
+                    <el-option
+                      v-for="item in units"
+                      :key="item"
+                      :label="item"
+                      :value="item">
+                    </el-option>
+                  </el-select>
                   <el-input v-else v-model="tableData[scope.$index][p]"></el-input>           
                 </template>
               </el-table-column>
@@ -170,6 +169,7 @@ export default {
         {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77', h: '88', i: '99', },
         
       ],
+      units: ['米', '千克'],
       selectData: [
         { model: '', label: '仓库名', options: ['仓库1','仓库2'], },
         { model: '', label: '库区', options: ['库区1','库区2'], }, 
