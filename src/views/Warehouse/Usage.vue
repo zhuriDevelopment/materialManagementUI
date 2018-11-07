@@ -104,8 +104,8 @@ export default {
       selectData: [
         { model: '', label: '仓库名', options: ['仓库1','仓库2'], },
         { model: '', label: '库区', options: ['库区1','库区2'], }, 
-        { model: '', label: '货架', options: ['货架1','货架2'], },
-        { model: '', label: '~', options: ['货架1','货架2'], }
+        // { model: '', label: '货架', options: ['货架1','货架2'], },
+        // { model: '', label: '~', options: ['货架1','货架2'], }
       ],
     };
   },

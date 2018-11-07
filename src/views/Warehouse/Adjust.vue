@@ -86,14 +86,26 @@
               style="width: 100%">
               <el-table-column
                 type="selection"
-                width="55">
+                width="55"
+                fixed
+              >
               </el-table-column>
-              <el-table-column
+              <!-- <el-table-column
                 v-for="(p,index) in Object.keys(tableData[0])"
                 :key="index"
                 :prop="p"
                 width="160"
                 :label="labels[index]">
+              </el-table-column> -->
+              <el-table-column
+                v-for="(p,index) in Object.keys(tableData[0])"
+                :key="index"
+                width="160"
+                :label="labels[index]">
+                <template slot-scope="scope">
+                  <div v-if="[1,2].includes(index)">{{tableData[scope.$index][p]}}</div>
+                  <el-input v-else v-model="tableData[scope.$index][p]"></el-input>           
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -152,10 +164,10 @@ export default {
       nodeData: {},
       id: 1000,
       tabIndex: '0',
-      labels: ["仓库名", "库区", "货架", "库位", "物料种类", "使用状况", "预约状况"],
+      labels: ["物料编号", "物料名称", "规格", "计量单位", "批号", "原库位", "新库位", "移动数量", "备注"],
       names: [],
       tableData: [
-        {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77'},
+        {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77', h: '88', i: '99', },
         
       ],
       selectData: [
@@ -275,7 +287,7 @@ export default {
         justify-content: space-between;
         align-items: center;
       
-        margin: 0 20px;
+        margin: 0 5% 0 20px;
         .row{
           display: flex;
           flex-direction: row;
@@ -292,7 +304,7 @@ export default {
               width: 100%;
             }
             .el-select, .el-input, .el-textarea{
-                width: 200px;
+                flex: 1;
             }
             .title {
               width: 80px;
