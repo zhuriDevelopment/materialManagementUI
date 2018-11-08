@@ -1,5 +1,5 @@
 <template>
-  <div class="WarehouseAssembly">
+  <div class="WarehouseSplit">
     <Nav-header></Nav-header>
     <div class="body">
       <div class="main-nav">
@@ -14,6 +14,8 @@
           <Form class="search" :formData="formData"></Form>
           <div class="buttons">
             <el-button type="primary" @click="addData">新增</el-button>
+            <el-button>修改</el-button>
+            <el-button type="danger">删除</el-button>
           </div>
           <div class="table">
             <el-table
@@ -29,9 +31,9 @@
                 width="160"
                 :label="labels[index]">
                 <template slot-scope="scope">
-                  <div v-if="[0, 1, 2, 7, 8].includes(index)">{{tableData[scope.$index][p]}}</div>
-                  <el-select
-                    v-else-if="[3, 4].includes(index)" 
+                  <div v-if="[0, 1, 2, 3, 9, 10, 11].includes(index)">{{tableData[scope.$index][p]}}</div>
+                  <el-select 
+                    v-else-if="[].includes(index)" 
                     v-model="tableData[scope.$index][p]">
                     <el-option
                       v-for="item in units"
@@ -66,7 +68,7 @@ import NavTree from "@/components/MainNavTree";
 import Form from "@/components/Warehouse/Form";
 
 export default {
-  name: "WarehouseAssembly",
+  name: "WarehouseSplit",
   components: {
     NavHeader,
     Tabs,
@@ -81,17 +83,17 @@ export default {
     return {
       formData: [
         [ //row1
-          {type: 'input', title: '组装单号', value: '', },
-          {type: 'date', title: '组装日期', value: '', },
+          {type: 'input', title: '拆分单号', value: '', },
+          {type: 'date', title: '拆分日期', value: '', },
           {type: 'select', title: '操作人', value: '', options: ['A', 'B', 'C']},
         ],
         [ //row2
-          {type: 'select', title: '待组装品', value: '', option: ['A', 'B', 'C']}, 
-          {type: 'input', title: '商品名称', value: '', disabled: true},
-          {type: 'input', title: '组装数量', value: ''},
+          {type: 'select', title: '待拆分品', value: '', options: ['A', 'B', 'C']}, 
+          {type: 'input', title: '商品名称', value: ''},
+          {type: 'input', title: '拆分数量', value: ''},
         ],
         [
-          {type: 'select', title: '所在仓库', value: '', options: ['a','b','c']},
+          {type: 'select', title: '拆分仓库', value: '', options: ['a','b','c']},
           {type: 'input', title: '批号', value: ''},
         ],
         [
@@ -107,10 +109,10 @@ export default {
       nodeData: {},
       id: 1000,
       tabIndex: '0',
-      labels: ["子物料编号", "物料名称", "规格", "批号", "计量单位", "需求数量", "单价", "金额", "备注"],
+      labels: ["拆分后的商品编号", "商品名称", "商品类别", "规格", "计量单位", "批号", "拆分单数", "拆分总数", "单价", "金额", "备注说明", "当前库存"],
       names: [],
       tableData: [
-        {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77', h: '88', i: '99', },
+        {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77', h: '88', i: '99', j: '10', q: '11', p: '12'},
         
       ],
       units: ['米', '千克'],
@@ -159,7 +161,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.WarehouseAssembly {
+.WarehouseSplit {
   width: 100%;
   height: 100%;
   display: flex;

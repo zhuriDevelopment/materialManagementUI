@@ -25,7 +25,7 @@ export default {
         'WarehouseUsage': '仓库使用情况查询',
         'WarehouseAdjust': '库位调整',
         'WarehouseAssembly': '商品组装',
-        
+        'WarehouseSplit': '商品拆分',
       },
     };
   },

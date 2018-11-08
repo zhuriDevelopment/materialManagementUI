@@ -77,7 +77,11 @@
               </div> -->
             
           </div>
-          
+          <div class="buttons">
+            <el-button type="primary" @click="addData">新增</el-button>
+            <!-- <el-button>修改</el-button> -->
+            <el-button type="danger">删除</el-button>
+          </div>
           <div class="table">
             <el-table
               :data="tableData"
@@ -358,6 +362,12 @@ export default {
         .search-btn {
           margin: 0 20px;
         }
+      }
+      .buttons{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin: 30px 20px;
       }
       .table {
         width: calc(~"100% - 80px");

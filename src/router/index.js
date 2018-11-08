@@ -8,6 +8,7 @@ import Warehouse from '@/views/Warehouse/Warehouse';
 import WarehouseUsage from '@/views/Warehouse/Usage';
 import WarehouseAdjust from '@/views/Warehouse/Adjust';
 import WarehouseAssembly from '@/views/Warehouse/Assembly';
+import WarehouseSplit from '@/views/Warehouse/Split';
 
 Vue.use(Router);
 
@@ -49,6 +50,11 @@ export default new Router({
       path: '/WarehouseAssembly',
       name: 'WarehouseAssembly',
       component: WarehouseAssembly,
+    },
+    {
+      path: '/WarehouseSplit',
+      name: 'WarehouseSplit',
+      component: WarehouseSplit,
     }
   ],
 });
