@@ -78,9 +78,10 @@
             
           </div>
           <div class="buttons">
+            <el-button type="primary" @click="edit">调整库位</el-button>
             <el-button type="primary" @click="addData">新增</el-button>
             <!-- <el-button>修改</el-button> -->
-            <el-button type="danger">删除</el-button>
+            <!-- <el-button type="danger">删除</el-button> -->
           </div>
           <div class="table">
             <el-table
@@ -88,10 +89,25 @@
               border
               highlight-current-row
               style="width: 100%">
-              <el-table-column type="selection" width="55" fixed>
+              <el-table-column
+                fixed
+                type="index"
+                width="50">
+              </el-table-column>
+              <el-table-column width="120" label="操作">
+                <template slot-scope="scope">
+                  <el-button @click.native.prevent="search(scope.$index)"
+                    type="text" size="small">
+                    物料查询
+                  </el-button> 
+                  <el-button @click.native.prevent="delRow(scope.$index)"
+                    type="text" size="small">
+                    删除
+                  </el-button>   
+                </template>
               </el-table-column>
               <el-table-column
-                v-for="(p,index) in Object.keys(tableData[0])"
+                v-for="(p,index) in tableKeys"
                 :key="index"
                 width="160"
                 :label="labels[index]">
@@ -101,15 +117,26 @@
                     v-else-if="[3].includes(index)" 
                     v-model="tableData[scope.$index][p]">
                     <el-option
-                      v-for="item in units"
+                      v-for="item in units[scope.$index]"
                       :key="item"
                       :label="item"
                       :value="item">
                     </el-option>
                   </el-select>
-                  <el-input v-else v-model="tableData[scope.$index][p]"></el-input>           
+                  <el-input v-else @input="handleChange" 
+                    v-model="tableData[scope.$index][p]" :type="p === 'amount'? 'number': 'string'">
+                  </el-input>       
                 </template>
               </el-table-column>
+              <!-- <el-table-column fixed="right" width="120">
+                <template slot-scope="scope">
+                  <el-button @click.native.prevent="edit(scope.$index)"
+                    type="text" size="small">
+                    调整库位
+                  </el-button> 
+                  
+                </template>
+              </el-table-column> -->
             </el-table>
           </div>
           <div class="pagination">
@@ -130,6 +157,7 @@ import NavHeader from "@/components/Nav";
 import Tabs from "@/components/Tabs";
 import Breadcrumb from "@/components/BreadcrumbWarehouse";
 import NavTree from "@/components/MainNavTree";
+import { throws } from 'assert';
 export default {
   name: "WarehouseAdjust",
   components: {
@@ -140,6 +168,7 @@ export default {
   },
   created() {
     this.initTabs();
+    this.addData();
   },
   data() {
     return {
@@ -155,7 +184,7 @@ export default {
       },
       warehouse: '',
       materialType: '',
-      materialCode: '',
+      // materialCode: '',
       materialName: '',
       catCode: '',
       catName: '',
@@ -168,12 +197,11 @@ export default {
       id: 1000,
       tabIndex: '0',
       labels: ["物料编号", "物料名称", "规格", "计量单位", "批号", "原库位", "新库位", "移动数量", "备注"],
+      tableKeys: ["materialCode", "materialName", "norm", "unitName", "batchCode", "sourceLocationGroupName", "destLocationGroupName", "amount", "note"],
       names: [],
-      tableData: [
-        {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77', h: '88', i: '99', },
-        
-      ],
-      units: ['米', '千克'],
+      tableData: [],
+      units: [],
+      selectedRow: '',
       selectData: [
         { model: '', label: '仓库名', options: ['仓库1','仓库2'], },
         { model: '', label: '库区', options: ['库区1','库区2'], }, 
@@ -214,9 +242,75 @@ export default {
       this.tabIndex = tabs.index;
       // console.log("emit: ", tabs);
     },
-    search() {
-      
+    search(index) {
+      this.$axios.post(`${window.$config.HOST}/InWarehouse/getMaterialInfoByMaterialCode`, this.tableData[index].materialCode, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      }).then((res) => {
+          // console.log(`treeData = `, response);
+          // this.tableData = res.data;
+          // d = res.data;
+
+          console.log(res.data)
+          this.units[index] = res.data[2];
+          this.tableData[index].unitName = res.data[2][0];
+          this.tableData[index].materialName = res.data[0];
+          this.tableData[index].norm = res.data[1];
+          // 仓库
+          console.log(this.tableData[index])
+        })
+        .catch(error => {
+          // console.log(`error in initing tree`, error);
+        });
     },
+    edit() {
+      let data = [];
+      const params = ["materialCode", "unitName", "batchCode", "sourceLocationGroupName", "destLocationGroupName", "amount"]
+      console.log(data)
+      for(const [index, value] of this.tableData.entries()){
+        data.push({})
+        params.forEach(p => {
+          if(p === 'amount'){
+            value[p] = parseInt(value[p])
+          }
+          data[index][p] = value[p]
+        })
+      }
+      console.log(data)
+      this.$axios.post(`${window.$config.HOST}/InWarehouse/editStorageLocation`, data, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      }).then((res) => {
+          console.log(res)
+          this.$message({
+            type: 'success',
+            message: '调整成功'
+          });
+        })
+        .catch(error => {
+          this.$message({
+            type: 'error',
+            message: '调整失败'
+          });
+        });
+    },
+    plainRow(){
+      let tmp = {}
+      this.tableKeys.forEach(el => tmp[el]='')
+      return tmp
+    },
+    addData(){
+      this.tableData.push(this.plainRow())
+      this.units.push([])
+    },
+    delRow(index){
+      this.tableData.splice(index, 1);
+    },
+    handleCurrentChange(row, event, column){
+      this.materialCode = row.materialCode
+      // console.log(this.materialCode)
+    },
+    handleChange(value){
+      this.materialCode = value;
+    }
   }
 };
 </script>

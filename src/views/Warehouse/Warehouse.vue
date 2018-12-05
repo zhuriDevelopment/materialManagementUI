@@ -73,7 +73,7 @@
                 width="60">
               </el-table-column>
               <el-table-column
-                v-for="(p,index) in Object.keys(tableData[0])"
+                v-for="(p,index) in tableKeys"
                 :key="index"
                 :prop="p"
                 width="160"
@@ -126,7 +126,8 @@ export default {
       nodeData: {},
       id: 1000,
       tabIndex: '0',
-      labels: ["物料编码", "规格", "批号", "在库数量", "库存单价", "在库金额", "备注"],
+      labels: ["物料编码", "规格", "批号", "在库数量", "在库金额", "备注"],
+      tableKeys: ["materialCode", "norm", "batchCode", "amount", "price", "note"],
       names: [],
       tableData: [
         {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77'},
@@ -167,7 +168,20 @@ export default {
       // console.log("emit: ", tabs);
     },
     searchWithParams() {
-      
+      const params = {
+        warehouseName: this.warehouse,
+      }
+      this.$axios.post(`${window.$config.HOST}/InWarehouse/getWarehouseInLibraryInfoByParms`, params)
+          .then((res) => {
+            // console.log(`treeData = `, response);
+            this.tableData = res.data;
+            console.log(this.tableData)
+            // 仓库
+            
+          })
+          .catch(error => {
+            // console.log(`error in initing tree`, error);
+          });
     },
   }
 };

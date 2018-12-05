@@ -12,7 +12,7 @@
         <Breadcrumb :tabIndex="tabIndex" :tabList="editableTabs" @clickHome="addHome"></Breadcrumb>
         <div class="card">
           <div class="search row">
-              <div class="col" :class="{'short': index > 1}" v-for="(col, index) in selectData">
+              <div class="col" :class="{'short': index > 1}" v-for="(col, index) in [select1, select2]">
                 <div class="label" :class="{'short-label': index > 2}">{{col.label}}</div>
                 <el-select v-model="col.model" :class="{'short': index > 1}" placeholder="请选择">
                   <el-option
@@ -42,11 +42,13 @@
                 width="60">
               </el-table-column>
               <el-table-column
-                v-for="(p,index) in Object.keys(tableData[0])"
+                align="left"
+                v-for="(p, index) in tableKeys"
                 :key="index"
                 :prop="p"
                 width="160"
                 :label="labels[index]">
+                <!-- <template slot-scope="scope">{{p}}</template> -->
               </el-table-column>
             </el-table>
           </div>
@@ -78,6 +80,7 @@ export default {
   },
   created() {
     this.initTabs();
+    this.getWareHouse();
   },
   data() {
     return {
@@ -95,19 +98,29 @@ export default {
       nodeData: {},
       id: 1000,
       tabIndex: '0',
-      labels: ["仓库名", "库区", "货架", "库位", "物料种类", "使用状况", "预约状况"],
+      labels: ["仓库名", "库区", "库位", "物料种类", "使用状况", "预约状况"],
+      tableKeys: ["warehouseName", "locationGroupName", "storageLocationName", "materialType", "useState", "orderState"],
       names: [],
       tableData: [
         {a: '11', b: '22', c: '33', d: '44', e: '55', f: '66', g: '77'},
         
       ],
-      selectData: [
-        { model: '', label: '仓库名', options: ['仓库1','仓库2'], },
-        { model: '', label: '库区', options: ['库区1','库区2'], }, 
+      select1: { model: '', label: '仓库名', options: ['仓库1','仓库2'], },
+      select2: { model: '', label: '库区', options: [], }, 
         // { model: '', label: '货架', options: ['货架1','货架2'], },
         // { model: '', label: '~', options: ['货架1','货架2'], }
-      ],
     };
+  },
+  watch: {
+    select1:{
+      handler: function (newVal, oldVal) {
+        this.select2.options = Object.assign([], this.warehouse[newVal.model])
+        console.log("options:", this.select2.options)
+        
+        // this.selectData[1].options = Object.assign({}, this.warehouse[newVal[0].model])
+      },
+      deep: true,
+    }
   },
   methods: {
     initTabs() {
@@ -128,6 +141,22 @@ export default {
         localStorage.materialInfoTabs = JSON.stringify(tabs);
       }
     },
+    getWareHouse() {
+      this.$axios.post(`${window.$config.HOST}/InWarehouse/getWarehouseUseStateAllInfo`, {})
+          .then((res) => {
+            // console.log(`treeData = `, response);
+            this.warehouse = res.data;
+            console.log(this.warehouse)
+            // 仓库
+            this.select1.options = []
+            Object.keys(this.warehouse).forEach(el => {
+              this.select1.options.push(el)
+            })
+          })
+          .catch(error => {
+            // console.log(`error in initing tree`, error);
+          });
+    },
     addHome() {
       this.editableTabs = tabs.filter(tab => tab.name !== "");
       this.editableTabs.push({
@@ -142,7 +171,20 @@ export default {
       // console.log("emit: ", tabs);
     },
     search() {
-      
+      const params = {
+        groupName: this.select2.model,
+      }
+      this.$axios.post(`${window.$config.HOST}/InWarehouse/getWarehouseUseStateInfoByParms`, params)
+          .then((res) => {
+            // console.log(`treeData = `, response);
+            this.tableData = res.data;
+            console.log(this.tableData)
+            // 仓库
+            
+          })
+          .catch(error => {
+            // console.log(`error in initing tree`, error);
+          });
     },
   }
 };
