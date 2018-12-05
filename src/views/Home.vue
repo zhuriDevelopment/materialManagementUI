@@ -162,6 +162,9 @@ export default {
     this.initTabs();
     this.getTableData();
   },
+  mounted() {
+    
+  },
   data() {
     return {
       editableTabsValue: "/",
