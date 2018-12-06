@@ -23,9 +23,6 @@ export default {
         }, {
           id: 2,
           label: '物料分类管理',
-        }, {
-          id: 3,
-          label: '仓库管理',
         }]
       }],
       defaultProps: {
@@ -43,10 +40,6 @@ export default {
       }
       if (data.label === '物料分类管理') {
         this.$router.push("/MtrTypeModify");
-        // this.$router.push({ name: "MtrTypeModify"});
-      }
-      if (data.label === '仓库管理') {
-        this.$router.push("/Warehouse");
       }
     }
   }
