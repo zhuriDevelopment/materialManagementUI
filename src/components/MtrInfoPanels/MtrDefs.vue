@@ -23,7 +23,7 @@
               <el-input v-model="tableData[scope.$index][p]"
                :disabled="(disabled[scope.$index]===scope.row.materialCode && labels[index] ==='物料编码') ||
                (scope.row[labels[index]] === undefined && index > 5)"
-               ></el-input>           
+               ></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -145,7 +145,7 @@ export default {
       materialCodes = this.data.map(element => element.materialCode);
       console.log(materialCodes)
       this.$axios
-        .post(`${window.$config.HOST}/MaterialManagement/getMaterialBasePropsBySpuCodeAndMaterialCodes`, {
+        .post(`${window.$config.HOST}/materialmanagement/getMaterialBasePropsBySpuCodeAndMaterialCodes`, {
           spuCode: this.$route.params.id,
           materialCodes,
           propertyType: 4
@@ -177,7 +177,7 @@ export default {
             this.showTable = true;
           })
         })
-    } 
+    }
   }
 };
 

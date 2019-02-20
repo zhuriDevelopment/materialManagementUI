@@ -16,7 +16,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
 
 window.$config = {};
-if (window.location.hostname === 'localhost' && window.location.port === "8080") {
+if (window.location.hostname === 'localhost' && window.location.port === "8081") {
   window.$config.HOST = 'http://localhost:8080'
 } else if (window.location.hostname === '202.120.1.66' && window.location.port === "8080") {
   window.$config.HOST = 'http://202.120.1.66:8080'
